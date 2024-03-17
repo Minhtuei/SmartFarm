@@ -1,7 +1,7 @@
 const withMT = require('@material-tailwind/react/utils/withMT');
 
 module.exports = withMT({
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './frontend/**/*.{js,ts,jsx,tsx}'],
   theme: {
     screens: {
       'sm': '640px',
@@ -18,7 +18,17 @@ module.exports = withMT({
       decimal: 'decimal',
       circle: 'circle'
     },
-    extend: {}
+    extend: {
+      colors: {
+        'blue/1': '#1488D8',
+        'blue/2': '#030391',
+        'gray/1': '#F5F5F5',
+        'gray/3': '#ACB5BD',
+        'gray/4': '#495057',
+        'cover': '#121212',
+        'border-dark': '#7D7D7D'
+      }
+    }
   },
   plugins: []
 });

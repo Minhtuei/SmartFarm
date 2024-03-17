@@ -1,14 +1,28 @@
 {
-  "directory": [
-    "./src/components",
-    "./src/constants",
-    "./src/hooks",
-    "./src/interfaces",
-    "./src/layouts",
-    "./src/pages",
-    "./src/services",
-    "./src/states",
-    "./src/utils"
-  ],
-  "delete": true
+    "directory": [
+        "./frontend/components",
+        "./frontend/constants",
+        "./frontend/hooks",
+        "./frontend/interfaces",
+        "./frontend/layouts",
+        "./frontend/pages",
+        "./frontend/services",
+        "./frontend/states",
+        "./frontend/utils",
+        "./backend/handlers",
+        "./backend/constants",
+        "./backend/dtos/in",
+        "./backend/dtos/out",
+        "./backend/configs",
+        "./backend/hooks",
+        "./backend/interfaces",
+        "./backend/repositories",
+        "./backend/utils"
+    ],
+    "exclude": [
+        "__mock__",
+        "__mocks__",
+        ".spec.ts"
+    ],
+    "delete": true
 }
