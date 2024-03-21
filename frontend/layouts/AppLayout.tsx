@@ -1,8 +1,10 @@
-import { AppNavigation } from 'frontend/components';
+import { AppSlideMenu } from '@fe/components';
 import { useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
-
+import { useState } from 'react';
+import { useScreenSize } from '@fe/hooks';
 export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
+    const screen = useScreenSize();
     const routeItems = useMemo(() => {
         const items: { path: string; element: React.ReactElement }[] = [];
         for (const menuItem of menu) {
@@ -17,11 +19,11 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
         }
         return items;
     }, [menu]);
-
+    const [open, setOpen] = useState(true);
     return (
         <div>
-            <AppNavigation menu={menu} />
-            <div className='p-4' style={{ marginLeft: '240px' }}>
+            <AppSlideMenu menu={menu} open={open} setOpen={setOpen} />
+            <div style={{ marginLeft: open && screen.screenSize >= 2 ? '240px' : '64px' }}>
                 <Routes>
                     {routeItems.map((item) => (
                         <Route path={item.path} element={item.element} key={item.path} />

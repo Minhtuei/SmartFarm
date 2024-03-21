@@ -3,3 +3,4 @@
  */
 
 export * from './color';
+export * from './screen';

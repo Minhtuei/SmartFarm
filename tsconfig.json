@@ -49,12 +49,8 @@
             "@be/dtos/out": ["backend/dtos/out"],
             "@be/dtos/common": ["backend/dtos/common.dto"],
             "@be/configs": ["backend/configs"],
-            "@be/configs/*": ["backend/configs/*"],
-            "@be/repositories": ["backend/repositories"],
-            "@be/utils": ["backend/utils"],
-            "@be/hooks": ["backend/hooks"],
+            "@be/configs/*": ["backend/configs/*"],        
             "@be/routes": ["backend/routes"],
-            "@be/interfaces": ["backend/interfaces"],
             "#package.json": ["./package.json"]
         }
     },

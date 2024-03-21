@@ -13,11 +13,7 @@
         "./backend/constants",
         "./backend/dtos/in",
         "./backend/dtos/out",
-        "./backend/configs",
-        "./backend/hooks",
-        "./backend/interfaces",
-        "./backend/repositories",
-        "./backend/utils"
+        "./backend/configs"
     ],
     "exclude": [
         "__mock__",
