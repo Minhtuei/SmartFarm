@@ -1,21 +1,24 @@
-import React from 'react';
 import { AppLayout } from '@fe/layouts';
 import { DashboardPage, DevicePage, HelpPage, NotificationPage, ProfilePage, LoginCard } from '@fe/pages'; // Import LoginCard
 import { ChartBarIcon, ComputerDesktopIcon, EnvelopeIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/react/20/solid';
-import { Routes, Route } from 'react-router-dom';
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useUserInfoStore } from '@fe/states';
 export default function App() {
+    const navigate = useNavigate();
+    const pathname = useLocation();
+    const { isAuth } = useUserInfoStore();
+    if (!isAuth && pathname.pathname !== '/login') {
+        navigate('/login');
+    }
+    if (!isAuth) return <LoginCard />;
     return (
         <div className='bg-green-100 dark:bg-black-100'>
-            <Routes>
-                <Route path='/login' element={<LoginCard />} />
-            </Routes>
             <AppLayout
                 menu={[
                     {
                         type: 'item',
                         icon: <ChartBarIcon className='h-5 w-5' />,
-                        path: '/',
+                        path: '/dashboard' || '/',
                         name: 'Dashboard',
                         element: <DashboardPage />
                     },

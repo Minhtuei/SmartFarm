@@ -3,3 +3,4 @@
  */
 
 export * from './formatTime';
+export * from './validate';

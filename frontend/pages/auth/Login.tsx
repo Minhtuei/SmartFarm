@@ -2,29 +2,15 @@ import { Card, CardHeader, CardBody, CardFooter, Typography, Input, Checkbox, Bu
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-
+import { validateEmail, validatePassword } from '@fe/utils';
+import { useUserInfoStore } from '@fe/states';
 export function LoginCard() {
-    const [username, setUsername] = useState<string | number>('');
+    const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [block, setBlock] = useState<boolean>(false);
-    const validateUsername = (username: string): boolean => {
-        // Regular expression to check if the username is in email format
-        const emailPattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-        return emailPattern.test(username);
-    };
-
-    const validatePassword = (password: string): boolean => {
-        // Regular expressions to check if the password meets the criteria
-        const lengthCheck = password.length >= 8;
-        const charCheck = /[a-zA-Z]/.test(password);
-        const numCheck = /\d/.test(password);
-        const specialCharCheck = /[!@#$%^&*()-_=+]/.test(password);
-
-        return lengthCheck && charCheck && numCheck && specialCharCheck;
-    };
-
+    const { setUserData, setIsAuth } = useUserInfoStore();
     const handleSignIn = () => {
-        if (!validateUsername(username)) {
+        if (!validateEmail(username)) {
             enqueueSnackbar('Invalid email format. Please enter a valid email.', { variant: 'error', autoHideDuration: 3000 });
         } else if (!validatePassword(password)) {
             enqueueSnackbar(
@@ -36,20 +22,25 @@ export function LoginCard() {
             setTimeout(() => {
                 setBlock(false);
                 enqueueSnackbar('Sign In Successful', { variant: 'success', autoHideDuration: 1000 });
+                if (password === 'tue@1234') {
+                    setIsAuth(true);
+                    setUserData({ email: username });
+                }
             }, 2000);
             // Perform sign-in logic here
         }
     };
     return (
         <div className='w-full h-[100vh] bg-gradient-to-r from-green/1 to-gray-900'>
-            <Card className='absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] sm:w-[30vw]'>
-                <CardHeader variant='gradient' color='blue' className='mb-4 grid h-28 place-items-center'>
-                    <Typography variant='h3' color='white'>
+            <Card placeholder={''} className='absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] sm:w-[30vw]'>
+                <CardHeader placeholder={''} variant='gradient' color='blue' className='mb-4 grid h-28 place-items-center'>
+                    <Typography placeholder='' variant='h3' color='white'>
                         Sign In
                     </Typography>
                 </CardHeader>
-                <CardBody className='flex flex-col gap-4'>
+                <CardBody placeholder={''} className='flex flex-col gap-4'>
                     <Input
+                        crossOrigin={''}
                         label='Email'
                         size='lg'
                         color='blue'
@@ -58,6 +49,7 @@ export function LoginCard() {
                         disabled={block}
                     />
                     <Input
+                        crossOrigin={''}
                         type='password'
                         label='Password'
                         size='lg'
@@ -67,11 +59,11 @@ export function LoginCard() {
                         disabled={block}
                     />
                     <div className='-ml-2.5'>
-                        <Checkbox label='Remember Me' />
+                        <Checkbox crossOrigin={''} label='Remember Me' />
                     </div>
                 </CardBody>
-                <CardFooter className='pt-0'>
-                    <Button variant='gradient' color='light-blue' fullWidth onClick={handleSignIn} disabled={block}>
+                <CardFooter placeholder={''} className='pt-0'>
+                    <Button placeholder={''} variant='gradient' color='light-blue' fullWidth onClick={handleSignIn} disabled={block}>
                         {block ? 'Signing In...' : 'Sign In'}
                     </Button>
                     <div className='mt-3 flex items-center'>
@@ -79,14 +71,21 @@ export function LoginCard() {
                         <span className='mx-4 text-md text-gray-800'>Or</span>
                         <div className='flex-grow border-t border-gray-300'></div>
                     </div>
-                    <Button variant='outlined' color='deep-purple' className='mt-3 flex justify-center items-center gap-3' fullWidth>
+                    <Button
+                        placeholder={''}
+                        variant='outlined'
+                        color='deep-purple'
+                        className='mt-3 flex justify-center items-center gap-3'
+                        fullWidth
+                        disabled={block}
+                    >
                         <p className='color-slate-50'>Login with Google</p>
                         <FcGoogle className='text-xl' />
                     </Button>
-                    <Typography variant='small' className='mt-6 flex justify-center'>
-                        Don&apos;t have an account?
-                        <Typography as='a' href='#signup' variant='small' color='blue-gray' className='ml-1 font-bold'>
-                            Sign up
+                    <Typography placeholder='' variant='small' className='mt-6 flex justify-center'>
+                        Forgot your password?
+                        <Typography placeholder='' as='a' href='#signup' variant='small' color='blue-gray' className='ml-1 font-bold'>
+                            Reset it
                         </Typography>
                     </Typography>
                 </CardFooter>

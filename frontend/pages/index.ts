@@ -5,6 +5,6 @@
 export * from './DashboardPage';
 export * from './DevicePage';
 export * from './HelpPage';
-export * from './Login';
 export * from './NotificationPage';
 export * from './ProfilePage';
+export * from './auth/Login';
