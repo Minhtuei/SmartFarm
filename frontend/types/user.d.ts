@@ -1,10 +1,12 @@
 type UserData = {
-    id: string;
+    // id: string;
     email: string;
 };
 
 type UserStore = {
-    userStatus: StoreStatus;
+    isAuth: boolean;
     userData: UserData;
-    getUserData: () => Promise<void>;
+    // getUserData: () => Promise<void>;
+    setIsAuth: (isAuth: boolean) => void;
+    setUserData: (userData: UserData) => void;
 };

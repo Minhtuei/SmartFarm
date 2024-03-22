@@ -3,3 +3,4 @@
  */
 
 export * from './review.state';
+export * from './userInfo.state';
