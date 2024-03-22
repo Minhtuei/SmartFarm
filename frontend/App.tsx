@@ -1,9 +1,15 @@
+import React from 'react';
 import { AppLayout } from '@fe/layouts';
-import { DashboardPage, DevicePage, HelpPage, NotificationPage, ProfilePage } from '@fe/pages';
+import { DashboardPage, DevicePage, HelpPage, NotificationPage, ProfilePage, LoginCard } from '@fe/pages'; // Import LoginCard
 import { ChartBarIcon, ComputerDesktopIcon, EnvelopeIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/react/20/solid';
+import { Routes, Route } from 'react-router-dom';
+
 export default function App() {
     return (
-        <div className='bg-green/1 dark:bg-black/1'>
+        <div className='bg-green-100 dark:bg-black-100'>
+            <Routes>
+                <Route path='/login' element={<LoginCard />} />
+            </Routes>
             <AppLayout
                 menu={[
                     {

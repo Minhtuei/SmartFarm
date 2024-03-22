@@ -19,10 +19,11 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
         }
         return items;
     }, [menu]);
+    const shouldDisplayMenu = location.pathname !== '/login';
     const [open, setOpen] = useState(true);
     return (
         <div>
-            <AppSlideMenu menu={menu} open={open} setOpen={setOpen} />
+            {shouldDisplayMenu && <AppSlideMenu menu={menu} open={open} setOpen={setOpen} />}
             <div style={{ marginLeft: open && screen.screenSize >= 2 ? '240px' : '64px' }}>
                 <Routes>
                     {routeItems.map((item) => (
