@@ -1,20 +1,44 @@
 import { AppLayout } from '@fe/layouts';
-import { DashboardPage, DevicePage, HelpPage, NotificationPage, ProfilePage, LoginCard } from '@fe/pages'; // Import LoginCard
-import { ChartBarIcon, ComputerDesktopIcon, EnvelopeIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/react/20/solid';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { DashboardPage, DevicePage, HelpPage, LoginPage, NotificationPage, ProfilePage } from '@fe/pages'; // Import LoginCard
 import { useUserInfoStore } from '@fe/states';
+import { ChartBarIcon, ComputerDesktopIcon, EnvelopeIcon, QuestionMarkCircleIcon, UserIcon } from '@heroicons/react/20/solid';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AppSkeleton } from './components';
+import { AuthLayout } from './layouts/AuthLayout';
 export default function App() {
     const navigate = useNavigate();
     const pathname = useLocation();
     const { isAuth } = useUserInfoStore();
-    if (!isAuth && pathname.pathname !== '/login') {
-        navigate('/login');
+    useEffect(() => {
+        if (pathname.pathname === '/' && isAuth) {
+            navigate('/dashboard');
+        }
+    }, [pathname, navigate, isAuth]);
+    useEffect(() => {
+        localStorage.setItem('Page', pathname.pathname);
+        if (localStorage.getItem('Page') === '/') {
+            localStorage.setItem('Page', '/dashboard');
+        }
+    }, [pathname]);
+    if (!isAuth) {
+        return (
+            <AuthLayout>
+                <LoginPage />
+            </AuthLayout>
+        );
     }
-    if (!isAuth) return <LoginCard />;
+
     return (
         <div className='bg-green-100 dark:bg-black-100'>
             <AppLayout
                 menu={[
+                    {
+                        type: 'skeleton',
+                        path: '/',
+                        name: 'Skeleton',
+                        element: <AppSkeleton />
+                    },
                     {
                         type: 'item',
                         icon: <ChartBarIcon className='h-5 w-5' />,

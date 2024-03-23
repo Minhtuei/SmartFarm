@@ -7,4 +7,4 @@ export * from './DevicePage';
 export * from './HelpPage';
 export * from './NotificationPage';
 export * from './ProfilePage';
-export * from './auth/Login';
+export * from './auth/LoginPage';
