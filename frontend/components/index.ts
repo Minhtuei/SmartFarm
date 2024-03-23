@@ -5,5 +5,6 @@
 export * from './common/AppNavigantionBar';
 export * from './common/AppSkeleton';
 export * from './common/AppSlideMenu';
+export * from './common/ProtectedRoutes';
 export * from './NavMenu/NotificationsMenu';
 export * from './NavMenu/ProfileMenu';
