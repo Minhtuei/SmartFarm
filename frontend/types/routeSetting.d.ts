@@ -12,6 +12,7 @@ type RouteItem = BaseRoute & {
     type: 'item';
     path: string;
     element: React.ReactElement;
+    isActive: boolean;
 };
 
 type RouteSkeleton = {
