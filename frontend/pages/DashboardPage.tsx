@@ -1,49 +1,85 @@
 import { AppNavigationBar } from '@fe/components';
+import { dashboardService } from '@fe/services';
+import { Typography } from '@material-tailwind/react';
+import { useEffect, useState } from 'react';
+import { WiHumidity } from 'react-icons/wi';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import { FaRegLightbulb } from 'react-icons/fa';
+import 'react-circular-progressbar/dist/styles.css';
+
 export function DashboardPage() {
+    const [data, setData] = useState<adaFruitDataList>([]);
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            const data = await dashboardService.getDashboard();
+            setData(data);
+        };
+
+        // Call immediately
+        fetchDashboard();
+
+        // Then call every 3 seconds
+        const interval = setInterval(() => {
+            fetchDashboard();
+        }, 3000); // Interval of 3 seconds
+
+        return () => clearInterval(interval); // Clear the interval if the component unmounts
+    }, []);
     return (
         <>
             <AppNavigationBar title={'Dashboard'} />
-            <div className='p-4 bg-white/2'>
-                <div className=''>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe atque, animi officiis praesentium quis, officia
-                    rem nam molestias quia autem at itaque placeat nihil est exercitationem repellendus illum quam hic fugit cupiditate?
-                    Quisquam veniam beatae excepturi! Fugiat fuga itaque ipsam praesentium perspiciatis, qui vero. Perspiciatis corporis, et
-                    id, nobis quibusdam illum vitae ipsam voluptatibus iste repellendus dicta laboriosam, maiores neque possimus aperiam
-                    necessitatibus? Ex saepe sequi iste, ea, aspernatur placeat consequatur aut officia non eveniet dolores suscipit
-                    architecto voluptate, quibusdam rerum illum quas! Cum tempora animi fugiat suscipit id vel error cupiditate itaque
-                    dignissimos, eveniet iste distinctio provident accusamus? Libero pariatur, enim dolore odit quisquam nemo quae labore
-                    facere? Deserunt, blanditiis! Saepe nam tempora, quos placeat optio dolorem! Labore in beatae nihil odit optio nemo
-                    totam aut temporibus velit impedit, corrupti assumenda dolores dolorum ab aspernatur soluta voluptates hic debitis
-                    veritatis! Incidunt impedit facilis esse amet sunt eaque officia illum dolorem consequuntur ex inventore odio porro,
-                    dicta earum doloremque nobis dolor hic illo quod enim rerum. Optio veniam reiciendis unde hic nostrum commodi assumenda
-                    officia. Magni impedit perspiciatis, est molestiae distinctio corporis harum veritatis. Consequatur repudiandae facilis,
-                    aliquid nisi corrupti officia repellendus atque. Voluptate doloremque amet vero quam maxime porro distinctio, architecto
-                    ipsum inventore illo iste, fugiat, officia quaerat. Officia atque porro voluptatem ullam adipisci molestiae temporibus
-                    eius dolor fugiat modi voluptates dolorem quis sit, culpa, consectetur aut ratione obcaecati ea perferendis architecto
-                    totam! Deserunt est quaerat sequi ea iure rem facilis consequatur hic, nesciunt culpa, laudantium alias totam officiis
-                    atque doloribus! Corporis animi voluptas dolorum architecto neque quam nam doloribus molestias dolor ab totam, cum
-                    quibusdam quae quod cupiditate molestiae iste omnis quasi maiores obcaecati ex nobis fuga doloremque tempora. Reiciendis
-                    vitae repellendus et quisquam nihil deserunt omnis voluptate, consectetur vero libero sunt delectus possimus in? Rerum
-                    eaque, voluptatum nobis cupiditate similique distinctio asperiores nisi deserunt totam quidem placeat ex reiciendis
-                    perspiciatis ducimus ea consequuntur quam quis ullam fugiat culpa laboriosam velit? Omnis a eius suscipit. Voluptates
-                    quibusdam nihil praesentium doloribus impedit ipsa temporibus qui! Odio corporis soluta voluptatum error, dolor harum
-                    consectetur tenetur eius illum voluptatibus assumenda facere debitis, recusandae veniam at. Commodi totam vitae saepe
-                    corrupti possimus quo illum deserunt eligendi quidem, debitis ea repellat consectetur at, laboriosam, architecto sequi
-                    repellendus hic perspiciatis. Reprehenderit veritatis iste, nemo a excepturi necessitatibus amet pariatur esse eius
-                    facere voluptatem soluta est velit earum perferendis, enim sed provident praesentium ad aspernatur sunt fugit? Vero fuga
-                    ullam minus. Perspiciatis vitae nostrum assumenda cumque quaerat dolorum ipsam dignissimos magnam! Accusamus deleniti
-                    qui optio veritatis nam ipsum, inventore esse facilis nostrum fuga voluptatem aspernatur corrupti officia voluptas nulla
-                    facere rem suscipit itaque quaerat doloribus alias odio, ab in sit! Quis ab provident blanditiis voluptatibus beatae
-                    impedit ipsa? Corporis, libero asperiores! Ab saepe aliquam quasi, aspernatur aut illo explicabo, consequatur veritatis
-                    consectetur error hic minima voluptate consequuntur laudantium odit quisquam! Dolorem quibusdam enim ipsa minima vel
-                    molestias maiores dolores neque repellendus mollitia blanditiis iste odit provident beatae distinctio atque consequatur
-                    magni, similique magnam a? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt dolor voluptates nobis dicta
-                    magni ex, exercitationem cumque porro aliquid aspernatur praesentium harum perferendis quaerat vitae consequuntur omnis
-                    quae. Odit iusto nam enim illum magni. Velit beatae necessitatibus quae exercitationem error amet perspiciatis molestias
-                    aperiam incidunt omnis. Sapiente, at. Incidunt laudantium iusto, quas rerum aspernatur facere possimus voluptatibus odit
-                    soluta impedit voluptates, nulla in nisi ab eos minus ad ipsum illo molestias blanditiis. Assumenda dolorem itaque, quo
-                    adipisci, quam odio sed asperiores iure facilis sapiente, facere corrupti inventore minima? Quam voluptatem error
-                    perspiciatis ut deserunt minima veniam cumque repellat molestias non.
+            <div className='p-4 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
+                <div className='h-screen w-full flex'>
+                    <div className='flex flex-col gap-4'>
+                        <div className='w-[250px] h-[200px] rounded-2xl bg-blue-200 text-white flex justify-center flex-col items-center py-4 '>
+                            <div className='flex items-center'>
+                                <Typography className='text-lg font-semibold' placeholder={undefined}>
+                                    Độ ẩm
+                                </Typography>
+                                <WiHumidity className='text-6xl' />
+                            </div>
+                            <CircularProgressbar
+                                value={data && data[1]?.last_value}
+                                text={`${data && data[1]?.last_value}%`}
+                                styles={buildStyles({
+                                    textColor: 'white',
+                                    pathColor: 'white'
+                                })}
+                            />
+                        </div>
+                        <div className='w-[250px] h-[200px] rounded-2xl bg-brown-500 text-white flex justify-center flex-col items-center py-4 '>
+                            <div className='flex items-center'>
+                                <Typography className='text-lg font-semibold' placeholder={undefined}>
+                                    Độ ẩm
+                                </Typography>
+                                <WiHumidity className='text-6xl' />
+                            </div>
+                            <CircularProgressbar
+                                value={data && data[1]?.last_value}
+                                text={`${data && data[1]?.last_value}%`}
+                                styles={buildStyles({
+                                    textColor: 'white',
+                                    pathColor: 'white'
+                                })}
+                            />
+                        </div>
+                        <div className='w-[250px] h-[200px] rounded-2xl bg-yellow-700 text-white flex justify-center flex-col items-center py-4 '>
+                            <div className='flex items-center'>
+                                <Typography className='text-lg font-semibold' placeholder={undefined}>
+                                    Ánh sáng
+                                </Typography>
+                                <FaRegLightbulb className='text-4xl' />
+                            </div>
+                            <CircularProgressbar
+                                value={data && (data[7]?.last_value / 500) * 100}
+                                text={`${data && data[7]?.last_value} lux`}
+                                styles={buildStyles({
+                                    textColor: 'white',
+                                    pathColor: 'white'
+                                })}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

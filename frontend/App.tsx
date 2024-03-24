@@ -30,7 +30,7 @@ export default function App() {
     }
 
     return (
-        <div className='bg-green-100 dark:bg-black-100'>
+        <div className='bg-green/1 dark:bg-black-100'>
             <AppLayout
                 menu={[
                     {

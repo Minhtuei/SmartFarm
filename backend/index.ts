@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import { mqttClient } from '@be/services';
 const app = express();
 app.use(
     cors({
@@ -10,6 +11,12 @@ app.use(
         credentials: true
     })
 );
+mqttClient.onConnect();
+mqttClient.publish('test', 'Hello from backend');
+mqttClient.subscribe('test');
+mqttClient.onMessage((topic, message) => {
+    console.log('Received message from topic', topic, message);
+});
 app.use(bodyParser.json());
 app.use(cookieParser(envs.COOKIE_SECRET));
 const PORT = process.env.PORT || 8080;
