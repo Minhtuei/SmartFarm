@@ -1,8 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
 
 const deviceSchema = new Schema({
-    deviceName: String,
-    deviceState: Boolean,
+    //device
+    deviceName: {
+        type: String,
+        required: true
+    },
+    deviceState: {
+        type: Boolean,
+        required: true
+    },
     deviceType: {
         type: String,
         enum: {
@@ -10,7 +17,32 @@ const deviceSchema = new Schema({
             message: '{VALUE} is not support'
         }
     },
-    userID: String
+    userID: String,
+    //activator
+    activateTime: Date,
+    //activator - pumper
+    pumpDuration: Number,
+    //activator - led
+    color: String,
+    //sensor
+    sensorType: {
+        type: String,
+        enum: {
+            values: ['light', 'earthHudmidity', 'airHumidity', 'temperature']
+        }
+    },
+    activatorID: String,
+    minLimit: {
+        type: Number,
+        required: true
+    },
+    maxLimit: Number,
+    environmentValue: [
+        {
+            value: Number,
+            time: Date
+        }
+    ]
 });
 
 export default mongoose.model('Device', deviceSchema);
