@@ -14,7 +14,6 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
 });
 
 interface IUser {
-    userID: number;
     name: string;
     email: string;
     phoneNumber: string;
@@ -28,7 +27,6 @@ interface IUser {
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
-    userID: Number,
     name: String,
     email: String,
     phoneNumber: String,
