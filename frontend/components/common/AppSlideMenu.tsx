@@ -4,15 +4,8 @@ import { Typography } from '@material-tailwind/react';
 import { ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useScreenSize } from '@fe/hooks';
-import { useEffect, useRef } from 'react';
 export function AppSlideMenu({ menu, open, setOpen }: { menu: RouteMenu } & { open: boolean; setOpen: (open: boolean) => void }) {
     const screen = useScreenSize();
-    const firstItemRef = useRef<HTMLAnchorElement>(null);
-    useEffect(() => {
-        if (firstItemRef.current) {
-            firstItemRef.current.focus();
-        }
-    }, [firstItemRef]);
     return (
         <div
             className={
@@ -46,8 +39,9 @@ export function AppSlideMenu({ menu, open, setOpen }: { menu: RouteMenu } & { op
                                 key={i}
                                 className={`block hover:bg-white hover:text-black/1 rounded-xl w-4/5 ${
                                     open && screen.screenSize >= 2 ? 'mx-4' : 'mx-2'
-                                } px-2 py-3 focus:bg-white focus:text-black/1 mb-2`}
-                                ref={localStorage.getItem('Page') === item.path ? firstItemRef : undefined}
+                                } px-2 py-3 focus:bg-white focus:text-black/1 mb-2 ${
+                                    item.isActive ? 'bg-white text-black/1 pointer-events-none' : ''
+                                }`}
                             >
                                 {open && screen.screenSize >= 2 ? (
                                     <div className='flex items-center'>

@@ -13,7 +13,8 @@
         "./backend/constants",
         "./backend/dtos/in",
         "./backend/dtos/out",
-        "./backend/configs"
+        "./backend/configs",
+        "./backend/services"
     ],
     "exclude": [
         "__mock__",

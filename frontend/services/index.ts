@@ -3,4 +3,5 @@
  */
 
 export * from './common';
+export * from './dashboard.service';
 export * from './review.service';

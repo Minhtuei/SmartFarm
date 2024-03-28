@@ -15,12 +15,6 @@ export default function App() {
             navigate('/dashboard');
         }
     }, [pathname, navigate, isAuth]);
-    useEffect(() => {
-        localStorage.setItem('Page', pathname.pathname);
-        if (localStorage.getItem('Page') === '/') {
-            localStorage.setItem('Page', '/dashboard');
-        }
-    }, [pathname]);
     if (!isAuth) {
         return (
             <AuthLayout>
@@ -30,7 +24,7 @@ export default function App() {
     }
 
     return (
-        <div className='bg-green-100 dark:bg-black-100'>
+        <div className='bg-green/1 dark:bg-black-100'>
             <AppLayout
                 menu={[
                     {
@@ -44,35 +38,40 @@ export default function App() {
                         icon: <ChartBarIcon className='h-5 w-5' />,
                         path: '/dashboard' || '/',
                         name: 'Dashboard',
-                        element: <DashboardPage />
+                        element: <DashboardPage />,
+                        isActive: pathname.pathname === '/dashboard' || pathname.pathname === '/'
                     },
                     {
                         type: 'item',
                         icon: <UserIcon className='h-5 w-5' />,
                         path: '/profile',
                         name: 'Profile',
-                        element: <ProfilePage />
+                        element: <ProfilePage />,
+                        isActive: pathname.pathname === '/profile'
                     },
                     {
                         type: 'item',
                         icon: <ComputerDesktopIcon className='h-5 w-5' />,
                         path: '/device',
                         name: 'Device',
-                        element: <DevicePage />
+                        element: <DevicePage />,
+                        isActive: pathname.pathname === '/device'
                     },
                     {
                         type: 'item',
                         icon: <EnvelopeIcon className='h-5 w-5' />,
                         path: '/notification',
                         name: 'Notification',
-                        element: <NotificationPage />
+                        element: <NotificationPage />,
+                        isActive: pathname.pathname === '/notification'
                     },
                     {
                         type: 'item',
                         icon: <QuestionMarkCircleIcon className='h-5 w-5' />,
                         path: '/help',
                         name: 'Help',
-                        element: <HelpPage />
+                        element: <HelpPage />,
+                        isActive: pathname.pathname === '/help'
                     }
                 ]}
             />

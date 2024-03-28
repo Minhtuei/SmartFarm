@@ -23,7 +23,7 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
     return (
         <div>
             <AppSlideMenu menu={menu} open={open} setOpen={setOpen} />
-            <div style={{ marginLeft: open && screen.screenSize >= 2 ? '240px' : '64px' }}>
+            <div className='dark:bg-black/1' style={{ marginLeft: open && screen.screenSize >= 2 ? '240px' : '64px' }}>
                 <Routes>
                     {routeItems.map((item) => (
                         <Route path={item.path} element={item.element} key={item.path} />
