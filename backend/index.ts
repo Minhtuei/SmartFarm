@@ -4,6 +4,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { mqttClient } from '@be/services';
+import { router as login } from './routes/auth/authRouter';
+const session = require('express-session');
+
 const app = express();
 app.use(
     cors({
@@ -11,6 +14,19 @@ app.use(
         credentials: true
     })
 );
+app.use(
+    session({
+        secret: 'dadn232',
+        resave: false,
+        saveUninitialized: true
+    })
+);
+// routes
+try {
+    app.use('/login', login);
+} catch (err) {
+    console.error('fix: ------\n' + err + '\n-------------------\n');
+}
 mqttClient.onConnect();
 mqttClient.publish('test', 'Hello from backend');
 mqttClient.subscribe('test');
@@ -28,16 +44,16 @@ const mongoose = require('mongoose');
 
 const url = `mongodb+srv://dadn223:dadn223@dadn.jonmqsq.mongodb.net/?retryWrites=true&w=majority&appName=DADN`;
 
-const connectionParams = {
-    useNewUrlParser: true,
-    //useCreateIndex: true,
-    useUnifiedTopology: true
-};
+// const connectionParams = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// };
+
 mongoose
-    .connect(url, connectionParams)
+    .connect(url)
     .then(() => {
         console.log('Connected to database ');
     })
-    .catch((err: DOMException) => {
+    .catch((err: Error) => {
         console.error(`Error connecting to the database. \n${err}`);
     });

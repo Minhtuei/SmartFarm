@@ -50,7 +50,8 @@
             "@be/dtos/common": ["backend/dtos/common.dto"],
             "@be/configs": ["backend/configs"],
             "@be/configs/*": ["backend/configs/*"],        
-            "@be/routes": ["backend/routes"],
+            "@be/routes/*": ["backend/routes"],
+            "@be/controllers/*": ["backend/controllers"],
             "#package.json": ["./package.json"]
         }
     },
