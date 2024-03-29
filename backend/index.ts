@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { mqttClient } from '@be/services';
 import { router as login } from './routes/auth/authRouter';
+import { router as user } from './routes/userRouter';
+import { router as device } from './routes/deviceRouter';
+import { router as notification } from './routes/notificationRouter';
 const session = require('express-session');
 
 const app = express();
@@ -24,6 +27,9 @@ app.use(
 // routes
 try {
     app.use('/login', login);
+    app.use('/user', user);
+    app.use('/device', device);
+    app.use('/notification', notification);
 } catch (err) {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }

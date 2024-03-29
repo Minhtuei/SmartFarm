@@ -11,3 +11,4 @@ router
     .patch(DeviceController.updateDeviceInfo)
     .delete(DeviceController.deleteDevice);
 router.route('/:userID/:sensorType').get(DeviceController.getValueByType);
+export { router };
