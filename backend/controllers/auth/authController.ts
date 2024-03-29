@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { config } from 'dotenv';
 import User from 'backend/models/user'; // Assuming "User" is exported directly from the user model
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 config();
 
 const generateToken = (email: string) => {
@@ -28,7 +29,7 @@ const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(StatusCodes.UNAUTHORIZED).send('User not found');
         }
-        const isPasswordValid = user.password === password;
+        const isPasswordValid = bcrypt.compare(user.password, password);
         if (!isPasswordValid) {
             return res.status(StatusCodes.UNAUTHORIZED).send('Password incorrect');
         }

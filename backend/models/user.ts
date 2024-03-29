@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+const bcrypt = require('bcrypt');
 //const crypto = require('crypto');
 
 // const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
@@ -37,6 +38,14 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     avatar: String, //image url
     major: String,
     location: String
+});
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) {
+        return; // Skip hashing if password is not modified
+    }
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword; // Replace plaintext password with hashed password
 });
 
 export default mongoose.model<IUser>('User', userSchema);
