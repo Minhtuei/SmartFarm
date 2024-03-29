@@ -1,17 +1,17 @@
 import mongoose, { Schema } from 'mongoose';
-const crypto = require('crypto');
+//const crypto = require('crypto');
 
-const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem'
-    },
-    privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem'
-    }
-});
+// const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+//     modulusLength: 2048,
+//     publicKeyEncoding: {
+//         type: 'spki',
+//         format: 'pem'
+//     },
+//     privateKeyEncoding: {
+//         type: 'pkcs8',
+//         format: 'pem'
+//     }
+// });
 
 interface IUser {
     name: string;
@@ -32,15 +32,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     phoneNumber: String,
     account: String,
     sessionID: Number,
-    password: {
-        type: String,
-        set(this: IUser, value: string) {
-            this.password = crypto.publicEncrypt(publicKey, Buffer.from(value)).toString('base64');
-        },
-        get(this: IUser) {
-            return crypto.privateDecrypt(privateKey, Buffer.from(this.password, 'base64')).toString();
-        }
-    },
+    password: String,
     accessToken: String,
     avatar: String, //image url
     major: String,

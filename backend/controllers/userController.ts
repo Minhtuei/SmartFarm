@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 
 export const getUserInfo = async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.params.userID);
+        const user = await User.findOne({ email: req.params.email });
         if (!user) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have user!" });
         return res.status(StatusCodes.OK).json({ user });
     } catch (error) {
@@ -14,7 +14,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
 
 export const updateUserInfo = async (req: Request, res: Response) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.userID, req.body, { new: true });
+        const user = await User.findOneAndUpdate({ email: req.params.email }, req.body, { new: true });
         if (!user) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have user!" });
         return res.status(StatusCodes.OK).json({ message: 'user updated : ', user });
     } catch (error) {
