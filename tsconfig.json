@@ -41,7 +41,7 @@
             "@fe/services": ["frontend/services"],
             "@fe/states": ["frontend/states"],
             "@fe/utils": ["frontend/utils"],
-
+            "@be/models": ["backend/models"],
             "@be/handlers": ["backend/handlers"],
             "@be/constants": ["backend/constants"],
             "@be/services": ["backend/services"],
@@ -51,6 +51,7 @@
             "@be/configs": ["backend/configs"],
             "@be/configs/*": ["backend/configs/*"],        
             "@be/routes": ["backend/routes"],
+            "@be/controllers": ["backend/controllers"],
             "#package.json": ["./package.json"]
         }
     },

@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { mqttClient } from '@be/services';
+import { mqttController } from '@be/controllers';
 const app = express();
 app.use(
     cors({
@@ -12,11 +13,11 @@ app.use(
     })
 );
 mqttClient.onConnect();
-mqttClient.publish('test', 'Hello from backend');
-mqttClient.subscribe('test');
-mqttClient.onMessage((topic, message) => {
-    console.log('Received message from topic', topic, message);
-});
+mqttClient.publish('Led_2', '100');
+mqttClient.subscribe('#');
+
+mqttController.GetDeViceInfo;
+
 app.use(bodyParser.json());
 app.use(cookieParser(envs.COOKIE_SECRET));
 const PORT = process.env.PORT || 8080;
@@ -28,13 +29,8 @@ const mongoose = require('mongoose');
 
 const url = `mongodb+srv://dadn223:dadn223@dadn.jonmqsq.mongodb.net/?retryWrites=true&w=majority&appName=DADN`;
 
-const connectionParams = {
-    useNewUrlParser: true,
-    //useCreateIndex: true,
-    useUnifiedTopology: true
-};
 mongoose
-    .connect(url, connectionParams)
+    .connect(url)
     .then(() => {
         console.log('Connected to database ');
     })

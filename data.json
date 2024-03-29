@@ -1,0 +1,36 @@
+{"id":2766853,"last_value":"Hello from backend","updated_at":"2024-03-29 14:49:25 UTC","key":"test","data":{"created_at":"2024-03-29T14:49:25.782Z","value":"Hello from backend","location":null,"id":"0FJ5NDXG7339RM9TEJ79DDYF3Q"}}{
+  "id": 2766853,
+  "last_value": "Hello from backend",
+  "updated_at": "2024-03-29 14:50:37 UTC",
+  "key": "test",
+  "data": {
+    "created_at": "2024-03-29T14:50:37.406Z",
+    "value": "Hello from backend",
+    "location": null,
+    "id": "0FJ5NEKBNMN50SY9N5F7D7SR1P"
+  }
+},
+{
+  "id": 2766853,
+  "last_value": "Hello from backend",
+  "updated_at": "2024-03-29 14:52:19 UTC",
+  "key": "test",
+  "data": {
+    "created_at": "2024-03-29T14:52:19.598Z",
+    "value": "Hello from backend",
+    "location": null,
+    "id": "0FJ5NFJHMFA2PVCAQ22R3YH4YR"
+  }
+},
+{
+  "id": 2766853,
+  "last_value": "Hello from backend",
+  "updated_at": "2024-03-29 14:52:30 UTC",
+  "key": "test",
+  "data": {
+    "created_at": "2024-03-29T14:52:30.861Z",
+    "value": "Hello from backend",
+    "location": null,
+    "id": "0FJ5NFNZM65EH40CF603249M64"
+  }
+},

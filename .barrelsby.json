@@ -14,7 +14,9 @@
         "./backend/dtos/in",
         "./backend/dtos/out",
         "./backend/configs",
-        "./backend/services"
+        "./backend/services",
+        "./backend/models",
+        "./backend/controllers"
     ],
     "exclude": [
         "__mock__",
