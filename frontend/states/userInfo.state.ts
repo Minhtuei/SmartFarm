@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 export const useUserInfoStore = create<UserStore>()(
     devtools((set) => ({
-        isAuth: false,
+        isAuth: sessionStorage.getItem('token') !== null && sessionStorage.getItem('token') !== undefined,
         userData: {
             email: ''
         },
