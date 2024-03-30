@@ -12,12 +12,29 @@ const session = require('express-session');
 
 const app = express();
 app.use(express.json());
-app.use(
-    cors({
-        origin: envs.CORS_WHITE_LIST,
-        credentials: true
-    })
-);
+const whitelist: string[] = ['http://localhost:3000', 'http://localhost:8080'];
+// CORS_WHITE_LIST=["http://localhost:3000","http://localhost:8080"] <- .env
+// Configure CORS options
+const corsOptions: cors.CorsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin!) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true // Allow credentials (cookies, authorization headers) to be sent to the server
+};
+
+// Use the configured CORS middleware
+app.use(cors(corsOptions));
+
+// app.use(
+//     cors({
+//         origin: envs.CORS_WHITE_LIST,
+//         credentials: true
+//     })
+// );
 app.use(
     session({
         secret: 'dadn232',

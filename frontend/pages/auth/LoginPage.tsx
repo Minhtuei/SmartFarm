@@ -4,11 +4,14 @@ import { FcGoogle } from 'react-icons/fc';
 import { enqueueSnackbar } from 'notistack';
 import { validateEmail, validatePassword } from '@fe/utils';
 import { useUserInfoStore } from '@fe/states';
+import { HttpStatusCode } from 'axios';
+import axios from 'axios';
 export function LoginPage() {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [block, setBlock] = useState<boolean>(false);
     const { setUserData, setIsAuth } = useUserInfoStore();
+    const serverHost = 'http://localhost:8080';
     const handleSignIn = () => {
         if (!validateEmail(username)) {
             enqueueSnackbar('Invalid email format. Please enter a valid email.', { variant: 'error', autoHideDuration: 3000 });
@@ -19,14 +22,45 @@ export function LoginPage() {
             );
         } else {
             setBlock(true);
-            setTimeout(() => {
-                setBlock(false);
-                enqueueSnackbar('Sign In Successful', { variant: 'success', autoHideDuration: 1000 });
-                if (password === 'tue@1234') {
-                    setIsAuth(true);
-                    setUserData({ email: username });
+
+            axios({
+                method: 'POST',
+                url: `${serverHost}/login`,
+                responseType: 'json',
+                data: {
+                    email: username, // encode with base64 format
+                    password: password // encode with base64 format
                 }
-            }, 2000);
+            })
+                .then(function (response) {
+                    if (response.status === HttpStatusCode.Ok) {
+                        sessionStorage.setItem('token', response.data.token);
+                        setIsAuth(true);
+                        setUserData({ email: username });
+                    }
+                    setBlock(false);
+                })
+                .catch(function (error) {
+                    setBlock(false);
+                    // console.error(error);
+                    if (
+                        error.response.status === HttpStatusCode.BadRequest ||
+                        error.response.status === HttpStatusCode.Unauthorized ||
+                        error.response.status === HttpStatusCode.InternalServerError
+                    ) {
+                        enqueueSnackbar(`${error.response.data.message}`, { variant: 'error', autoHideDuration: 3000 });
+                    }
+                    console.log(error);
+                });
+
+            // setTimeout(() => {
+            //     setBlock(false);
+            //     enqueueSnackbar('Sign In Successful', { variant: 'success', autoHideDuration: 1000 });
+            //     if (password === 'tue@1234') {
+            //         setIsAuth(true);
+            //         setUserData({ email: username });
+            //     }
+            // }, 2000);
             // Perform sign-in logic here
         }
     };
