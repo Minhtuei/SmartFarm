@@ -34,7 +34,7 @@ export function LoginPage() {
             })
                 .then(function (response) {
                     if (response.status === HttpStatusCode.Ok) {
-                        sessionStorage.setItem('token', response.data.token);
+                        sessionStorage.setItem('token', `Bearer ${response.data.token}`);
                         setIsAuth(true);
                         setUserData({ email: username });
                     }
