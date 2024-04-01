@@ -13,15 +13,16 @@ const generateToken = async (user) => {
         if (!user || !user.email) {
             throw new Error('User email is required');
         }
-        console.log(process.env.ACCESS_JWT_SECRET);
-        console.log(process.env.REFRESH_JWT_SECRET);
+        // console.log(process.env.ACCESS_JWT_SECRET);
+        // console.log(process.env.REFRESH_JWT_SECRET);
         const payload = { email: user.email };
-        const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '14m' });
+        const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
         const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '30d' });
 
         const userToken = await UserToken.findOne({ email: user.email });
-        if (userToken) await userToken.remove();
-
+        // console.log(userToken);
+        if (userToken) await UserToken.updateOne({ email: user.email });
+        // console.log(user.email + ' : new token');
         await new UserToken({ email: user.email, token: refreshToken }).save();
         return Promise.resolve({ accessToken, refreshToken });
     } catch (err) {
@@ -69,5 +70,18 @@ const login = async (req: Request, res: Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
     }
 };
+const logout = async (req, res) => {
+    try {
+        const refreshToken = req.header('Refresh-Token');
 
-export { generateToken, login };
+        // Mark the token as revoked
+        await UserToken.updateOne({ token: refreshToken }, { revoked: true });
+
+        return res.status(StatusCodes.OK).json({ message: 'Logout successful' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
+    }
+};
+
+export { generateToken, login, logout };

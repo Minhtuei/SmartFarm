@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -18,7 +18,11 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
         if (accessToken) {
             const secret = process.env.ACCESS_JWT_SECRET;
-            const decoded = jwt.verify(accessToken.split(' ')[1], secret) as { email: string };
+            const decoded = jwt.verify(accessToken.split(' ')[1], secret) as { email: string; exp: number }; // Extract expiry time
+            const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
+            if (decoded.exp < currentTime) {
+                return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired. Please refresh.' });
+            }
             req.email = decoded.email;
             return next();
         }
@@ -44,7 +48,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
         }
     } catch (err) {
         if (err instanceof jwt.JsonWebTokenError) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token.' });
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token.', error: err });
         }
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error.' });
     }
