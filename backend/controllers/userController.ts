@@ -21,3 +21,13 @@ export const updateUserInfo = async (req: Request, res: Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
+
+export const createUser = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    try {
+        await User.create({ email: email, password: password });
+        return res.status(StatusCodes.OK).json({ email: email, password: password });
+    } catch (error) {
+        console.log(error);
+    }
+};
