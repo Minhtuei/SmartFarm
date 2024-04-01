@@ -13,7 +13,7 @@ app.use(
     })
 );
 mqttClient.onConnect();
-mqttClient.publish('Led_2', '100');
+// mqttClient.publish('Led_2', '100');
 mqttClient.subscribe('#');
 
 mqttController.GetDeViceInfo;
