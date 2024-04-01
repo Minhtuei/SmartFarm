@@ -34,7 +34,8 @@ export function LoginPage() {
             })
                 .then(function (response) {
                     if (response.status === HttpStatusCode.Ok) {
-                        sessionStorage.setItem('token', `Bearer ${response.data.token}`);
+                        sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
+                        sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
                         setIsAuth(true);
                         setUserData({ email: username });
                     }

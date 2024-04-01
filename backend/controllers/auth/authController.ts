@@ -1,19 +1,32 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { config } from 'dotenv';
+require('dotenv').config();
 import { validateEmail, validatePassword } from '@fe/utils';
 import User from 'backend/models/user'; // Assuming "User" is exported directly from the user model
+import UserToken from 'backend/models/userToken';
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-config();
 
-const generateToken = (email: string) => {
-    const jwtSecretKey = process.env.JWT_SECRET;
-    // console.log(jwtSecretKey);
-    const data = {
-        email
-    };
-    return jwt.sign(data, jwtSecretKey); // You forgot to pass the secret key
+const generateToken = async (user) => {
+    try {
+        if (!user || !user.email) {
+            throw new Error('User email is required');
+        }
+        console.log(process.env.ACCESS_JWT_SECRET);
+        console.log(process.env.REFRESH_JWT_SECRET);
+        const payload = { email: user.email };
+        const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '14m' });
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '30d' });
+
+        const userToken = await UserToken.findOne({ email: user.email });
+        if (userToken) await userToken.remove();
+
+        await new UserToken({ email: user.email, token: refreshToken }).save();
+        return Promise.resolve({ accessToken, refreshToken });
+    } catch (err) {
+        return Promise.reject(err);
+    }
 };
 
 const login = async (req: Request, res: Response) => {
@@ -37,7 +50,7 @@ const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found' });
         }
-        // console.log(user.password);
+        // console.log(user);
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
@@ -47,10 +60,10 @@ const login = async (req: Request, res: Response) => {
         // const { email } = user;
 
         // Generate token
-        const token = generateToken(email);
+        const token = await generateToken(user);
         // req.session.token = token;
         // Send token in response
-        return res.status(StatusCodes.OK).json({ token });
+        return res.status(StatusCodes.OK).json({ accessToken: token.accessToken, refreshToken: token.refreshToken });
     } catch (error) {
         console.error('Login error:', error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
