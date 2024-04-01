@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/user';
 import { UserToken } from '../models/userToken';
-import { generateToken } from '../controllers/auth/authController';
+// import { generateToken } from '../controllers/auth/authController';
 dotenv.config();
 
 const authenticate = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,9 +41,9 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
                 return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found.' });
             }
 
-            const newTokens = await generateToken(user); // Assuming generateToken function is available
+            // const newTokens = await generateToken(user); // Assuming generateToken function is available
             req.email = decoded.email;
-            res.locals.newTokens = newTokens;
+            // res.locals.newTokens = newTokens;
             return next();
         }
     } catch (err) {
