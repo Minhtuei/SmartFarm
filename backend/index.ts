@@ -71,7 +71,7 @@ const mongoose = require('mongoose');
 const url = `mongodb+srv://dadn223:dadn223@dadn.jonmqsq.mongodb.net/?retryWrites=true&w=majority&appName=DADN`;
 
 mongoose
-    .connect(url, connectionParams)
+    .connect(url)
     .then(() => {
         console.log('Connected to database ');
     })
