@@ -4,7 +4,6 @@ require('dotenv').config();
 import { validateEmail, validatePassword } from '@fe/utils';
 import User from 'backend/models/user'; // Assuming "User" is exported directly from the user model
 import UserToken from 'backend/models/userToken';
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -70,7 +69,7 @@ const login = async (req: Request, res: Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
     }
 };
-const logout = async (req, res) => {
+const logout = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.header('Refresh-Token');
 
@@ -83,5 +82,25 @@ const logout = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
     }
 };
+const updateToken = async (req: Request, res: Response) => {
+    try {
+        const refreshToken = req.header('Refresh-Token');
 
-export { generateToken, login, logout };
+        if (!refreshToken) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Refresh token is required.' });
+        }
+
+        const decoded = jwt.verify(refreshToken.split(' ')[1], process.env.REFRESH_JWT_SECRET) as { email: string };
+
+        const accessToken = jwt.sign({ email: decoded.email }, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
+
+        return res.status(StatusCodes.OK).json({ message: 'Token updated successfully', accessToken: accessToken });
+    } catch (err) {
+        if (err instanceof jwt.JsonWebTokenError) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token.', error: err });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error.' });
+    }
+};
+
+export { generateToken, login, logout, updateToken };
