@@ -15,6 +15,7 @@
         "./backend/dtos/out",
         "./backend/configs",
         "./backend/services",
+        "./backend/models",
         "./backend/controllers"
     ],
     "exclude": [

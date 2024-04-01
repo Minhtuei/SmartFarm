@@ -1,19 +1,32 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
-import { config } from 'dotenv';
+require('dotenv').config();
 import { validateEmail, validatePassword } from '@fe/utils';
 import User from 'backend/models/user'; // Assuming "User" is exported directly from the user model
+import UserToken from 'backend/models/userToken';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-config();
 
-const generateToken = (email: string) => {
-    const jwtSecretKey = process.env.JWT_SECRET;
-    // console.log(jwtSecretKey);
-    const data = {
-        email
-    };
-    return jwt.sign(data, jwtSecretKey); // You forgot to pass the secret key
+const generateToken = async (user) => {
+    try {
+        if (!user || !user.email) {
+            throw new Error('User email is required');
+        }
+        // console.log(process.env.ACCESS_JWT_SECRET);
+        // console.log(process.env.REFRESH_JWT_SECRET);
+        const payload = { email: user.email };
+        const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '30d' });
+
+        const userToken = await UserToken.findOne({ email: user.email });
+        // console.log(userToken);
+        if (userToken) await UserToken.updateOne({ email: user.email });
+        // console.log(user.email + ' : new token');
+        await new UserToken({ email: user.email, token: refreshToken }).save();
+        return Promise.resolve({ accessToken, refreshToken });
+    } catch (err) {
+        return Promise.reject(err);
+    }
 };
 
 const login = async (req: Request, res: Response) => {
@@ -37,7 +50,7 @@ const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found' });
         }
-        // console.log(user.password);
+        // console.log(user);
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
@@ -47,14 +60,47 @@ const login = async (req: Request, res: Response) => {
         // const { email } = user;
 
         // Generate token
-        const token = generateToken(email);
+        const token = await generateToken(user);
         // req.session.token = token;
         // Send token in response
-        return res.status(StatusCodes.OK).json({ token });
+        return res.status(StatusCodes.OK).json({ accessToken: token.accessToken, refreshToken: token.refreshToken });
     } catch (error) {
         console.error('Login error:', error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
     }
 };
+const logout = async (req: Request, res: Response) => {
+    try {
+        const refreshToken = req.header('Refresh-Token');
 
-export { generateToken, login };
+        // Mark the token as revoked
+        await UserToken.updateOne({ token: refreshToken }, { revoked: true });
+
+        return res.status(StatusCodes.OK).json({ message: 'Logout successful' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });
+    }
+};
+const updateToken = async (req: Request, res: Response) => {
+    try {
+        const refreshToken = req.header('Refresh-Token');
+
+        if (!refreshToken) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Refresh token is required.' });
+        }
+
+        const decoded = jwt.verify(refreshToken.split(' ')[1], process.env.REFRESH_JWT_SECRET) as { email: string };
+
+        const accessToken = jwt.sign({ email: decoded.email }, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
+
+        return res.status(StatusCodes.OK).json({ message: 'Token updated successfully', accessToken: accessToken });
+    } catch (err) {
+        if (err instanceof jwt.JsonWebTokenError) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token.', error: err });
+        }
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error.' });
+    }
+};
+
+export { generateToken, login, logout, updateToken };

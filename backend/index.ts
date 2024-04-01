@@ -11,6 +11,7 @@ import { router as notification } from './routes/notificationRouter';
 import { authenticate } from './services/authenticate';
 const session = require('express-session');
 
+import { mqttController } from '@be/controllers';
 const app = express();
 app.use(express.json());
 const whitelist: string[] = ['http://localhost:3000', 'http://localhost:8080'];
@@ -53,11 +54,11 @@ try {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }
 mqttClient.onConnect();
-mqttClient.publish('test', 'Hello from backend');
-mqttClient.subscribe('test');
-mqttClient.onMessage((topic, message) => {
-    console.log('Received message from topic', topic, message);
-});
+// mqttClient.publish('Led_2', '100');
+mqttClient.subscribe('#');
+
+mqttController.GetDeViceInfo;
+
 app.use(bodyParser.json());
 app.use(cookieParser(envs.COOKIE_SECRET));
 const PORT = process.env.PORT || 8080;
@@ -68,11 +69,6 @@ app.listen(PORT, () => {
 const mongoose = require('mongoose');
 
 const url = `mongodb+srv://dadn223:dadn223@dadn.jonmqsq.mongodb.net/?retryWrites=true&w=majority&appName=DADN`;
-
-// const connectionParams = {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// };
 
 mongoose
     .connect(url)

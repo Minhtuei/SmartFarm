@@ -8,7 +8,8 @@ export const envs = cleanEnv(process.env, {
         devDefault: 'development',
         choices: ['development', 'test', 'production']
     }),
-    JWT_SECRET: str(),
+    REFRESH_JWT_SECRET: str(),
+    ACCESS_JWT_SECRET: str(),
     COOKIE_SECRET: str(),
     CORS_WHITE_LIST: str(),
     ADAFRUIT_IO_USERNAME: str(),

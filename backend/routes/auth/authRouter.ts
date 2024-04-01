@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import { Response, Request } from "express";
-import { login } from '../../controllers/auth/authController';
+import { login, updateToken } from '../../controllers/auth/authController';
 const router = Router();
 
 // router.get('/test/:str', (req: Request, res: Response) => {
@@ -19,5 +19,5 @@ const router = Router();
 // });
 
 router.post('/', login);
-
+router.post('/updateToken', updateToken);
 export { router };
