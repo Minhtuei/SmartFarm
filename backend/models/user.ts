@@ -1,20 +1,20 @@
 import mongoose, { Schema } from 'mongoose';
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+//const crypto = require('crypto');
 
-const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem'
-    },
-    privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem'
-    }
-});
+// const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+//     modulusLength: 2048,
+//     publicKeyEncoding: {
+//         type: 'spki',
+//         format: 'pem'
+//     },
+//     privateKeyEncoding: {
+//         type: 'pkcs8',
+//         format: 'pem'
+//     }
+// });
 
 interface IUser {
-    userID: number;
     name: string;
     email: string;
     phoneNumber: string;
@@ -28,25 +28,24 @@ interface IUser {
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
-    userID: Number,
     name: String,
     email: String,
     phoneNumber: String,
     account: String,
     sessionID: Number,
-    password: {
-        type: String,
-        set(this: IUser, value: string) {
-            this.password = crypto.publicEncrypt(publicKey, Buffer.from(value)).toString('base64');
-        },
-        get(this: IUser) {
-            return crypto.privateDecrypt(privateKey, Buffer.from(this.password, 'base64')).toString();
-        }
-    },
+    password: String,
     accessToken: String,
     avatar: String, //image url
     major: String,
     location: String
+});
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) {
+        return; // Skip hashing if password is not modified
+    }
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword; // Replace plaintext password with hashed password
 });
 
 export default mongoose.model<IUser>('User', userSchema);
