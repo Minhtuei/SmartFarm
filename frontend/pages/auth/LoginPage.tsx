@@ -5,6 +5,7 @@ import { enqueueSnackbar } from 'notistack';
 import { validateEmail, validatePassword } from '@fe/utils';
 import { useUserInfoStore } from '@fe/states';
 import { HttpStatusCode } from 'axios';
+import { setHeaderRequest } from '@fe/utils';
 import axios from 'axios';
 export function LoginPage() {
     const [username, setUsername] = useState<string>('');
@@ -34,10 +35,11 @@ export function LoginPage() {
             })
                 .then(function (response) {
                     if (response.status === HttpStatusCode.Ok) {
-                        sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
-                        sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
+                        sessionStorage.setItem('accessToken', `${response.data.accessToken}`);
+                        sessionStorage.setItem('refreshToken', `${response.data.refreshToken}`);
                         setIsAuth(true);
-                        setUserData({ email: username });
+                        setUserData({ email: username, id: response.data.userInfo.id });
+                        setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
                     }
                     setBlock(false);
                 })

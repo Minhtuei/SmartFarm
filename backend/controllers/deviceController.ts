@@ -1,10 +1,10 @@
-import Device from '../models/device';
+import { Device, User } from '@be/models';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 
 export const getAllDevice = async (req: Request, res: Response) => {
     try {
-        const devices = await Device.find({ userID: req.params.userID });
+        const devices = await Device.find({ userID: req.userID });
         res.status(StatusCodes.OK).json({ devices });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
@@ -32,10 +32,14 @@ export const createDevice = async (req: Request, res: Response) => {
 
 export const updateDeviceInfo = async (req: Request, res: Response) => {
     try {
-        const device = await Device.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const deviceID = req.params.deviceID;
+        const userID = req.userID;
+        const device = await Device.findOneAndUpdate({ _id: deviceID }, { userID });
+        await User.findByIdAndUpdate(userID, { $push: { devices: deviceID } });
         if (!device) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have device!" });
         return res.status(StatusCodes.OK).json({ message: 'device updated : ', device });
     } catch (error) {
+        console.log(error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
