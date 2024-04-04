@@ -9,7 +9,13 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
             const jsonMessage = JSON.parse(message);
             const adaFruitID = jsonMessage.id;
             const device = await Device.findOne({ adaFruitID });
-            if (device && device.deviceState !== 'OFF') {
+            if (device) {
+                device.deviceState =
+                    jsonMessage.key.split('-')[0] === 'led' || jsonMessage.key.split('_')[0] === 'waterpump'
+                        ? jsonMessage.last_value === '1'
+                            ? 'ON'
+                            : 'OFF'
+                        : 'NONE';
                 device.lastValue = jsonMessage.last_value;
                 device.updatedTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' });
                 device.environmentValue.push({
@@ -39,6 +45,11 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
         }
     }
 });
+const UpdateDeviceInfo = async (adaFruitID: string, body: DeviceData) => {
+    mqttClient.publish(`${adaFruitID}`, JSON.stringify(body.lastValue));
+};
+
 export const mqttController = {
-    GetDeViceInfo
+    GetDeViceInfo,
+    UpdateDeviceInfo
 };

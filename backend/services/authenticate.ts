@@ -18,7 +18,6 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
         if (accessToken) {
             const secret = process.env.ACCESS_JWT_SECRET;
             const decoded = jwt.verify(accessToken.split(' ')[1], secret) as { email: string; exp: number; id: string };
-            console.log(decoded);
             const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
             if (decoded.exp < currentTime) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired. Please refresh.' });
