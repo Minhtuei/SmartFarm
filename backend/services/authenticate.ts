@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '@be/models';
 import { UserToken } from '@be/models';
+
 // import { generateToken } from '../controllers/auth/authController';
 dotenv.config();
 
@@ -43,7 +44,9 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
             // const newTokens = await generateToken(user); // Assuming generateToken function is available
             req.email = decoded.email;
+
             req.userID = decoded.id;
+
             // res.locals.newTokens = newTokens;
             return next();
         }
