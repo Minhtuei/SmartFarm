@@ -25,6 +25,7 @@ interface IUser {
     avatar: string; //image url
     major: string;
     location: string;
+    devices: string[];
 }
 
 const userSchema: Schema<IUser> = new mongoose.Schema({
@@ -37,7 +38,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     accessToken: String,
     avatar: String, //image url
     major: String,
-    location: String
+    location: String,
+    devices: [String]
 });
 
 userSchema.pre('save', async function () {
@@ -48,4 +50,4 @@ userSchema.pre('save', async function () {
     this.password = hashedPassword; // Replace plaintext password with hashed password
 });
 
-export default mongoose.model<IUser>('User', userSchema);
+export const User = mongoose.model('User', userSchema);

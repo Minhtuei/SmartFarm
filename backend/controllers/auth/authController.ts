@@ -2,19 +2,20 @@ import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 require('dotenv').config();
 import { validateEmail, validatePassword } from '@fe/utils';
-import User from 'backend/models/user'; // Assuming "User" is exported directly from the user model
+import { User } from '@be/models';
 import UserToken from 'backend/models/userToken';
+import { UserDataType } from 'backend/types/user';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const generateToken = async (user) => {
+const generateToken = async (user: UserDataType) => {
     try {
         if (!user || !user.email) {
             throw new Error('User email is required');
         }
         // console.log(process.env.ACCESS_JWT_SECRET);
         // console.log(process.env.REFRESH_JWT_SECRET);
-        const payload = { email: user.email };
+        const payload = { email: user.email, id: user._id };
         const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
         const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '30d' });
 
@@ -63,7 +64,9 @@ const login = async (req: Request, res: Response) => {
         const token = await generateToken(user);
         // req.session.token = token;
         // Send token in response
-        return res.status(StatusCodes.OK).json({ accessToken: token.accessToken, refreshToken: token.refreshToken });
+        return res
+            .status(StatusCodes.OK)
+            .json({ accessToken: token.accessToken, refreshToken: token.refreshToken, userInfo: { email: user.email, id: user._id } });
     } catch (error) {
         console.error('Login error:', error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error' });

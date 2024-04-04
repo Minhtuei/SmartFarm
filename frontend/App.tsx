@@ -6,15 +6,30 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppSkeleton } from './components';
 import { AuthLayout } from './layouts/AuthLayout';
+import { useDevicesStore } from '@fe/states';
 export default function App() {
     const navigate = useNavigate();
     const pathname = useLocation();
     const { isAuth } = useUserInfoStore();
+    const { getDeviceInfos } = useDevicesStore();
     useEffect(() => {
         if (pathname.pathname === '/' && isAuth) {
             navigate('/dashboard');
         }
     }, [pathname, navigate, isAuth]);
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            await getDeviceInfos();
+        };
+        // Call immediately
+        fetchDashboard(); // Then call every 3 seconds
+        const interval = setInterval(() => {
+            fetchDashboard();
+        }, 10000); // Interval of 3 seconds
+
+        return () => clearInterval(interval); // Clear the interval if the component unmounts
+    }, []);
+
     if (!isAuth) {
         return (
             <AuthLayout>
