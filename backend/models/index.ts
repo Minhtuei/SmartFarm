@@ -5,3 +5,4 @@
 export * from './device';
 export * from './notification';
 export * from './user';
+export * from './userToken';

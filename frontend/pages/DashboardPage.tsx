@@ -79,7 +79,7 @@ export function DashboardPage() {
                         </div>
                     </div>
                     <div className='flex flex-col items-center gap-4'>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-blue-200 text-white flex justify-center flex-col items-center py-4 '>
+                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#55C3F2] text-white flex justify-center flex-col items-center py-4 '>
                             <div className='flex items-center'>
                                 <Typography className='text-lg font-semibold' placeholder={undefined}>
                                     Độ ẩm
@@ -95,10 +95,10 @@ export function DashboardPage() {
                                 })}
                             />
                         </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-brown-500 text-white flex justify-center flex-col items-center py-4 '>
+                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#BE704F] text-white flex justify-center flex-col items-center py-4 '>
                             <div className='flex items-center'>
                                 <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Độ ẩm
+                                    Độ ẩm đất
                                 </Typography>
                                 <WiHumidity className='text-6xl' />
                             </div>
@@ -111,7 +111,7 @@ export function DashboardPage() {
                                 })}
                             />
                         </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-yellow-700 text-white flex justify-center flex-col items-center py-4 '>
+                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#EA5E5E] text-white flex justify-center flex-col items-center py-4 '>
                             <div className='flex items-center'>
                                 <Typography className='text-lg font-semibold' placeholder={undefined}>
                                     Ánh sáng
@@ -119,11 +119,11 @@ export function DashboardPage() {
                                 <FaRegLightbulb className='text-4xl' />
                             </div>
                             <CircularProgressbar
-                                value={data && (data[7]?.last_value / 500) * 100}
-                                text={`${data && data[7]?.last_value} lux`}
+                                value={data && (data[5]?.last_value / 500) * 100}
+                                text={`${data && data[5]?.last_value} lux`}
                                 styles={buildStyles({
                                     textColor: 'white',
-                                    pathColor: 'white'
+                                    pathColor: 'yellow'
                                 })}
                             />
                         </div>

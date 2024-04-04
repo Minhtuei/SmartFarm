@@ -3,10 +3,9 @@ import * as DeviceController from '../controllers/deviceController';
 
 const router = Router();
 
-router.route('/:userID').get(DeviceController.getAllDevice);
-router.route('/').post(DeviceController.createDevice);
+router.route('/getall').get(DeviceController.getAllDevice);
 router
-    .route('/:userID/:deviceID')
+    .route('/:deviceID')
     .get(DeviceController.getDeviceInfo)
     .patch(DeviceController.updateDeviceInfo)
     .delete(DeviceController.deleteDevice);
