@@ -8,7 +8,7 @@ import { router as login } from './routes/auth/authRouter';
 import { router as user } from './routes/userRouter';
 import { router as device } from './routes/deviceRouter';
 import { router as notification } from './routes/notificationRouter';
-import { router as otp } from './routes/genAccRouter';
+import { router as genAcc } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
 const session = require('express-session');
 
@@ -51,7 +51,7 @@ try {
     app.use('/user', authenticate, user);
     app.use('/device', authenticate, device);
     app.use('/notification', authenticate, notification);
-    app.use('/otp', otp);
+    app.use('/gen', genAcc);
 } catch (err) {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }

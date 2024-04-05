@@ -50,15 +50,15 @@ export const SendPassword = async (req: Request, res: Response) => {
         const transporter = nodemailer.createTransport({
             service: 'Gmail', // Replace 'Gmail' with your email service provider
             auth: {
-                user: 'your_email@gmail.com', // Your email address
-                pass: 'your_password' // Your email password or app-specific password
+                user: 'nammnguyen0306@gmail.com', // Your email address
+                pass: 'namNGUYEN2403.' // Your email password or app-specific password
             }
         });
         const app = express();
         app.get('/send-email', (req: Request, res: Response) => {
             // Define email options
             const mailOptions: nodemailer.SendMailOptions = {
-                from: 'your_email@gmail.com', // Sender email address
+                from: 'nammnguyen0306@gmail.com', // Sender email address
                 to: email, // Recipient email address
                 subject: genPassword + 'is your new password', // Email subject
                 // Email body
@@ -114,15 +114,15 @@ export const SendOTP = async (req: Request, res: Response) => {
         const transporter = nodemailer.createTransport({
             service: 'Gmail', // Replace 'Gmail' with your email service provider
             auth: {
-                user: 'your_email@gmail.com', // Your email address
-                pass: 'your_password' // Your email password or app-specific password
+                user: 'nammnguyen0306@gmail.com', // Your email address
+                pass: 'namNGUYEN2403.' // Your email password or app-specific password
             }
         });
         const app = express();
         app.get('/send-email', (req: Request, res: Response) => {
             // Define email options
             const mailOptions: nodemailer.SendMailOptions = {
-                from: 'your_email@gmail.com', // Sender email address
+                from: 'nammnguyen0306@gmail.com', // Sender email address
                 to: email, // Recipient email address
                 subject: genOTP + 'is your verification code', // Email subject
                 // Email body
