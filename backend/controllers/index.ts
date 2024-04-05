@@ -3,6 +3,7 @@
  */
 
 export * from './deviceController';
+export * from './emailController';
 export * from './mqttController';
 export * from './notificationController';
 export * from './userController';
