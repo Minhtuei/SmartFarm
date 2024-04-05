@@ -3,7 +3,7 @@ import { DeviceService } from '@fe/services';
 import { useState } from 'react';
 interface NewDeviceDialogProps {
     open: boolean;
-    onClose: () => React.Dispatch<React.SetStateAction<boolean>>;
+    onClose: () => void;
 }
 export function NewDeviceDialog({ open, onClose }: NewDeviceDialogProps) {
     const [deviceID, setDeviceID] = useState<string>('');

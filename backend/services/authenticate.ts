@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '@be/models';
 import { UserToken } from '@be/models';
+
 // import { generateToken } from '../controllers/auth/authController';
 dotenv.config();
 
@@ -18,7 +19,6 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
         if (accessToken) {
             const secret = process.env.ACCESS_JWT_SECRET;
             const decoded = jwt.verify(accessToken.split(' ')[1], secret) as { email: string; exp: number; id: string };
-            console.log(decoded);
             const currentTime = Math.floor(Date.now() / 1000); // Convert to seconds
             if (decoded.exp < currentTime) {
                 return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access token has expired. Please refresh.' });
@@ -44,7 +44,9 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
 
             // const newTokens = await generateToken(user); // Assuming generateToken function is available
             req.email = decoded.email;
+
             req.userID = decoded.id;
+
             // res.locals.newTokens = newTokens;
             return next();
         }

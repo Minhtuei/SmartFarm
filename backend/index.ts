@@ -56,7 +56,6 @@ try {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }
 mqttClient.onConnect();
-// mqttClient.publish('Led_2', '100');
 mqttClient.subscribe('#');
 
 mqttController.GetDeViceInfo;

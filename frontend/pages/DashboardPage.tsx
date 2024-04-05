@@ -1,7 +1,5 @@
 import { AppNavigationBar } from '@fe/components';
-import { dashboardService } from '@fe/services';
 import { Typography } from '@material-tailwind/react';
-import { useEffect, useState } from 'react';
 import { WiHumidity } from 'react-icons/wi';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { FaRegLightbulb } from 'react-icons/fa';
@@ -10,25 +8,11 @@ import { FaTemperatureHigh } from 'react-icons/fa';
 import weatherScreen from '@fe/assets/weather-screen.png';
 import 'react-circular-progressbar/dist/styles.css';
 import moment from 'moment';
-
+import { useDevicesStore } from '@fe/states';
 export function DashboardPage() {
     const time = moment().format('HH:mm');
     const day = moment().format('DD/MM/YYYY');
-    const [data, setData] = useState<adaFruitDataList>([]);
-    useEffect(() => {
-        const fetchDashboard = async () => {
-            const data = await dashboardService.getDashboard();
-            setData(data);
-        };
-
-        // Call immediately
-        fetchDashboard(); // Then call every 3 seconds
-        const interval = setInterval(() => {
-            fetchDashboard();
-        }, 3000); // Interval of 3 seconds
-
-        return () => clearInterval(interval); // Clear the interval if the component unmounts
-    }, []);
+    const { deviceInfos } = useDevicesStore();
 
     return (
         <>
@@ -57,7 +41,7 @@ export function DashboardPage() {
                                     </div>
                                     <div className='flex items-center gap-2 '>
                                         <Typography className='text-white text-3xl font-semibold' placeholder={undefined}>
-                                            {data && data[0]?.last_value}°C
+                                            {deviceInfos.filter((device) => device.deviceType === 'temperature')[0]?.lastValue}
                                         </Typography>
                                         <FaTemperatureHigh className='text-4xl text-white' />
                                     </div>
@@ -69,7 +53,7 @@ export function DashboardPage() {
                                         Xin chào, Minh Tuệ
                                     </Typography>
                                     <Typography className='text-sm text-white' placeholder={undefined}>
-                                        Thời tiết hiện tại ở trang tại là {data && data[0]?.last_value}°C
+                                        Thời tiết hiện tại ở trang tại là {deviceInfos && deviceInfos[0]?.lastValue}°C
                                     </Typography>
                                     <Typography className='text-sm text-white' placeholder={undefined}>
                                         Hãy dành chút thời gian để xem thông tin cảm biến và chăm sóc trang trại của bạn nhé!
@@ -87,8 +71,8 @@ export function DashboardPage() {
                                 <WiHumidity className='text-6xl' />
                             </div>
                             <CircularProgressbar
-                                value={data && data[1]?.last_value}
-                                text={`${data && data[1]?.last_value}%`}
+                                value={deviceInfos && deviceInfos[1]?.lastValue}
+                                text={`${deviceInfos && deviceInfos[1]?.lastValue}%`}
                                 styles={buildStyles({
                                     textColor: 'white',
                                     pathColor: 'white'
@@ -103,8 +87,8 @@ export function DashboardPage() {
                                 <WiHumidity className='text-6xl' />
                             </div>
                             <CircularProgressbar
-                                value={data && data[1]?.last_value}
-                                text={`${data && data[1]?.last_value}%`}
+                                value={deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}
+                                text={`${deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}%`}
                                 styles={buildStyles({
                                     textColor: 'white',
                                     pathColor: 'white'
@@ -119,8 +103,8 @@ export function DashboardPage() {
                                 <FaRegLightbulb className='text-4xl' />
                             </div>
                             <CircularProgressbar
-                                value={data && (data[5]?.last_value / 500) * 100}
-                                text={`${data && data[5]?.last_value} lux`}
+                                value={deviceInfos && (deviceInfos[5]?.lastValue / 500) * 100}
+                                text={`${deviceInfos && deviceInfos[5]?.lastValue} lux`}
                                 styles={buildStyles({
                                     textColor: 'white',
                                     pathColor: 'yellow'
