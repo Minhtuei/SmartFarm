@@ -48,7 +48,7 @@ app.use(
 // routes
 try {
     app.use('/login', login);
-    app.use('/user', authenticate, user);
+    app.use('/user', user);
     app.use('/device', authenticate, device);
     app.use('/notification', authenticate, notification);
     app.use('/gen', genAcc);

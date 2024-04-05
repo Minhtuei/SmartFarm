@@ -24,7 +24,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-    const { email } = req.body;
+    const email = req.params.email;
     if (!validateEmail(email)) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             status: 'error',

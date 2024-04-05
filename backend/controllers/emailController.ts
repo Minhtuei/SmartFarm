@@ -26,8 +26,7 @@ export const GenerateOTP = (): string => {
 
 export const SendPassword = async (req: Request, res: Response) => {
     try {
-        const { email } = req.body;
-
+        const email = req.params.email;
         if (!email) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'error',
@@ -62,7 +61,12 @@ export const SendPassword = async (req: Request, res: Response) => {
                 to: email, // Recipient email address
                 subject: genPassword + 'is your new password', // Email subject
                 // Email body
-                text: 'Hi!\n' + 'Thank you for using our service.\n' + 'Your password is :' + genPassword
+                text:
+                    'Hi!\n' +
+                    'Thank you for using our service.\n' +
+                    'Your password is :' +
+                    genPassword +
+                    '\nPlease do not reply this email.'
             };
 
             // Send the email
@@ -83,7 +87,7 @@ export const SendPassword = async (req: Request, res: Response) => {
 
 export const SendOTP = async (req: Request, res: Response) => {
     try {
-        const { email } = req.body;
+        const email = req.params.email;
 
         if (!email) {
             return res.status(StatusCodes.BAD_REQUEST).json({
@@ -132,7 +136,8 @@ export const SendOTP = async (req: Request, res: Response) => {
                     'Your verification code is :' +
                     genOTP +
                     '\n' +
-                    'Please complete the verification process in 30 minutes.'
+                    'Please complete the verification process in 30 minutes.' +
+                    '\nPlease do not reply this email.'
             };
 
             // Send the email
