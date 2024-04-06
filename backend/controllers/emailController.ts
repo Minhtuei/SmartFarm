@@ -3,7 +3,10 @@ import { User } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
-
+import dotenv from 'dotenv';
+dotenv.config({ path: '../../.env' });
+const EMAIL = process.env.EMAIL_ADDRESS;
+const PASSWORD = process.env.APP_PASSWORD;
 export const GeneratePassword = (length: number): string => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
@@ -45,41 +48,40 @@ export const SendPassword = async (req: Request, res: Response) => {
         }
         const genPassword = GeneratePassword(10);
         user.updateOne({ password: genPassword });
-        const express = require('express');
         const transporter = nodemailer.createTransport({
             service: 'Gmail', // Replace 'Gmail' with your email service provider
             auth: {
-                user: 'nammnguyen0306@gmail.com', // Your email address
-                pass: 'namNGUYEN2403.' // Your email password or app-specific password
+                user: EMAIL, // Your email address
+                pass: PASSWORD // Your email password or app-specific password
             }
         });
-        const app = express();
-        app.get('/send-email', (req: Request, res: Response) => {
-            // Define email options
-            const mailOptions: nodemailer.SendMailOptions = {
-                from: 'nammnguyen0306@gmail.com', // Sender email address
-                to: email, // Recipient email address
-                subject: genPassword + 'is your new password', // Email subject
-                // Email body
-                text:
-                    'Hi!\n' +
-                    'Thank you for using our service.\n' +
-                    'Your password is :' +
-                    genPassword +
-                    '\nPlease do not reply this email.'
-            };
+        // Define email options
+        const mailOptions: nodemailer.SendMailOptions = {
+            from: EMAIL, // Sender email address
+            to: email, // Recipient email address
+            subject: genPassword + 'is your new password', // Email subject
+            // Email body
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Content</title>
+            </head>
+            <body>
+            <p style="font-size: 18px; color: black;">Hi!</p>
+            <p style="font-size: 18px; color: black;">Thank you for using our service.</p>
+            <p style="font-size: 18px; color: black;">Your password is: <span style="font-size: 24px; color: blue;"><b>${genPassword}</b></span></p>
+            <p style="font-size: 18px; color: black;">Please do not reply to this email.</p>
+            </body>
+            </html>
+            `
+        };
 
-            // Send the email
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error sending email:', error);
-                    res.status(500).json({ error: 'Failed to send email' });
-                } else {
-                    console.log('Email sent:', info.response);
-                    res.status(200).json({ message: 'Email sent successfully' });
-                }
-            });
-        });
+        // Send the email
+        await transporter.sendMail(mailOptions);
+        return res.status(StatusCodes.OK).json({ message: 'Message sent' });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
@@ -114,7 +116,6 @@ export const SendOTP = async (req: Request, res: Response) => {
             });
         }
         user.updateOne({ otp: genOTP, otpExpired: currentTime.getTime() + 30 * 60000 });
-        const express = require('express');
         const transporter = nodemailer.createTransport({
             service: 'Gmail', // Replace 'Gmail' with your email service provider
             auth: {
@@ -122,34 +123,39 @@ export const SendOTP = async (req: Request, res: Response) => {
                 pass: 'namNGUYEN2403.' // Your email password or app-specific password
             }
         });
-        const app = express();
-        app.get('/send-email', (req: Request, res: Response) => {
-            // Define email options
-            const mailOptions: nodemailer.SendMailOptions = {
-                from: 'nammnguyen0306@gmail.com', // Sender email address
-                to: email, // Recipient email address
-                subject: genOTP + 'is your verification code', // Email subject
-                // Email body
-                text:
-                    'Hi!\n' +
-                    'Thank you for using our service.\n' +
-                    'Your verification code is :' +
-                    genOTP +
-                    '\n' +
-                    'Please complete the verification process in 30 minutes.' +
-                    '\nPlease do not reply this email.'
-            };
+        const mailOptions: nodemailer.SendMailOptions = {
+            from: 'nammnguyen0306@gmail.com', // Sender email address
+            to: email, // Recipient email address
+            subject: genOTP + 'is your verification code', // Email subject
+            // Email body
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Content</title>
+            </head>
+            <body>
+            <p style="font-size: 18px; color: black;">Hi!</p>
+            <p style="font-size: 18px; color: black;">Thank you for using our service.</p>
+            <p style="font-size: 18px; color: black;">Your verification code is: <span style="font-size: 24px; color: blue;"><b>${genOTP}</b></span></p>
+            <p style="font-size: 18px; color: black;">Please complete the verification process in 30 minutes.</p>
+            <p style="font-size: 18px; color: black;">Please do not reply to this email.</p>
+            </body>
+            </html>
+            `
+        };
 
-            // Send the email
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error('Error sending email:', error);
-                    res.status(500).json({ error: 'Failed to send email' });
-                } else {
-                    console.log('Email sent:', info.response);
-                    res.status(200).json({ message: 'Email sent successfully' });
-                }
-            });
+        // Send the email
+        await transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email:', error);
+                return res.status(500).json({ error: 'Failed to send email' });
+            } else {
+                console.log('Email sent:', info.response);
+                return res.status(200).json({ message: 'Email sent successfully' });
+            }
         });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
