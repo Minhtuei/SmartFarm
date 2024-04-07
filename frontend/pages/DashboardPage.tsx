@@ -1,25 +1,23 @@
 import { AppNavigationBar } from '@fe/components';
 import { Typography } from '@material-tailwind/react';
-import { WiHumidity } from 'react-icons/wi';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import { FaRegLightbulb } from 'react-icons/fa';
 import { FaTemperatureHigh } from 'react-icons/fa';
-
+import { IconButton, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
+import { AdjustmentsHorizontalIcon } from '@heroicons/react/20/solid';
 import weatherScreen from '@fe/assets/weather-screen.png';
-import 'react-circular-progressbar/dist/styles.css';
-import moment from 'moment';
+import { MiniDeviceInfo } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
+import moment from 'moment';
+import { LineChart } from '@fe/components';
 export function DashboardPage() {
     const time = moment().format('HH:mm');
     const day = moment().format('DD/MM/YYYY');
     const { deviceInfos } = useDevicesStore();
-
     return (
         <>
             <AppNavigationBar title={'Dashboard'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
-                <div className='h-screen w-full flex flex-col md:flex-row gap-4 md:justify-between'>
-                    <div className='flex flex-col'>
+                <div className='min-h-screen w-full flex flex-col md:flex-row gap-4 md:justify-between'>
+                    <div className='flex flex-col gap-4'>
                         <div
                             style={{
                                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${weatherScreen})`,
@@ -61,56 +59,28 @@ export function DashboardPage() {
                                 </div>
                             </div>
                         </div>
+                        <LineChart deviceInfos={deviceInfos.filter((device) => device.deviceType === 'temperature')} time={'minute'} />
+                        <Menu>
+                            <MenuHandler>
+                                <IconButton placeholder={''} className='px-3 py-2 bg-green/1 '>
+                                    <AdjustmentsHorizontalIcon className='w-6 h-6' />
+                                </IconButton>
+                            </MenuHandler>
+                            <MenuList placeholder={''}>
+                                <MenuItem placeholder={''}>Phút</MenuItem>
+                                <MenuItem placeholder={''}>Giờ</MenuItem>
+                                <MenuItem placeholder={''}>Ngày</MenuItem>
+                                <MenuItem placeholder={''}>Tuần</MenuItem>
+                                <MenuItem placeholder={''}>Tháng</MenuItem>
+                            </MenuList>
+                        </Menu>
                     </div>
                     <div className='flex flex-col items-center gap-4'>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#55C3F2] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Độ ẩm
-                                </Typography>
-                                <WiHumidity className='text-6xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos && deviceInfos[1]?.lastValue}
-                                text={`${deviceInfos && deviceInfos[1]?.lastValue}%`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'white'
-                                })}
-                            />
-                        </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#BE704F] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Độ ẩm đất
-                                </Typography>
-                                <WiHumidity className='text-6xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}
-                                text={`${deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}%`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'white'
-                                })}
-                            />
-                        </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#EA5E5E] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Ánh sáng
-                                </Typography>
-                                <FaRegLightbulb className='text-4xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos && (deviceInfos[5]?.lastValue / 500) * 100}
-                                text={`${deviceInfos && deviceInfos[5]?.lastValue} lux`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'yellow'
-                                })}
-                            />
-                        </div>
+                        {deviceInfos
+                            .filter((device) => device.deviceType !== 'led' && device.deviceType !== 'waterpump')
+                            .map((device, index) => (
+                                <MiniDeviceInfo key={index} {...device} />
+                            ))}
                     </div>
                 </div>
             </div>

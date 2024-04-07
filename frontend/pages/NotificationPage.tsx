@@ -132,8 +132,8 @@ export function NotificationPage() {
     return (
         <>
             <AppNavigationBar title='Notifications' />
-            <div className='p-4 bg-white/2'>
-                <Card className='h-full w-full'>
+            <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
+                <Card className='h-[calc(100vh-130px)] w-full'>
                     <CardHeader floated={false} shadow={false} className='rounded-none'>
                         <div className='mb-8 flex items-center justify-between gap-8'>
                             <div>

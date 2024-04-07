@@ -5,6 +5,7 @@ export const DeviceService = {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
             const response = await axios.patch(`http://localhost:8080/device/${deviceID}`, {});
+            await DeviceService.getAllDevice();
             return response.data;
         } catch (error) {
             return error;
