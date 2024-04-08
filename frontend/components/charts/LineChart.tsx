@@ -1,20 +1,34 @@
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale } from 'chart.js';
 import moment from 'moment';
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
-
+import Chart from 'react-apexcharts';
+import { DEVICE_CATEGORY } from '@fe/constants';
 interface LineChartProps {
     deviceInfos: DeviceData[];
     time: string;
 }
 export function LineChart({ deviceInfos, time }: LineChartProps) {
-    const timeUnit = getTimeUnit(time); // Function to get the time unit based on the provided time string
+    const deviceTypeNames = DEVICE_CATEGORY;
+    const TIME = {
+        minute: {
+            label: Array.from({ length: 60 }, (_, i) => `${i}:00`),
+            timeUnit: 'second',
+            format: 'HH:mm:ss'
+        },
+        hour: {
+            label: Array.from({ length: 60 }, (_, i) => `${i}:00`),
+            timeUnit: 'minute',
+            format: 'HH:mm'
+        },
+        date: {
+            label: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+            timeUnit: 'hour',
+            format: 'DD/MM-HH:00'
+        }
+    };
 
     const temperatureData = {
-        labels: deviceInfos[0]?.environmentValue
-            .map((value) => moment(new Date(value.createdTime)).format(getTimeFormat(timeUnit)))
-            .reduce((unique, item) => (unique.includes(item) ? unique : [...unique, item]), [] as string[]), // Get unique labels
+        labels: deviceInfos[0]?.environmentValue.map((value) =>
+            moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format)
+        ),
         values: deviceInfos[0]?.environmentValue.map((value) => value.value)
     };
 
@@ -30,51 +44,60 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
     };
 
     const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top' as const
-            },
+        chart: {
+            id: 'basic-bar'
+        },
+        xaxis: {
+            categories: temperatureData.labels
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        yaxis: {
             title: {
-                display: true,
-                text: 'Chart showing temperature values over time of temperature sensors'
-            },
-            scales: {
-                x: {
-                    type: 'time' as const,
-                    time: {
-                        unit: timeUnit
+                text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} ${deviceTypeNames[
+                    deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames
+                ]?.unit}`
+            }
+        },
+        title: {
+            text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.lineChartName}`,
+            align: 'center'
+        },
+        zoom: {
+            type: 'x',
+            enabled: true,
+            autoScaleYaxis: true
+        },
+        annotations: {
+            yaxis: [
+                {
+                    y: 20,
+                    borderColor: 'red',
+                    label: {
+                        borderColor: 'red',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396'
+                        },
+                        text: 'Min Alarm'
+                    }
+                },
+                {
+                    y: 40,
+                    borderColor: 'red',
+                    label: {
+                        borderColor: 'red',
+                        style: {
+                            color: '#fff',
+                            background: '#FEB019'
+                        },
+                        text: 'Max Alarm'
                     }
                 }
-            }
+            ]
         }
     };
 
-    return <Line data={data} options={options} />;
-}
-
-function getTimeUnit(time: string): Chart.TimeUnit {
-    if (time === 'hour') {
-        return 'hour';
-    } else if (time === 'minute') {
-        return 'minute';
-    } else if (time === 'date') {
-        return 'date';
-    } else {
-        // Default to hour if time unit is not recognized
-        return 'hour';
-    }
-}
-
-function getTimeFormat(timeUnit: Chart.TimeUnit): string {
-    if (timeUnit === 'hour') {
-        return 'HH';
-    } else if (timeUnit === 'minute') {
-        return 'HH:mm';
-    } else if (timeUnit === 'date') {
-        return 'DD/MM';
-    } else {
-        // Default to 'HH:mm' format if time unit is not recognized
-        return 'HH:mm';
-    }
+    return <Chart options={options} series={data.datasets} type='line' height={350} />;
 }

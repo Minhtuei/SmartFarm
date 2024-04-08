@@ -1,7 +1,7 @@
 import { DEVICE_CATEGORY } from '@fe/constants';
 import { Typography } from '@material-tailwind/react';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 export function MiniDeviceInfo(device: DeviceData) {
+    const deviceUnit = device?.deviceType === 'temperature' ? '°C' : device?.deviceType === 'light' ? 'lux' : '%';
     const deviceTypeNames = DEVICE_CATEGORY;
     return (
         <div
@@ -22,30 +22,11 @@ export function MiniDeviceInfo(device: DeviceData) {
 
                 {deviceTypeNames[device?.deviceType as keyof typeof deviceTypeNames]?.icon}
             </div>
-            {device?.deviceType === 'light' ? (
-                <div className='flex flex-col items-center h-full'>
-                    <Typography className='text-4xl font-semibold h-full' placeholder={undefined}>
-                        {device?.lastValue} lux
-                    </Typography>
-                </div>
-            ) : device?.deviceType === 'temperature' ? (
-                <div className='flex flex-col items-center h-full'>
-                    <Typography className='text-4xl font-semibold h-full' placeholder={undefined}>
-                        {device?.lastValue}°C
-                    </Typography>
-                </div>
-            ) : (
-                <CircularProgressbar
-                    value={device?.lastValue}
-                    text={`${device?.lastValue}%`}
-                    styles={buildStyles({
-                        textColor: 'white',
-                        pathColor: 'white',
-                        trailColor: 'rgba(255,255,255,0.3)',
-                        textSize: '24px'
-                    })}
-                />
-            )}
+            <div className='flex flex-col items-center h-full'>
+                <Typography className='text-4xl font-semibold h-full' placeholder={undefined}>
+                    {`${device?.lastValue} ${deviceUnit}`}
+                </Typography>
+            </div>
         </div>
     );
 }
