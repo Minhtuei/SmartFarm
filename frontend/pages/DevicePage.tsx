@@ -1,5 +1,5 @@
 import LightSensor from '@fe/assets/light-sensor.png';
-import { AppNavigationBar, NewDeviceDialog, Pagination } from '@fe/components';
+import { AppNavigationBar, NewDeviceDialog } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
 import { AdjustmentsHorizontalIcon, BoltIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import {
@@ -42,7 +42,7 @@ export function DevicePage() {
         <>
             <AppNavigationBar title={'Device'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
-                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-2 overflow-y-auto lg:overflow-hidden'>
+                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-4 overflow-y-auto pr-4'>
                     <div className='flex items-center gap-2'>
                         <Menu>
                             <MenuHandler>
@@ -78,7 +78,7 @@ export function DevicePage() {
                     </div>
                     <div className='flex flex-wrap justify-between gap-y-4'>
                         {deviceInfos.map((device) => (
-                            <Card placeholder={''} key={device.adaFruitID} className='w-[400px] cursor-pointer shrink'>
+                            <Card placeholder={''} key={device.adaFruitID} className='w-[400px] shrink'>
                                 <CardBody placeholder={''} className='flex items-center'>
                                     <BoltIcon className='w-8 h-8 text-yellow-500' />
                                     <Typography color='blue' className='ml-2' placeholder={''}>
@@ -89,7 +89,7 @@ export function DevicePage() {
                                             <Switch
                                                 crossOrigin='true'
                                                 color='blue'
-                                                defaultChecked={device.deviceState === 'ON'}
+                                                checked={device.deviceState === 'ON'}
                                                 onChange={handleTriggerDevice(device.adaFruitID)}
                                             />
                                         </div>
@@ -118,9 +118,15 @@ export function DevicePage() {
                                             <Typography className='text-md truncate' placeholder={''}>
                                                 {device.adaFruitID}
                                             </Typography>
-                                            <Typography color='green' className='text-md' placeholder={''}>
-                                                Đang hoạt động
-                                            </Typography>
+                                            {device.deviceState !== 'OFF' ? (
+                                                <Typography color='green' className='text-md' placeholder={''}>
+                                                    Đang hoạt động
+                                                </Typography>
+                                            ) : (
+                                                <Typography color='red' className='text-md' placeholder={''}>
+                                                    Đã tắt
+                                                </Typography>
+                                            )}
                                         </div>
                                     </div>
                                 </CardBody>
@@ -148,9 +154,6 @@ export function DevicePage() {
                         </Card>
                     </div>
                     <NewDeviceDialog open={openNewDeviceDialog} onClose={() => setOpenNewDeviceDialog(false)} />
-                    <div className='absolute bottom-0 flex left-1/2 -translate-x-1/2'>
-                        <Pagination />
-                    </div>
                 </div>
             </div>
         </>

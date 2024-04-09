@@ -46,7 +46,9 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
     }
 });
 const UpdateDeviceInfo = async (adaFruitID: string, body: DeviceData) => {
-    mqttClient.publish(`${adaFruitID}`, JSON.stringify(body.lastValue));
+    if (Object.keys(body).length !== 0) {
+        mqttClient.publish(`${adaFruitID}`, JSON.stringify(body.lastValue));
+    }
 };
 
 export const mqttController = {

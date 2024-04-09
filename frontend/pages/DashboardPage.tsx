@@ -1,25 +1,20 @@
-import { AppNavigationBar } from '@fe/components';
-import { Typography } from '@material-tailwind/react';
-import { WiHumidity } from 'react-icons/wi';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import { FaRegLightbulb } from 'react-icons/fa';
-import { FaTemperatureHigh } from 'react-icons/fa';
-
 import weatherScreen from '@fe/assets/weather-screen.png';
-import 'react-circular-progressbar/dist/styles.css';
-import moment from 'moment';
+import { AppNavigationBar, LineChart, MiniDeviceInfo } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
+import { Carousel, IconButton, Typography } from '@material-tailwind/react';
+import moment from 'moment';
+import { FaTemperatureHigh } from 'react-icons/fa';
 export function DashboardPage() {
     const time = moment().format('HH:mm');
     const day = moment().format('DD/MM/YYYY');
     const { deviceInfos } = useDevicesStore();
-
     return (
         <>
             <AppNavigationBar title={'Dashboard'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
-                <div className='h-screen w-full flex flex-col md:flex-row gap-4 md:justify-between'>
-                    <div className='flex flex-col'>
+                <div className='min-h-screen w-full flex flex-col md:flex-row gap-4 md:justify-between'>
+                    <div className='flex flex-col gap-4 lg:w-[480px] xl:w-[680px]'>
                         <div
                             style={{
                                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${weatherScreen})`,
@@ -27,7 +22,7 @@ export function DashboardPage() {
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center'
                             }}
-                            className='flex flex-col justify-between lg:w-[480px] lg:h-[200px] xl:w-[680px] xl:h-[250px] rounded-3xl p-4'
+                            className='flex flex-col justify-between lg:h-[200px] xl:h-[250px] rounded-3xl p-4'
                         >
                             <div className='flex flex-row-reverse'>
                                 <div className='flex flex-col w-[300px] items-end gap-2'>
@@ -61,56 +56,83 @@ export function DashboardPage() {
                                 </div>
                             </div>
                         </div>
+                        <div className='w-full'>
+                            <Carousel
+                                placeholder={'Chưa có dữ liệu'}
+                                prevArrow={({ handlePrev }) => (
+                                    <IconButton
+                                        variant='text'
+                                        color='white'
+                                        size='lg'
+                                        onClick={handlePrev}
+                                        className='!absolute top-2/4 left-4 -translate-y-2/4'
+                                    >
+                                        <ChevronDoubleLeftIcon className='w-8 h-8 text-green/1' />
+                                    </IconButton>
+                                )}
+                                nextArrow={({ handleNext }) => (
+                                    <IconButton
+                                        variant='text'
+                                        color='white'
+                                        size='lg'
+                                        onClick={handleNext}
+                                        className='!absolute top-2/4 !right-4 -translate-y-2/4'
+                                    >
+                                        <ChevronDoubleRightIcon className='w-8 h-8 text-green/1' />
+                                    </IconButton>
+                                )}
+                                navigation={({ setActiveIndex, activeIndex, length }) => (
+                                    <div className='absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2'>
+                                        {new Array(length).fill('').map((_, i) => (
+                                            <span
+                                                key={i}
+                                                className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                                                    activeIndex === i ? 'w-8 bg-green/1' : 'w-4 bg-gray-300'
+                                                }`}
+                                                onClick={() => setActiveIndex(i)}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                                transition={{ duration: 1 }}
+                                className='overflow-y-hidden'
+                            >
+                                <LineChart
+                                    deviceInfos={deviceInfos.filter((device) => device.deviceType === 'temperature')}
+                                    time='minute'
+                                />
+                                <LineChart
+                                    deviceInfos={deviceInfos.filter((device) => device.deviceType === 'airhumidity')}
+                                    time='minute'
+                                />
+                                <LineChart
+                                    deviceInfos={deviceInfos.filter((device) => device.deviceType === 'earthhumidity')}
+                                    time='minute'
+                                />
+                                <LineChart deviceInfos={deviceInfos.filter((device) => device.deviceType === 'light')} time='minute' />
+                            </Carousel>
+                        </div>
+                        {/* <Menu>
+                            <MenuHandler>
+                                <IconButton placeholder={''} className='px-3 py-2 bg-green/1 '>
+                                    <AdjustmentsHorizontalIcon className='w-6 h-6' />
+                                </IconButton>
+                            </MenuHandler>
+                            <MenuList placeholder={''}>
+                                <MenuItem placeholder={''}>Phút</MenuItem>
+                                <MenuItem placeholder={''}>Giờ</MenuItem>
+                                <MenuItem placeholder={''}>Ngày</MenuItem>
+                                <MenuItem placeholder={''}>Tuần</MenuItem>
+                                <MenuItem placeholder={''}>Tháng</MenuItem>
+                            </MenuList>
+                        </Menu> */}
                     </div>
                     <div className='flex flex-col items-center gap-4'>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#55C3F2] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Độ ẩm
-                                </Typography>
-                                <WiHumidity className='text-6xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos && deviceInfos[1]?.lastValue}
-                                text={`${deviceInfos && deviceInfos[1]?.lastValue}%`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'white'
-                                })}
-                            />
-                        </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#BE704F] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Độ ẩm đất
-                                </Typography>
-                                <WiHumidity className='text-6xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}
-                                text={`${deviceInfos.filter((device) => device.deviceType === 'earthhumidity')[0]?.lastValue}%`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'white'
-                                })}
-                            />
-                        </div>
-                        <div className='h-[300px] md:w-[250px] md:h-[200px] rounded-2xl bg-[#EA5E5E] text-white flex justify-center flex-col items-center py-4 '>
-                            <div className='flex items-center'>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    Ánh sáng
-                                </Typography>
-                                <FaRegLightbulb className='text-4xl' />
-                            </div>
-                            <CircularProgressbar
-                                value={deviceInfos && (deviceInfos[5]?.lastValue / 500) * 100}
-                                text={`${deviceInfos && deviceInfos[5]?.lastValue} lux`}
-                                styles={buildStyles({
-                                    textColor: 'white',
-                                    pathColor: 'yellow'
-                                })}
-                            />
-                        </div>
+                        {deviceInfos
+                            .filter((device) => device.deviceType !== 'led' && device.deviceType !== 'waterpump')
+                            .map((device, index) => (
+                                <MiniDeviceInfo key={index} {...device} />
+                            ))}
                     </div>
                 </div>
             </div>

@@ -21,6 +21,7 @@ export const useDevicesStore = create<DevicesInfo>((set) => ({
             }));
             set({ deviceInfos });
         } catch (err) {
+            DeviceService.updateToken();
             console.log(err);
         }
     }

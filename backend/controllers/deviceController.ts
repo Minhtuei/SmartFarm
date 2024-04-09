@@ -36,8 +36,9 @@ export const updateDeviceInfo = async (req: Request, res: Response) => {
         const userID = req.userID;
         let update;
         if (Object.keys(req.body).length === 0) {
+            console.log('empty');
             // If req.body is empty, only update userID
-            update = { userID: userID };
+            update = { $set: { userID: userID } };
         } else {
             // If req.body is not empty, update other fields as well
             update = {
