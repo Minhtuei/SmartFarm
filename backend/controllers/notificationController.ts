@@ -1,6 +1,9 @@
 import Notification from '../models/notification';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
+import { validateEmail } from '@fe/utils';
+import { User } from '@be/models';
+import { SendNotification } from './emailController';
 
 export const getAllNotification = async (req: Request, res: Response) => {
     try {
@@ -23,8 +26,26 @@ export const getNotificationByDevice = async (req: Request, res: Response) => {
 
 export const createNotification = async (req: Request, res: Response) => {
     try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Missing email!'
+            });
+        }
+        if (!validateEmail(email)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Invalid email!'
+            });
+        }
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found' });
+        }
         const notification = await Notification.create(req.body);
         const time = notification.createdAt;
+        await SendNotification(req, res);
         return res.status(StatusCodes.CREATED).json({ notification, time });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
