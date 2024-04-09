@@ -1,54 +1,52 @@
 import moment from 'moment';
 import Chart from 'react-apexcharts';
 import { DEVICE_CATEGORY } from '@fe/constants';
+
+interface DeviceData {
+    deviceName: string;
+    environmentValue: { createdTime: string; value: number }[];
+    deviceType: string;
+}
+
 interface LineChartProps {
     deviceInfos: DeviceData[];
     time: string;
 }
+
 export function LineChart({ deviceInfos, time }: LineChartProps) {
     const deviceTypeNames = DEVICE_CATEGORY;
+
     const TIME = {
         minute: {
-            label: Array.from({ length: 60 }, (_, i) => `${i}:00`),
             timeUnit: 'second',
             format: 'HH:mm:ss'
         },
         hour: {
-            label: Array.from({ length: 60 }, (_, i) => `${i}:00`),
             timeUnit: 'minute',
             format: 'HH:mm'
         },
         date: {
-            label: Array.from({ length: 24 }, (_, i) => `${i}:00`),
             timeUnit: 'hour',
             format: 'DD/MM-HH:00'
         }
     };
 
-    const temperatureData = {
-        labels: deviceInfos[0]?.environmentValue.map((value) =>
-            moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format)
-        ),
-        values: deviceInfos[0]?.environmentValue.map((value) => value.value)
-    };
-
-    const data = {
-        labels: temperatureData.labels,
-        datasets: deviceInfos.map((device: DeviceData) => ({
-            label: device.deviceName,
-            data: temperatureData.values,
-            fill: false,
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgba(255, 99, 132, 0.2)'
+    const temperatureData = (deviceInfos || []).map((device) => ({
+        name: device.deviceName,
+        data: device.environmentValue.map((value) => ({
+            x: moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format),
+            y: value.value
         }))
-    };
+    }));
 
     const options = {
+        series: temperatureData,
         chart: {
-            id: 'basic-bar'
+            id: 'basic-line'
         },
         xaxis: {
-            categories: temperatureData.labels
+            type: 'category',
+            categories: temperatureData.length > 0 ? temperatureData[0].data.map((data) => data.x) : []
         },
         stroke: {
             curve: 'smooth'
@@ -57,12 +55,20 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             title: {
                 text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} ${deviceTypeNames[
                     deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames
-                ]?.unit}`
+                ]?.unit}`,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                }
             }
         },
         title: {
             text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.lineChartName}`,
-            align: 'center'
+            align: 'center',
+            style: {
+                fontSize: '20px',
+                fontWeight: 'bold'
+            }
         },
         zoom: {
             type: 'x',
@@ -99,5 +105,5 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
         }
     };
 
-    return <Chart options={options} series={data.datasets} type='line' height={350} />;
+    return <Chart options={options} series={options.series} type='line' height={350} />;
 }

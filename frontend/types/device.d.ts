@@ -21,3 +21,11 @@ interface DevicesInfo {
     deviceInfos: DeviceData[];
     getDeviceInfos: () => Promise<void>;
 }
+interface DeviceCategory {
+    longName: string;
+    shortName: string;
+    image: string;
+    icon: JSX.Element;
+    lineChartName: string;
+    unit: string;
+}

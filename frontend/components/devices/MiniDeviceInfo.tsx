@@ -1,5 +1,6 @@
 import { DEVICE_CATEGORY } from '@fe/constants';
 import { Typography } from '@material-tailwind/react';
+import moment from 'moment';
 export function MiniDeviceInfo(device: DeviceData) {
     const deviceUnit = device?.deviceType === 'temperature' ? '°C' : device?.deviceType === 'light' ? 'lux' : '%';
     const deviceTypeNames = DEVICE_CATEGORY;
@@ -25,6 +26,11 @@ export function MiniDeviceInfo(device: DeviceData) {
             <div className='flex flex-col items-center h-full'>
                 <Typography className='text-4xl font-semibold h-full' placeholder={undefined}>
                     {`${device?.lastValue} ${deviceUnit}`}
+                </Typography>
+            </div>
+            <div className='flex items-center justify-center'>
+                <Typography className='text-sm' placeholder={undefined}>
+                    {device?.updatedTime ? moment(new Date(device.updatedTime)).format('HH:mm DD/MM/YYYY') : ''}
                 </Typography>
             </div>
         </div>

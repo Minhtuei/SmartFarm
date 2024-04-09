@@ -1,7 +1,6 @@
-import LightSensor from '@fe/assets/light-sensor.png';
 import { AppNavigationBar, NewDeviceDialog } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
-import { AdjustmentsHorizontalIcon, BoltIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import {
     Button,
     Card,
@@ -13,12 +12,15 @@ import {
     MenuItem,
     MenuList,
     Switch,
-    Typography
+    Typography,
+    Spinner
 } from '@material-tailwind/react';
 import { useState } from 'react';
 import { DeviceService } from '@fe/services';
+import { MiniDeviceImage } from '@fe/components';
 export function DevicePage() {
     const [openNewDeviceDialog, setOpenNewDeviceDialog] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { deviceInfos } = useDevicesStore();
     const deviceTypeNames = {
         led: 'Đèn LED',
@@ -31,9 +33,15 @@ export function DevicePage() {
     const handleTriggerDevice = (adaFruitID: string) => {
         return async (e: React.ChangeEvent<HTMLInputElement>) => {
             const device = deviceInfos.find((device) => device.adaFruitID === adaFruitID);
-            if (device) {
-                const deviceState = e.target.checked ? 'ON' : 'OFF';
-                await DeviceService.triggerDevice(deviceState, adaFruitID);
+            setIsLoading(true);
+            try {
+                if (device) {
+                    const deviceState = e.target.checked ? 'ON' : 'OFF';
+                    await DeviceService.triggerDevice(deviceState, adaFruitID);
+                    deviceInfos.find((device) => device.adaFruitID === adaFruitID)!.deviceState = deviceState;
+                }
+            } finally {
+                setIsLoading(false);
             }
         };
     };
@@ -76,12 +84,11 @@ export function DevicePage() {
                             <TrashIcon className='w-6 h-6' />
                         </IconButton>
                     </div>
-                    <div className='flex flex-wrap justify-between gap-y-4'>
+                    <div className='flex flex-wrap justify-between gap-4'>
                         {deviceInfos.map((device) => (
-                            <Card placeholder={''} key={device.adaFruitID} className='w-[400px] shrink'>
+                            <Card placeholder={''} key={device.adaFruitID} className='flex-grow shrink'>
                                 <CardBody placeholder={''} className='flex items-center'>
-                                    <BoltIcon className='w-8 h-8 text-yellow-500' />
-                                    <Typography color='blue' className='ml-2' placeholder={''}>
+                                    <Typography color='blue' className='ml-2 font-semibold text-lg' placeholder={''}>
                                         {deviceTypeNames[device.deviceType]}
                                     </Typography>
                                     {device.deviceState !== 'NONE' && (
@@ -95,9 +102,9 @@ export function DevicePage() {
                                         </div>
                                     )}
                                 </CardBody>
-                                <CardBody placeholder={''} className='flex items-center py-0 max-w-full '>
+                                <CardBody placeholder={''} className='flex items-center py-0 max-w-full gap-2 '>
                                     <div className='w-[100px] h-[100px] shrink-0'>
-                                        <img src={LightSensor} alt='device' className='w-full h-full object-cover' />
+                                        <MiniDeviceImage deviceType={device.deviceType} />
                                     </div>
                                     <div className='flex flex-1 gap-1'>
                                         <div className='flex flex-col gap-1'>
@@ -155,6 +162,16 @@ export function DevicePage() {
                     </div>
                     <NewDeviceDialog open={openNewDeviceDialog} onClose={() => setOpenNewDeviceDialog(false)} />
                 </div>
+                {isLoading && (
+                    <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+                        <div className='flex items-center p-4 bg-white rounded-lg'>
+                            <Typography placeholder={''} className='mr-2 text-lg italic font-semibold' variant='h3'>
+                                Đang xử lý...
+                            </Typography>
+                            <Spinner className='w-8 h-8' />
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

@@ -15,7 +15,6 @@ export const DeviceService = {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
             const response = await axios.get(`http://localhost:8080/device/getall`);
-            console.log(response.data);
             return response.data;
         } catch (error) {
             DeviceService.updateToken();
@@ -30,6 +29,7 @@ export const DeviceService = {
                 lastValue: state === 'ON' ? 1 : 0,
                 updatedTime: new Date().toISOString()
             });
+
             return response.data;
         } catch (error) {
             return error;
@@ -40,7 +40,6 @@ export const DeviceService = {
         try {
             const response = await axios.post(`http://localhost:8080/login/updateToken`, {});
             sessionStorage.setItem('accessToken', response.data.accessToken);
-            sessionStorage.setItem('refreshToken', response.data.refreshToken);
         } catch (error) {
             return error;
         }
