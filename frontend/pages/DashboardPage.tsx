@@ -6,17 +6,10 @@ import { Carousel, IconButton, Typography } from '@material-tailwind/react';
 import moment from 'moment';
 import { FaTemperatureHigh } from 'react-icons/fa';
 import { ComponentSkeleton } from '@fe/components';
-import { useEffect, useState } from 'react';
+import { Timer } from '@fe/components';
 export function DashboardPage() {
     const time = moment().format('HH:mm');
     const day = moment().format('DD/MM/YYYY');
-    const [timer, setTimer] = useState<number>(9);
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTimer((prev) => (prev - 1 < 0 ? 9 : prev - 1));
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
     const { deviceInfos } = useDevicesStore();
     return (
         <>
@@ -25,7 +18,7 @@ export function DashboardPage() {
                 {deviceInfos.length === 0 ? (
                     <ComponentSkeleton />
                 ) : (
-                    <div className='min-h-screen w-full flex flex-col md:flex-row gap-10 md:justify-between'>
+                    <div className='min-h-screen w-full flex flex-col lg:flex-row gap-10 lg:justify-between'>
                         <div className='flex flex-col gap-4 lg:w-[480px] xl:w-[680px] flex-grow'>
                             <div
                                 style={{
@@ -73,7 +66,7 @@ export function DashboardPage() {
                                 <Carousel
                                     placeholder={'Chưa có dữ liệu'}
                                     autoplay={true}
-                                    autoplayDelay={10000}
+                                    autoplayDelay={5000}
                                     loop={true}
                                     prevArrow={({ handlePrev }) => (
                                         <IconButton
@@ -112,8 +105,8 @@ export function DashboardPage() {
                                             ))}
                                         </div>
                                     )}
-                                    transition={{ duration: 1 }}
-                                    className='overflow-y-hidden bg-white dark:bg-gray-700 dark:text-white/2 rounded-3xl py -4 shadow-lg'
+                                    transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                                    className='overflow-y-hidden bg-white rounded-3xl py-4 shadow-lg'
                                 >
                                     <LineChart
                                         deviceInfos={deviceInfos.filter((device) => device.deviceType === 'temperature')}
@@ -148,16 +141,8 @@ export function DashboardPage() {
                         </div>
 
                         <div className='flex flex-col items-center gap-4'>
-                            <div
-                                className="className='h-[300px] md:w-[250px] md:h-[200px] md:min-h-[200px] rounded-2xl bg-blue-gray-800 text-white flex justify-center flex-col items-center py-4 '
-"
-                            >
-                                <Typography className='text-lg font-semibold text-center' placeholder={undefined}>
-                                    Dữ liệu sẽ được cập nhật sau
-                                </Typography>
-                                <Typography className='text-lg font-semibold' placeholder={undefined}>
-                                    {timer} giây
-                                </Typography>
+                            <div className='w-4/5 h-[300px] lg:w-[250px] lg:h-[200px] lg:min-h-[200px] flex items-center bg-white  rounded-2xl  '>
+                                <Timer />
                             </div>
                             {deviceInfos
                                 .filter((device) => device.deviceType !== 'led' && device.deviceType !== 'waterpump')

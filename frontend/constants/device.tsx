@@ -37,3 +37,16 @@ export const DEVICE_CATEGORY: Record<string, DeviceCategory> = {
         unit: 'lux'
     }
 };
+
+export const ACTIVATE_DEVICE: Record<string, ActivateDevice> = {
+    led: {
+        longName: 'Đèn LED',
+        shortName: 'Đèn',
+        image: LightImg
+    },
+    waterpump: {
+        longName: 'Máy bơm nước',
+        shortName: 'Bơm nước',
+        image: EarthHumidityImg
+    }
+};

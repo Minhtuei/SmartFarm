@@ -6,7 +6,7 @@ export function MiniDeviceInfo(device: DeviceData) {
     const deviceTypeNames = DEVICE_CATEGORY;
     return (
         <div
-            className='h-[300px] md:w-[250px] md:h-[200px] md:min-h-[200px] rounded-2xl text-white flex justify-center flex-col items-center py-4 '
+            className='h-[300px] w-4/5 lg:w-[250px] lg:h-[200px] lg:min-h-[200px] rounded-2xl text-white flex justify-center flex-col items-center py-4 '
             style={{
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(${deviceTypeNames[
                     device?.deviceType as keyof typeof deviceTypeNames
@@ -24,7 +24,7 @@ export function MiniDeviceInfo(device: DeviceData) {
                 {deviceTypeNames[device?.deviceType as keyof typeof deviceTypeNames]?.icon}
             </div>
             <div className='flex flex-col items-center h-full'>
-                <Typography className='text-4xl font-semibold h-full' placeholder={undefined}>
+                <Typography className='text-4xl font-semibold h-full flex flex-col justify-center ' placeholder={undefined}>
                     {`${device?.lastValue} ${deviceUnit}`}
                 </Typography>
             </div>

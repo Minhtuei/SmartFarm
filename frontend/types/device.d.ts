@@ -29,3 +29,8 @@ interface DeviceCategory {
     lineChartName: string;
     unit: string;
 }
+interface ActivateDevice {
+    longName: string;
+    shortName: string;
+    image: string;
+}
