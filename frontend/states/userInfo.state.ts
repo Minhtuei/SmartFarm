@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 export const useUserInfoStore = create<UserStore>()(
     devtools((set) => ({
-        isAuth: true || (sessionStorage.getItem('accessToken') !== null && sessionStorage.getItem('accessToken') !== undefined),
+        isAuth: (sessionStorage.getItem('accessToken') !== null && sessionStorage.getItem('accessToken') !== undefined),
         userData: {
             id: '',
             email: ''
