@@ -1,49 +1,196 @@
 import { AppNavigationBar } from '@fe/components';
+import { Avatar, Button } from '@material-tailwind/react';
+import { AiTwotoneMail } from 'react-icons/ai';
+import { IoIosPhonePortrait } from 'react-icons/io';
+import { FaKey, FaEye } from 'react-icons/fa';
+import { useState } from 'react';
+import { validatePassword } from '@fe/utils';
+import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 export function ProfilePage() {
+    const clsDefaultInput =
+        'peer h-full w-full rounded-[7px]  !border  !border-gray-300 border-t-transparent bg-transparent bg-white px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700  shadow-lg shadow-gray-900/5 outline outline-0 ring-4 ring-transparent transition-all placeholder:text-gray-500 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2  focus:!border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 focus:ring-gray-900/10 disabled:border-0 disabled:bg-blue-gray-50';
+    const [username, setUsername] = useState<string>('Nguyễn Minh Toàn');
+    const email = 'test1@test.test';
+    const [phone, setPhone] = useState<string>('0392123451');
+    const password = 'test123@';
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [verPassword, setVerPassword] = useState<string>('');
+    const [hide1, setHide1] = useState<boolean>(true);
+    const [hide2, setHide2] = useState<boolean>(true);
+    const [hide3, setHide3] = useState<boolean>(true);
+    const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value);
+    };
+    const handlePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPhone(e.target.value);
+    };
+    const handleClick1 = () => {
+        setHide1(!hide1);
+    };
+    const handleClick2 = () => {
+        setHide2(!hide2);
+    };
+    const handleClick3 = () => {
+        setHide3(!hide3);
+    };
+
+    const handlePass2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewPassword(e.target.value);
+    };
+    const handlePass3 = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setVerPassword(e.target.value);
+    };
+    const Save = () => {
+        console.log('Saving...');
+        if (newPassword !== verPassword) {
+            enqueueSnackbar('The new password does not match the retype password', { variant: 'error', autoHideDuration: 2000 });
+        } else if (!validatePassword(newPassword) || !validatePassword(verPassword)) {
+            enqueueSnackbar(
+                'The new password must be at least 8 characters long and contain at least one letter, one number, and one special character.',
+                { variant: 'error', autoHideDuration: 2000 }
+            );
+        }
+        // send server -> dont complete
+    };
     return (
         <>
             <AppNavigationBar title='Profile' />
-            <div className='p-4 bg-white/2'>
-                <div className=''>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe atque, animi officiis praesentium quis, officia
-                    rem nam molestias quia autem at itaque placeat nihil est exercitationem repellendus illum quam hic fugit cupiditate?
-                    Quisquam veniam beatae excepturi! Fugiat fuga itaque ipsam praesentium perspiciatis, qui vero. Perspiciatis corporis, et
-                    id, nobis quibusdam illum vitae ipsam voluptatibus iste repellendus dicta laboriosam, maiores neque possimus aperiam
-                    necessitatibus? Ex saepe sequi iste, ea, aspernatur placeat consequatur aut officia non eveniet dolores suscipit
-                    architecto voluptate, quibusdam rerum illum quas! Cum tempora animi fugiat suscipit id vel error cupiditate itaque
-                    dignissimos, eveniet iste distinctio provident accusamus? Libero pariatur, enim dolore odit quisquam nemo quae labore
-                    facere? Deserunt, blanditiis! Saepe nam tempora, quos placeat optio dolorem! Labore in beatae nihil odit optio nemo
-                    totam aut temporibus velit impedit, corrupti assumenda dolores dolorum ab aspernatur soluta voluptates hic debitis
-                    veritatis! Incidunt impedit facilis esse amet sunt eaque officia illum dolorem consequuntur ex inventore odio porro,
-                    dicta earum doloremque nobis dolor hic illo quod enim rerum. Optio veniam reiciendis unde hic nostrum commodi assumenda
-                    officia. Magni impedit perspiciatis, est molestiae distinctio corporis harum veritatis. Consequatur repudiandae facilis,
-                    aliquid nisi corrupti officia repellendus atque. Voluptate doloremque amet vero quam maxime porro distinctio, architecto
-                    ipsum inventore illo iste, fugiat, officia quaerat. Officia atque porro voluptatem ullam adipisci molestiae temporibus
-                    eius dolor fugiat modi voluptates dolorem quis sit, culpa, consectetur aut ratione obcaecati ea perferendis architecto
-                    totam! Deserunt est quaerat sequi ea iure rem facilis consequatur hic, nesciunt culpa, laudantium alias totam officiis
-                    atque doloribus! Corporis animi voluptas dolorum architecto neque quam nam doloribus molestias dolor ab totam, cum
-                    quibusdam quae quod cupiditate molestiae iste omnis quasi maiores obcaecati ex nobis fuga doloremque tempora. Reiciendis
-                    vitae repellendus et quisquam nihil deserunt omnis voluptate, consectetur vero libero sunt delectus possimus in? Rerum
-                    eaque, voluptatum nobis cupiditate similique distinctio asperiores nisi deserunt totam quidem placeat ex reiciendis
-                    perspiciatis ducimus ea consequuntur quam quis ullam fugiat culpa laboriosam velit? Omnis a eius suscipit. Voluptates
-                    quibusdam nihil praesentium doloribus impedit ipsa temporibus qui! Odio corporis soluta voluptatum error, dolor harum
-                    consectetur tenetur eius illum voluptatibus assumenda facere debitis, recusandae veniam at. Commodi totam vitae saepe
-                    corrupti possimus quo illum deserunt eligendi quidem, debitis ea repellat consectetur at, laboriosam, architecto sequi
-                    repellendus hic perspiciatis. Reprehenderit veritatis iste, nemo a excepturi necessitatibus amet pariatur esse eius
-                    facere voluptatem soluta est velit earum perferendis, enim sed provident praesentium ad aspernatur sunt fugit? Vero fuga
-                    ullam minus. Perspiciatis vitae nostrum assumenda cumque quaerat dolorum ipsam dignissimos magnam! Accusamus deleniti
-                    qui optio veritatis nam ipsum, inventore esse facilis nostrum fuga voluptatem aspernatur corrupti officia voluptas nulla
-                    facere rem suscipit itaque quaerat doloribus alias odio, ab in sit! Quis ab provident blanditiis voluptatibus beatae
-                    impedit ipsa? Corporis, libero asperiores! Ab saepe aliquam quasi, aspernatur aut illo explicabo, consequatur veritatis
-                    consectetur error hic minima voluptate consequuntur laudantium odit quisquam! Dolorem quibusdam enim ipsa minima vel
-                    molestias maiores dolores neque repellendus mollitia blanditiis iste odit provident beatae distinctio atque consequatur
-                    magni, similique magnam a? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt dolor voluptates nobis dicta
-                    magni ex, exercitationem cumque porro aliquid aspernatur praesentium harum perferendis quaerat vitae consequuntur omnis
-                    quae. Odit iusto nam enim illum magni. Velit beatae necessitatibus quae exercitationem error amet perspiciatis molestias
-                    aperiam incidunt omnis. Sapiente, at. Incidunt laudantium iusto, quas rerum aspernatur facere possimus voluptatibus odit
-                    soluta impedit voluptates, nulla in nisi ab eos minus ad ipsum illo molestias blanditiis. Assumenda dolorem itaque, quo
-                    adipisci, quam odio sed asperiores iure facilis sapiente, facere corrupti inventore minima? Quam voluptatem error
-                    perspiciatis ut deserunt minima veniam cumque repellat molestias non.
+            <SnackbarProvider />
+            <div className='p-4 bg-white/2 h-full'>
+                <div className='w-[max-content]'>
+                    <p className='font-semibold text-xl'>Thông tin</p>
+                    <div className='w-full border-b border-gray-500'></div>
+                </div>
+                <div className='w-[80%] mt-4 ml-3 flex flex-row justify-between items-center p-3'>
+                    <div className='flex flex-row gap-2'>
+                        <div>
+                            <Avatar size='xl' src='https://docs.material-tailwind.com/img/face-2.jpg' alt='avatar' />
+                        </div>
+                        <div>
+                            <p>Minh Toàn</p>
+                            <p>Software Enginneer</p>
+                            <p>Đại Học Bách Khoa, TP.HCM</p>
+                        </div>
+                    </div>
+                    <div className='space-x-2'>
+                        <Button className='bg-[#4AB58E] border-[1px] border-black'>Tải ảnh</Button>
+                        <Button className='bg-[#fff] text-[$000] border-[1px] border-black'>Xóa ảnh</Button>
+                    </div>
+                </div>
+                <div className='w-full border-b border-gray-500'></div>
+                <div>
+                    <p className='font-semibold text-lg my-3 ml-3'>Họ và tên</p>
+                    <div className='w-[90%] ml-3'>
+                        <input type='text' value={username} className={clsDefaultInput} onChange={(e) => handleUserName(e)} />
+                    </div>
+                    <div className='w-[90%] flex flex-row justify-between'>
+                        <div className='w-[47%]'>
+                            <p className='font-semibold text-lg my-3 ml-3'>Địa chỉ Email</p>
+                            <div className='w-full ml-3'>
+                                <div style={{ position: 'relative' }}>
+                                    <AiTwotoneMail
+                                        style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}
+                                    />
+                                    <input
+                                        type='email'
+                                        style={{ paddingLeft: '30px' }}
+                                        className={clsDefaultInput}
+                                        value={email}
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='w-[47%]'>
+                            <p className='font-semibold text-lg my-3 ml-3'>Số điện thoại</p>
+                            <div className='w-full ml-3'>
+                                <div style={{ position: 'relative' }}>
+                                    <IoIosPhonePortrait
+                                        style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}
+                                    />
+                                    <input
+                                        type='number'
+                                        style={{ paddingLeft: '30px' }}
+                                        className={clsDefaultInput}
+                                        value={phone}
+                                        onChange={(e) => handlePhone(e)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='w-[90%] flex flex-row justify-between'>
+                        <div className='w-[47%]'>
+                            <p className='font-semibold text-lg my-3 ml-3'>Mật khẩu hiện tại</p>
+                            <div className='w-full ml-3'>
+                                <div style={{ position: 'relative' }}>
+                                    <FaKey style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }} />
+                                    <FaEye
+                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e]'
+                                        onClick={() => handleClick1()}
+                                    />
+                                    <input
+                                        type={hide1 ? 'password' : 'text'}
+                                        style={{ paddingLeft: '30px' }}
+                                        className={clsDefaultInput}
+                                        value={password}
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='w-[47%]'>
+                            <p className='font-semibold text-lg my-3 ml-3'>Mật khẩu mới</p>
+                            <div className='w-full ml-3'>
+                                <div style={{ position: 'relative' }}>
+                                    <FaKey style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }} />
+                                    <FaEye
+                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e]'
+                                        onClick={() => handleClick2()}
+                                    />
+                                    <input
+                                        type={hide2 ? 'password' : 'text'}
+                                        style={{ paddingLeft: '30px' }}
+                                        className={clsDefaultInput}
+                                        value={newPassword}
+                                        onChange={(e) => handlePass2(e)}
+                                        placeholder='nhập vào mật khẩu mới'
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p className='font-semibold text-lg my-3 ml-3'>Nhập lại mật khẩu mới</p>
+                <div className='w-[90%] ml-3'>
+                    <div style={{ position: 'relative' }}>
+                        <FaKey style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }} />
+                        <FaEye
+                            className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e]'
+                            onClick={() => handleClick3()}
+                        />
+                        <input
+                            type={hide3 ? 'password' : 'text'}
+                            style={{ paddingLeft: '30px' }}
+                            className={clsDefaultInput}
+                            value={verPassword}
+                            onChange={(e) => handlePass3(e)}
+                            placeholder='Nhập lại mật khâu mới tại đây'
+                        />
+                    </div>
+                </div>
+                <div className='w-[90%] space-x-2 mt-3 flex justify-end'>
+                    <Button
+                        className='bg-[#fff] text-[$000] border-[1px] border-black'
+                        onClick={() => {
+                            window.location = '/profile';
+                        }}
+                    >
+                        Hủy bỏ
+                    </Button>
+                    <Button className='bg-[#4AB58E] border-[1px] border-black' onClick={() => Save()}>
+                        Lưu
+                    </Button>
                 </div>
             </div>
         </>

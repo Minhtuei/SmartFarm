@@ -10,3 +10,4 @@ export * from './common/ProtectedRoutes';
 export * from './devices/NewDeviceDialog';
 export * from './NavMenu/NotificationsMenu';
 export * from './NavMenu/ProfileMenu';
+export * from './Notify/index';
