@@ -1,6 +1,10 @@
 type DeviceType = 'led' | 'earthhumidity' | 'airhumidity' | 'temperature' | 'waterpump' | 'light';
 type ColorType = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'cyan' | 'white' | 'black';
 type DeviceState = 'ON' | 'OFF' | 'NONE';
+interface Schedule {
+    startTime: string;
+    endTime: string;
+}
 interface DeviceData {
     deviceName: string;
     deviceState: DeviceState;
@@ -16,6 +20,7 @@ interface DeviceData {
     adaFruitID: string;
     icon?: React.ReactElement;
     image?: string;
+    schedule?: Schedule[];
 }
 interface DevicesInfo {
     deviceInfos: DeviceData[];
@@ -33,4 +38,10 @@ interface ActivateDevice {
     longName: string;
     shortName: string;
     image: string;
+}
+interface DeviceUpdateInfo {
+    deviceName: string;
+    minLimit: number;
+    maxLimit: number;
+    schedule: Schedule[];
 }

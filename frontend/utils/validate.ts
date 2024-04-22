@@ -11,3 +11,10 @@ export const validatePassword = (password: string): boolean => {
     const specialCharCheck = /[!@#$%^&*()-_=+]/.test(password);
     return lengthCheck && charCheck && numCheck && specialCharCheck;
 };
+export const validateDeviceName = (deviceName: string): boolean => {
+    const deviceNamePattern = /^[a-zA-Z0-9]+$/;
+    return deviceNamePattern.test(deviceName);
+};
+export const validateLimit = (min: number, max: number): boolean => {
+    return min >= 0 && max >= 0 && min <= max;
+};

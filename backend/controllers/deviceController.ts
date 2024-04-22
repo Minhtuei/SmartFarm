@@ -72,6 +72,32 @@ export const updateDeviceInfo = async (req: Request, res: Response) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
+export const updateDeviceInfos = async (req: Request, res: Response) => {
+    try {
+        const adaFruitID = req.params.deviceID;
+        const device = await Device.findOne({ adaFruitID });
+        if (!device) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have device!" });
+        }
+        // Update device properties if they have changed in the request body
+        if (req.body.deviceName && device.deviceName !== req.body.deviceName) {
+            device.deviceName = req.body.deviceName;
+        }
+        if (req.body.minLimit && device.minLimit !== req.body.minLimit) {
+            device.minLimit = req.body.minLimit;
+        }
+        if (req.body.maxLimit && device.maxLimit !== req.body.maxLimit) {
+            device.maxLimit = req.body.maxLimit;
+        }
+        if (req.body.schedule && device.schedule !== req.body.schedule) {
+            device.schedule = req.body.schedule;
+        }
+        await device.save();
+        return res.status(StatusCodes.OK).json({ message: 'Device updated', device });
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    }
+};
 
 export const deleteDevice = async (req: Request, res: Response) => {
     try {

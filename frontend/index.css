@@ -1,6 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background-color: transparent;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-input:-webkit-autofill { +label { @extend .active; } }
+input:-webkit-autofill {
+    + label {
+        @extend .active;
+    }
+}
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .ant-btn-primary {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+    .ant-btn-primary:hover {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+    .ant-btn-primary:focus {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+}

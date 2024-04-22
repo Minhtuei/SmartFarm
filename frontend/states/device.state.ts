@@ -10,7 +10,7 @@ export const useDevicesStore = create<DevicesInfo>((set) => ({
                 deviceState: device.deviceState,
                 deviceType: device.deviceType,
                 userID: device.userID,
-                pumpDuration: device.pumpDuration,
+                schedule: device.schedule,
                 color: device.color,
                 minLimit: device.minLimit,
                 maxLimit: device.maxLimit,

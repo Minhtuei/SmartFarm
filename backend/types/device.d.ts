@@ -6,10 +6,8 @@ interface DeviceSchema {
     deviceState: DeviceState;
     deviceType: DeviceType;
     userID: string;
-    activateTime: Date;
-    pumpDuration: number;
+    schedule: { startTime: string; endTime: string }[];
     color: ColorType;
-    pumpDuration: number;
     minLimit: number;
     maxLimit: number;
     lastValue: number;

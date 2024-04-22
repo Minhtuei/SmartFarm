@@ -35,6 +35,25 @@ export const DeviceService = {
             return error;
         }
     },
+    updateDeviceInfo: async (deviceID: string, type: string, data: DeviceUpdateInfo) => {
+        try {
+            setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
+            let body = {};
+            if (type === 'led' || type === 'waterpump') {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { minLimit, maxLimit, ...rest } = data;
+                body = rest;
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { schedule, ...rest } = data;
+                body = rest;
+            }
+            const response = await axios.patch(`http://localhost:8080/device/${deviceID}/updateInfo`, body);
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    },
     updateToken: async () => {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {

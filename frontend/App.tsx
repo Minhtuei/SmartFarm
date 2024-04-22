@@ -67,10 +67,10 @@ export default function App() {
                     {
                         type: 'item',
                         icon: <ComputerDesktopIcon className='h-5 w-5' />,
-                        path: '/device',
+                        path: '/device/*',
                         name: 'Device',
                         element: <DevicePage />,
-                        isActive: pathname.pathname === '/device'
+                        isActive: pathname.pathname === '/device/*'
                     },
                     {
                         type: 'item',

@@ -15,6 +15,10 @@ const session = require('express-session');
 import { mqttController } from '@be/controllers';
 const app = express();
 app.use(express.json());
+mqttClient.onConnect();
+mqttClient.subscribe('#');
+
+mqttController.GetDeViceInfo;
 const whitelist: string[] = ['http://localhost:3000', 'http://localhost:8080'];
 // CORS_WHITE_LIST=["http://localhost:3000","http://localhost:8080"] <- .env
 // Configure CORS options
@@ -55,10 +59,6 @@ try {
 } catch (err) {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }
-mqttClient.onConnect();
-mqttClient.subscribe('#');
-
-mqttController.GetDeViceInfo;
 
 app.use(bodyParser.json());
 app.use(cookieParser(envs.COOKIE_SECRET));

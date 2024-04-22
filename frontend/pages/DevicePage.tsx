@@ -19,7 +19,9 @@ import { useState } from 'react';
 import { DeviceService } from '@fe/services';
 import { MiniDeviceImage } from '@fe/components';
 import { filterDeviceByType, filterDeviceByName } from '@fe/utils';
+import { useNavigate } from 'react-router-dom';
 export function DevicePage() {
+    const navigate = useNavigate();
     const [openNewDeviceDialog, setOpenNewDeviceDialog] = useState<boolean>(false);
     const [openRemoveDeviceDialog, setOpenRemoveDeviceDialog] = useState<boolean>(false);
     const [openDeviceDialog, setOpenDeviceDialog] = useState<boolean>(false);
@@ -54,6 +56,7 @@ export function DevicePage() {
     const handleOpenDeviceInfoDialog = (adaFruitID: string) => {
         setOpenDeviceDialog(true);
         setDevice(deviceInfos.find((device) => device.adaFruitID === adaFruitID) || null);
+        navigate(`/device/${adaFruitID}`, { replace: true });
     };
     return (
         <>
