@@ -6,10 +6,12 @@ import { FaKey, FaEye } from 'react-icons/fa';
 import { useState } from 'react';
 import { validatePassword } from '@fe/utils';
 import { enqueueSnackbar, SnackbarProvider } from 'notistack';
+import { MdKeyboardVoice, MdVoiceOverOff } from 'react-icons/md';
 export function ProfilePage() {
     const clsDefaultInput =
         'peer h-full w-full rounded-[7px]  !border  !border-gray-300 border-t-transparent bg-transparent bg-white px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700  shadow-lg shadow-gray-900/5 outline outline-0 ring-4 ring-transparent transition-all placeholder:text-gray-500 placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2  focus:!border-gray-900 focus:border-t-transparent focus:!border-t-gray-900 focus:outline-0 focus:ring-gray-900/10 disabled:border-0 disabled:bg-blue-gray-50';
     const [username, setUsername] = useState<string>('Nguyễn Minh Toàn');
+    const [voice, setVoice] = useState<boolean>(true); // change this when implement backend.
     const email = 'test1@test.test';
     const [phone, setPhone] = useState<string>('0392123451');
     const password = 'test123@';
@@ -18,6 +20,10 @@ export function ProfilePage() {
     const [hide1, setHide1] = useState<boolean>(true);
     const [hide2, setHide2] = useState<boolean>(true);
     const [hide3, setHide3] = useState<boolean>(true);
+    const handleVoice = () => {
+        setVoice(!voice);
+        enqueueSnackbar('Nhấn Lưu để lưu lại trạng thái', { variant: 'warning', autoHideDuration: 2000 });
+    };
     const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
     };
@@ -61,20 +67,37 @@ export function ProfilePage() {
                     <p className='font-semibold text-xl'>Thông tin</p>
                     <div className='w-full border-b border-gray-500'></div>
                 </div>
-                <div className='w-[80%] mt-4 ml-3 flex flex-row justify-between items-center p-3'>
+                <div className='w-[80%] my-4 ml-3 md:flex md:flex-row justify-between items-center p-3 relative'>
                     <div className='flex flex-row gap-2'>
                         <div>
-                            <Avatar size='xl' src='https://docs.material-tailwind.com/img/face-2.jpg' alt='avatar' />
+                            <Avatar
+                                size='xl'
+                                src='https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80'
+                                alt='avatar'
+                            />
                         </div>
                         <div>
-                            <p>Minh Toàn</p>
+                            <p>{username}</p>
                             <p>Software Enginneer</p>
                             <p>Đại Học Bách Khoa, TP.HCM</p>
                         </div>
                     </div>
-                    <div className='space-x-2'>
-                        <Button className='bg-[#4AB58E] border-[1px] border-black'>Tải ảnh</Button>
-                        <Button className='bg-[#fff] text-[$000] border-[1px] border-black'>Xóa ảnh</Button>
+                    <div
+                        className={`md:absolute md:right-0 border-2 border-black p-2 rounded-xl text-white font-bold shadow-md ${
+                            voice ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
+                        }`}
+                        onClick={handleVoice}
+                    >
+                        <p className='text-center text-[#1d1d1d]'>
+                            Điều kiển bằng <br />
+                            giọng nói
+                        </p>
+                        {voice ? (
+                            <MdKeyboardVoice className='mx-auto text-xl font-bold ' />
+                        ) : (
+                            <MdVoiceOverOff className='mx-auto text-xl font-bold ' />
+                        )}
+                        <p className={`text-center ${voice ? 'text-[#0f172a]' : ''}`}>{voice ? 'Đang bật' : 'Đang tắt'}</p>
                     </div>
                 </div>
                 <div className='w-full border-b border-gray-500'></div>
