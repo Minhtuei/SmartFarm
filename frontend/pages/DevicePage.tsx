@@ -123,9 +123,14 @@ export function DevicePage() {
                             <TrashIcon className='w-6 h-6' />
                         </IconButton>
                     </div>
-                    <div className='flex flex-wrap justify-between gap-4'>
+                    <div className='flex flex-wrap justify-between gap-4 '>
                         {deviceInfos.map((device) => (
-                            <Card placeholder={''} id={device.adaFruitID} key={device.adaFruitID} className='flex-grow shrink'>
+                            <Card
+                                placeholder={''}
+                                id={device.adaFruitID}
+                                key={device.adaFruitID}
+                                className='flex-grow shrink w-full lg:w-1/4 md:w-1/3'
+                            >
                                 <CardBody placeholder={''} className='flex items-center'>
                                     <Typography color='blue' className='ml-2 font-semibold text-lg' placeholder={''}>
                                         {deviceTypeNames[device.deviceType]}
@@ -142,34 +147,42 @@ export function DevicePage() {
                                     )}
                                 </CardBody>
                                 <CardBody placeholder={''} className='flex items-center py-0 max-w-full gap-2 '>
-                                    <div className='w-[100px] h-[100px] shrink-0'>
+                                    <div className='shrink-0 w-[64px] h-[64px]'>
                                         <MiniDeviceImage deviceType={device.deviceType} />
                                     </div>
-                                    <div className='flex flex-1 gap-1'>
-                                        <div className='flex flex-col gap-1'>
+                                    <div className='grid grid-cols-2 gap-2'>
+                                        <div className='flex items-center'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Tên thiết bị:
                                             </Typography>
+                                        </div>
+                                        <div className='flex'>
+                                            <Typography className='text-md truncate' placeholder={''}>
+                                                {device.deviceName}
+                                            </Typography>
+                                        </div>
+                                        <div className='flex'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Mã thiết bị:
                                             </Typography>
+                                        </div>
+                                        <div className='flex'>
+                                            <Typography className='text-md truncate' placeholder={''}>
+                                                {device.adaFruitID}
+                                            </Typography>
+                                        </div>
+                                        <div className='flex'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Trạng thái:
                                             </Typography>
                                         </div>
-                                        <div className='flex flex-col gap-1'>
-                                            <Typography className='text-md' placeholder={''}>
-                                                {device.deviceName}
-                                            </Typography>
-                                            <Typography className='text-md truncate' placeholder={''}>
-                                                {device.adaFruitID}
-                                            </Typography>
+                                        <div className='flex'>
                                             {device.deviceState !== 'OFF' ? (
-                                                <Typography color='green' className='text-md' placeholder={''}>
+                                                <Typography color='green' className='text-md truncate' placeholder={''}>
                                                     Đang hoạt động
                                                 </Typography>
                                             ) : (
-                                                <Typography color='red' className='text-md' placeholder={''}>
+                                                <Typography color='red' className='text-md truncate ' placeholder={''}>
                                                     Đã tắt
                                                 </Typography>
                                             )}

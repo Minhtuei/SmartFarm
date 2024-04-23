@@ -10,6 +10,7 @@ import { router as device } from './routes/deviceRouter';
 import { router as notification } from './routes/notificationRouter';
 import { router as genAcc } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
+import { Scheduler } from './handlers';
 const session = require('express-session');
 
 import { mqttController } from '@be/controllers';
@@ -19,6 +20,16 @@ mqttClient.onConnect();
 mqttClient.subscribe('#');
 
 mqttController.GetDeViceInfo;
+async function startScheduler() {
+    try {
+        await Scheduler();
+    } catch (error) {
+        console.error('Error running Scheduler:', error);
+    }
+    setTimeout(startScheduler, 1000);
+}
+
+startScheduler();
 const whitelist: string[] = ['http://localhost:3000', 'http://localhost:8080'];
 // CORS_WHITE_LIST=["http://localhost:3000","http://localhost:8080"] <- .env
 // Configure CORS options

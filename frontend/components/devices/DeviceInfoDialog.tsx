@@ -49,7 +49,14 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
         setSchedule(device?.schedule || []);
         setScheduleNumber(0);
     };
-
+    const isInfoUnchanged = () => {
+        return (
+            deviceName === device?.deviceName &&
+            minLimit === device?.minLimit &&
+            maxLimit === device?.maxLimit &&
+            JSON.stringify(schedule) === JSON.stringify(device?.schedule)
+        );
+    };
     useEffect(() => {
         if (!open) {
             navigate('/device', { replace: true });
@@ -58,6 +65,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
             clearState();
         }
     }, [open, device]);
+
     if (!device) return null;
     return (
         <Dialog placeholder={''} open={open} handler={onClose} className='max-h-[650px] overflow-y-auto no-scrollbar bg-green-100'>
@@ -172,14 +180,13 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                         </>
                     ) : (
                         <>
-                            <div className='flex items-center w-full '>
-                                <Typography className='text-lg font-semibold w-1/2' placeholder={undefined}>
-                                    Tự động bật:
-                                </Typography>
+                            <div className='flex items-center w-full'>
+                                <Typography className='text-lg font-semibold w-1/2'>Tự động bật:</Typography>
                                 <div className='w-1/2 flex flex-col gap-y-1' id='scheduleHelp'>
-                                    {device?.schedule?.map((item, index) => (
+                                    {schedule.map((item, index) => (
                                         <TimePicker.RangePicker
                                             key={index}
+                                            placeholder={['--:--', '--:--']}
                                             format='HH:mm'
                                             popupClassName='z-[9999]'
                                             value={[dayjs(item.startTime, 'HH:mm'), dayjs(item.endTime, 'HH:mm')]}
@@ -189,14 +196,15 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                                     startTime: timeString[0],
                                                     endTime: timeString[1]
                                                 };
-                                                setSchedule((prev) => [...prev, ...newSchedule]);
+                                                setSchedule(newSchedule);
                                             }}
-                                            className={onChange ? '' : 'pointer-events-none'}
+                                            className={onChange ? '' : 'pointer-events-none '}
                                         />
                                     ))}
                                     {Array.from({ length: scheduleNumber }).map((_, index) => (
                                         <TimePicker.RangePicker
                                             key={index}
+                                            placeholder={['--:--', '--:--']}
                                             format='HH:mm'
                                             popupClassName='z-[9999]'
                                             onChange={(_, timeString) => {
@@ -222,9 +230,10 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                         <IconButton
                                             placeholder={''}
                                             onClick={() => {
-                                                if (scheduleNumber > 0) setScheduleNumber(scheduleNumber - 1 || 0);
+                                                if (scheduleNumber > 0) setScheduleNumber(scheduleNumber - 1);
                                                 else {
-                                                    schedule.pop();
+                                                    const newSchedule = [...schedule].slice(0, -1);
+                                                    setSchedule(newSchedule);
                                                 }
                                             }}
                                             disabled={!onChange}
@@ -271,6 +280,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                         setOnChange(true);
                     }}
                     className='mr-1'
+                    disabled={onChange}
                 >
                     <span>Chỉnh sửa</span>
                 </Button>
@@ -280,7 +290,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                     variant='gradient'
                     color='green'
                     onClick={() => handleOnClick()}
-                    disabled={!onChange}
+                    disabled={isInfoUnchanged() || !onChange}
                     className='mr-1'
                 >
                     <span>Lưu</span>

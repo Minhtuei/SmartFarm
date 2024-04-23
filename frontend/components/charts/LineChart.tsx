@@ -6,6 +6,8 @@ interface DeviceData {
     deviceName: string;
     environmentValue: { createdTime: string; value: number }[];
     deviceType: string;
+    minLimit: number;
+    maxLimit: number;
 }
 
 interface LineChartProps {
@@ -38,7 +40,6 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             y: value.value
         }))
     }));
-
     const options = useMemo(
         () => ({
             series: temperatureData,
@@ -79,7 +80,7 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             annotations: {
                 yaxis: [
                     {
-                        y: 20,
+                        y: deviceInfos[0]?.minLimit,
                         borderColor: 'red',
                         label: {
                             borderColor: 'red',
@@ -87,11 +88,11 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
                                 color: '#fff',
                                 background: '#00E396'
                             },
-                            text: 'Min Alarm'
+                            text: 'Ngưỡng dưới'
                         }
                     },
                     {
-                        y: 40,
+                        y: deviceInfos[0]?.maxLimit,
                         borderColor: 'red',
                         label: {
                             borderColor: 'red',
@@ -99,7 +100,7 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
                                 color: '#fff',
                                 background: '#FEB019'
                             },
-                            text: 'Max Alarm'
+                            text: 'Ngưỡng trên'
                         }
                     }
                 ]

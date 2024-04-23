@@ -2,6 +2,7 @@ import { mqttClient } from '@be/services';
 import { Device } from '@be/models';
 import path from 'path';
 import fs from 'fs';
+import { limitHandler } from '@be/handlers';
 const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
     const regex = /\/feeds\/(\d+)\/json/;
     if (regex.test(topic)) {
@@ -25,6 +26,7 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
                     createdTime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
                 });
                 device.save();
+                await limitHandler(device);
             } else {
                 const newDevice = new Device({
                     adaFruitID: jsonMessage.id,
@@ -47,12 +49,11 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
         }
     }
 });
-const UpdateDeviceInfo = async (adaFruitID: string, body: DeviceData) => {
+const UpdateDeviceInfo = async (adaFruitID: string, body: MQTTDeviceData) => {
     if (Object.keys(body).length !== 0) {
         mqttClient.publish(`${adaFruitID}`, JSON.stringify(body.lastValue));
     }
 };
-
 export const mqttController = {
     GetDeViceInfo,
     UpdateDeviceInfo
