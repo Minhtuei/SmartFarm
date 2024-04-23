@@ -7,11 +7,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AppSkeleton } from './components';
 import { AuthLayout } from './layouts/AuthLayout';
 import { useDevicesStore } from '@fe/states';
+import { useNotificationStore } from '@fe/states';
 export default function App() {
     const navigate = useNavigate();
     const pathname = useLocation();
-    const { isAuth } = useUserInfoStore();
+    const { isAuth, userData } = useUserInfoStore();
     const { getDeviceInfos } = useDevicesStore();
+    const { getNotifications } = useNotificationStore();
     useEffect(() => {
         if (pathname.pathname === '/' && isAuth) {
             navigate('/dashboard');
@@ -19,7 +21,8 @@ export default function App() {
     }, [pathname, navigate, isAuth]);
     useEffect(() => {
         const fetchDashboard = async () => {
-            await getDeviceInfos();
+            await getDeviceInfos(userData.id);
+            await getNotifications(userData.id);
         };
         // Call immediately
         fetchDashboard(); // Then call every 3 seconds
@@ -29,6 +32,12 @@ export default function App() {
 
         return () => clearInterval(interval); // Clear the interval if the component unmounts
     }, []);
+    // useEffect(() => {
+    //     const fetchNotification = async () => {
+    //         await getNotifications(userData.id);
+    //     };
+    //     fetchNotification();
+    // }, []);
 
     if (!isAuth) {
         return (

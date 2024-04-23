@@ -1,20 +1,27 @@
 import axios from 'axios';
 import { setHeaderRequest } from '@fe/utils';
+import { useUserInfoStore } from '@fe/states';
 export const DeviceService = {
     addDevice: async (deviceID: string) => {
+        const { userData } = useUserInfoStore.getState();
+        if (!userData) {
+            return;
+        }
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
-            const response = await axios.patch(`http://localhost:8080/device/${deviceID}`, {});
-            await DeviceService.getAllDevice();
+            const response = await axios.patch(`http://localhost:8080/device/${deviceID}/updateUser`, {
+                userID: userData.id
+            });
+            // await DeviceService.getAllDevice();
             return response.data;
         } catch (error) {
             return error;
         }
     },
-    getAllDevice: async () => {
+    getAllDevice: async (userId: string) => {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
-            const response = await axios.get(`http://localhost:8080/device/getall`);
+            const response = await axios.get(`http://localhost:8080/device/${userId}`);
             return response.data;
         } catch (error) {
             DeviceService.updateToken();

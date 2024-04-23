@@ -4,13 +4,28 @@ import { Request, Response } from 'express';
 import { mqttController } from './mqttController';
 export const getAllDevice = async (req: Request, res: Response) => {
     try {
-        const devices = await Device.find({ userID: { $exists: true, $ne: null } });
+        const userID = req.params.userID;
+        const devices = await Device.find({ userID });
         res.status(StatusCodes.OK).json({ devices });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
-
+export const updateDeviceUser = async (req: Request, res: Response) => {
+    try {
+        const device = await Device.findOne({ adaFruitID: req.params.deviceID });
+        if (!device) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have device!" });
+        device.userID = req.body.userID;
+        if (!device.userID && device.userID !== req.body.userID) {
+            device.userID = req.body.userID;
+            await device.save();
+            return res.status(StatusCodes.OK).json({ message: 'Device updated', device });
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Device not updated' });
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    }
+};
 export const getDeviceInfo = async (req: Request, res: Response) => {
     try {
         const device = await Device.findById(req.params.id);
@@ -33,28 +48,20 @@ export const createDevice = async (req: Request, res: Response) => {
 export const updateDeviceInfo = async (req: Request, res: Response) => {
     try {
         const adaFruitID = req.params.deviceID;
-        const userID = req.userID;
-        let update;
-        if (Object.keys(req.body).length === 0) {
-            console.log('empty');
-            // If req.body is empty, only update userID
-            update = { $set: { userID: userID } };
-        } else {
-            // If req.body is not empty, update other fields as well
-            update = {
-                $set: {
-                    deviceState: req.body.deviceState,
-                    lastValue: req.body.lastValue,
-                    updatedTime: req.body.updatedTime
-                },
-                $push: {
-                    environmentValue: {
-                        createdTime: req.body.updatedTime,
-                        value: req.body.lastValue
-                    }
+        const update = {
+            $set: {
+                deviceState: req.body.deviceState,
+                lastValue: req.body.lastValue,
+                updatedTime: req.body.updatedTime
+            },
+            $push: {
+                environmentValue: {
+                    createdTime: req.body.updatedTime,
+                    value: req.body.lastValue
                 }
-            };
-        }
+            }
+        };
+
         const device = await Device.findOneAndUpdate(
             { adaFruitID: adaFruitID },
             {

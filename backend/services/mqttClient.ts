@@ -2,6 +2,7 @@ import mqtt from 'mqtt';
 import { envs } from '@be/configs';
 const url = `mqtt://${envs.ADAFRUIT_IO_USERNAME}:${envs.ADAFRUIT_IO_KEY}@io.adafruit.com`;
 const client = mqtt.connect(url);
+import { Notification, Device, User } from '@be/models';
 const onConnect = () => {
     client.on('connect', () => {
         console.log('Connected to MQTT broker');
@@ -22,11 +23,29 @@ const subscribe = (topic: string) => {
     });
 };
 const publish = (topic: string, message: string) => {
-    client.publish(`${envs.ADAFRUIT_IO_USERNAME}/feeds/${topic}`, message, (err) => {
+    client.publish(`${envs.ADAFRUIT_IO_USERNAME}/feeds/${topic}`, message, async (err) => {
+        const device = await Device.findOne({ adaFruitID: topic });
+        const user = await User.findOne({ _id: device?.userID });
         if (err) {
             console.error('Failed to publish message to topic', topic);
+            const notification = new Notification({
+                context: `Thiết bị ${device?.deviceName} không thể cập nhật trạng thái`,
+                notificationType: 'error',
+                email: user?.email,
+                deviceName: device?.deviceName
+            });
+            await notification.save();
         } else {
             console.log('Published message to topic', topic);
+            const user = await User.findOne({ _id: device?.userID });
+            const state = device?.deviceState === 'ON' ? 'Bật' : 'Tắt';
+            const notification = new Notification({
+                context: `Thiết bị ${device?.deviceName} đã được ${state}`,
+                notificationType: 'schedule',
+                email: user?.email,
+                deviceName: device?.deviceName
+            });
+            await notification.save();
         }
     });
 };

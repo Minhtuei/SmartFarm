@@ -5,7 +5,7 @@ export const useUserInfoStore = create<UserStore>()(
     devtools((set) => ({
         isAuth: sessionStorage.getItem('accessToken') !== null && sessionStorage.getItem('accessToken') !== undefined,
         userData: {
-            id: '',
+            id: sessionStorage.getItem('id') || '',
             email: ''
         },
         setIsAuth: (isAuth: boolean) => set({ isAuth }),

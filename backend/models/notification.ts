@@ -6,7 +6,7 @@ const notficationSchema = new Schema(
         notificationType: {
             type: String,
             enum: {
-                values: ['warning', 'error', 'report', 'setting'],
+                values: ['warning', 'error', 'success', 'schedule'],
                 message: '{VALUE} is not support'
             }
         },
@@ -16,4 +16,4 @@ const notficationSchema = new Schema(
     { timestamps: true }
 );
 
-export default mongoose.model('Notification', notficationSchema);
+export const Notification = mongoose.model('Notification', notficationSchema);
