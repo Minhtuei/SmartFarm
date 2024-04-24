@@ -92,12 +92,12 @@ export function NotificationPage() {
                                     </tr>
                                 </thead>
                                 <tbody className='abcabc'>
-                                    {rowsToDisplay.map(({ _id, deviceName, context, createdTime, notificationType }, index) => {
+                                    {rowsToDisplay.map(({ _id, deviceName, context, createdAt, notificationType }, index) => {
                                         const isLast = index === notifications.length - 1;
                                         const classes = isLast ? 'p-4' : 'p-4 border-b border-blue-gray-50';
 
                                         return (
-                                            <tr key={_id} style={{ backgroundColor: index % 2 === 0 ? 'rgb(5 150 105 / 57%)' : 'white' }}>
+                                            <tr key={_id}>
                                                 <td className={classes}>
                                                     <div className='flex items-center gap-3'>
                                                         <Typography variant='small' color='blue-gray' className='font-normal'>
@@ -121,7 +121,7 @@ export function NotificationPage() {
                                                 </td>
                                                 <td className={classes}>
                                                     <Typography variant='small' color='blue-gray' className='font-normal'>
-                                                        {moment(createdTime).format('DD/MM/YYYY HH:mm')}
+                                                        {moment(createdAt).format('DD/MM/YYYY HH:mm')}
                                                     </Typography>
                                                 </td>
                                                 <td className={classes}>

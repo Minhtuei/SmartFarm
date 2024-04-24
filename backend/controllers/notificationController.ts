@@ -12,13 +12,25 @@ export const getAllNotification = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
         }
-        const notifications = await Notification.find({ email: user.email });
+        const notifications = await Notification.find({ email: user.email }).sort({ createdAt: -1 });
         res.status(StatusCodes.OK).json({ notifications });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
-
+export const getLatestNotification = async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+        }
+        const notification = await Notification.find({ email: user.email }).sort({ createdAt: -1 }).limit(5);
+        res.status(StatusCodes.OK).json({ notification });
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    }
+};
 export const getNotificationByDevice = async (req: Request, res: Response) => {
     try {
         const email = req.params.email;

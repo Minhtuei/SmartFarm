@@ -38,10 +38,10 @@ const publish = (topic: string, message: string) => {
         } else {
             console.log('Published message to topic', topic);
             const user = await User.findOne({ _id: device?.userID });
-            const state = device?.deviceState === 'ON' ? 'Bật' : 'Tắt';
+            const state = message === '1' ? 'bật' : 'tắt';
             const notification = new Notification({
                 context: `Thiết bị ${device?.deviceName} đã được ${state}`,
-                notificationType: 'schedule',
+                notificationType: 'success',
                 email: user?.email,
                 deviceName: device?.deviceName
             });

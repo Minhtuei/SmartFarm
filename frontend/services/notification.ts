@@ -11,6 +11,16 @@ export const NotificationService = {
             return error;
         }
     },
+    getLatestNotification: async (userId: string) => {
+        setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
+        try {
+            const response = await axios.get(`http://localhost:8080/notification/${userId}/latest`);
+            return response.data;
+        } catch (error) {
+            NotificationService.updateToken();
+            return error;
+        }
+    },
     updateToken: async () => {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {

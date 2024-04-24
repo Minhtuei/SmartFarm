@@ -90,3 +90,8 @@ mongoose
     .catch((err: Error) => {
         console.error(`Error connecting to the database. \n${err}`);
     });
+// const Notification = mongoose.model('Notification'); // Replace 'Notification' with your actual model name
+// Notification.deleteMany({ email: 'test2@gmail.com' }).then(() => {
+//     console.log('Deleted all notifications)');
+// }
+// );

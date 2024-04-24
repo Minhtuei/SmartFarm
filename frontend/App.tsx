@@ -13,7 +13,7 @@ export default function App() {
     const pathname = useLocation();
     const { isAuth, userData } = useUserInfoStore();
     const { getDeviceInfos } = useDevicesStore();
-    const { getNotifications } = useNotificationStore();
+    const { getNotifications, getLatestNotification } = useNotificationStore();
     useEffect(() => {
         if (pathname.pathname === '/' && isAuth) {
             navigate('/dashboard');
@@ -22,7 +22,6 @@ export default function App() {
     useEffect(() => {
         const fetchDashboard = async () => {
             await getDeviceInfos(userData.id);
-            await getNotifications(userData.id);
         };
         // Call immediately
         fetchDashboard(); // Then call every 3 seconds
@@ -32,12 +31,16 @@ export default function App() {
 
         return () => clearInterval(interval); // Clear the interval if the component unmounts
     }, []);
-    // useEffect(() => {
-    //     const fetchNotification = async () => {
-    //         await getNotifications(userData.id);
-    //     };
-    //     fetchNotification();
-    // }, []);
+    useEffect(() => {
+        const fetchNotification = async () => {
+            await getNotifications(userData.id);
+            const interval = setInterval(() => {
+                getLatestNotification(userData.id);
+            }, 3000);
+            return () => clearInterval(interval);
+        };
+        fetchNotification();
+    }, []);
 
     if (!isAuth) {
         return (
