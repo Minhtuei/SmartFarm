@@ -1,7 +1,6 @@
-import LightSensor from '@fe/assets/light-sensor.png';
-import { AppNavigationBar, NewDeviceDialog, Pagination } from '@fe/components';
+import { AppNavigationBar, NewDeviceDialog, RemoveDeviceDialog, DeviceInfoDialog } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
-import { AdjustmentsHorizontalIcon, BoltIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import {
     Button,
     Card,
@@ -13,14 +12,25 @@ import {
     MenuItem,
     MenuList,
     Switch,
-    Typography
+    Typography,
+    Spinner
 } from '@material-tailwind/react';
 import { useState } from 'react';
 import { DeviceService } from '@fe/services';
+import { MiniDeviceImage } from '@fe/components';
+import { filterDeviceByType, filterDeviceByName } from '@fe/utils';
+import { useNavigate } from 'react-router-dom';
 export function DevicePage() {
+    const navigate = useNavigate();
     const [openNewDeviceDialog, setOpenNewDeviceDialog] = useState<boolean>(false);
+    const [openRemoveDeviceDialog, setOpenRemoveDeviceDialog] = useState<boolean>(false);
+    const [openDeviceDialog, setOpenDeviceDialog] = useState<boolean>(false);
+    const [device, setDevice] = useState<DeviceData | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [searchValue, setSearchValue] = useState<string>('');
     const { deviceInfos } = useDevicesStore();
-    const deviceTypeNames = {
+    const deviceTypeNames: { [key: string]: string } = {
+        all: 'Tất cả',
         led: 'Đèn LED',
         earthhumidity: 'Cảm biến độ ẩm đất',
         airhumidity: 'Cảm biến độ ẩm không khí',
@@ -31,18 +41,32 @@ export function DevicePage() {
     const handleTriggerDevice = (adaFruitID: string) => {
         return async (e: React.ChangeEvent<HTMLInputElement>) => {
             const device = deviceInfos.find((device) => device.adaFruitID === adaFruitID);
-            if (device) {
-                const deviceState = e.target.checked ? 'ON' : 'OFF';
-                await DeviceService.triggerDevice(deviceState, adaFruitID);
+            setIsLoading(true);
+            try {
+                if (device) {
+                    const deviceState = e.target.checked ? 'ON' : 'OFF';
+                    await DeviceService.triggerDevice(deviceState, adaFruitID);
+                    deviceInfos.find((device) => device.adaFruitID === adaFruitID)!.deviceState = deviceState;
+                }
+            } finally {
+                setIsLoading(false);
             }
         };
     };
-
+    const handleOpenDeviceInfoDialog = (adaFruitID: string) => {
+        setOpenDeviceDialog(true);
+        setDevice(deviceInfos.find((device) => device.adaFruitID === adaFruitID) || null);
+        navigate(`/device/${adaFruitID}`, { replace: true });
+    };
+    const handleRemoveDevice = (adaFruitID: string) => {
+        setOpenRemoveDeviceDialog(true);
+        setDevice(deviceInfos.find((device) => device.adaFruitID === adaFruitID) || null);
+    };
     return (
         <>
-            <AppNavigationBar title={'Device'} />
+            <AppNavigationBar title={'Thiết bị'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
-                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-2 overflow-y-auto lg:overflow-hidden'>
+                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-4 overflow-y-auto pr-4'>
                     <div className='flex items-center gap-2'>
                         <Menu>
                             <MenuHandler>
@@ -51,37 +75,71 @@ export function DevicePage() {
                                 </IconButton>
                             </MenuHandler>
                             <MenuList placeholder={''}>
-                                <MenuItem placeholder={''}>Menu Item 1</MenuItem>
-                                <MenuItem placeholder={''}>Menu Item 2</MenuItem>
-                                <MenuItem placeholder={''}>Menu Item 3</MenuItem>
+                                {Object.keys(deviceTypeNames).map((deviceType) => (
+                                    <MenuItem
+                                        placeholder={''}
+                                        key={deviceType}
+                                        onClick={() => {
+                                            filterDeviceByType(deviceType, deviceInfos);
+                                        }}
+                                    >
+                                        {deviceTypeNames[deviceType] as keyof typeof deviceTypeNames}
+                                    </MenuItem>
+                                ))}
                             </MenuList>
                         </Menu>
                         <Input
                             type='device'
-                            placeholder='Search for a device...'
+                            placeholder='Tìm kiếm thiết bị'
                             className='!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10'
                             labelProps={{
                                 className: 'hidden'
                             }}
                             containerProps={{ className: 'min-w-[100px] w-1/4' }}
                             crossOrigin={'true'}
+                            value={searchValue}
+                            onChange={(e) => {
+                                setSearchValue(e.target.value);
+                                filterDeviceByName(e.target.value, deviceInfos);
+                            }}
                         />{' '}
-                        <IconButton color='green' placeholder={''} className='px-3 py-2 hover:shadow-none '>
+                        <IconButton
+                            color='green'
+                            placeholder={''}
+                            className='px-3 py-2 hover:shadow-none '
+                            onClick={() => {
+                                filterDeviceByName(searchValue, deviceInfos);
+                            }}
+                        >
                             <MagnifyingGlassIcon className='w-6 h-6' />
                         </IconButton>
-                        <IconButton color='blue' placeholder={''} className='px-3 py-2 hover:shadow-none '>
+                        <IconButton
+                            color='blue'
+                            placeholder={''}
+                            className='px-3 py-2 hover:shadow-none '
+                            onClick={() => setOpenNewDeviceDialog(true)}
+                        >
                             <PlusIcon className='w-6 h-6' />
                         </IconButton>
-                        <IconButton color='red' placeholder={''} className='px-3 py-2 hover:shadow-none '>
+                        <IconButton
+                            color='red'
+                            placeholder={''}
+                            className='px-3 py-2 hover:shadow-none '
+                            onClick={() => setOpenRemoveDeviceDialog(true)}
+                        >
                             <TrashIcon className='w-6 h-6' />
                         </IconButton>
                     </div>
-                    <div className='flex flex-wrap justify-between gap-y-4'>
+                    <div className='flex flex-wrap justify-between gap-4 '>
                         {deviceInfos.map((device) => (
-                            <Card placeholder={''} key={device.adaFruitID} className='w-[400px] cursor-pointer shrink'>
+                            <Card
+                                placeholder={''}
+                                id={device.adaFruitID}
+                                key={device.adaFruitID}
+                                className='flex-grow shrink w-full lg:w-1/4 md:w-1/3 dark:bg-white/80 '
+                            >
                                 <CardBody placeholder={''} className='flex items-center'>
-                                    <BoltIcon className='w-8 h-8 text-yellow-500' />
-                                    <Typography color='blue' className='ml-2' placeholder={''}>
+                                    <Typography color='blue' className='ml-2 font-semibold text-lg' placeholder={''}>
                                         {deviceTypeNames[device.deviceType]}
                                     </Typography>
                                     {device.deviceState !== 'NONE' && (
@@ -89,46 +147,72 @@ export function DevicePage() {
                                             <Switch
                                                 crossOrigin='true'
                                                 color='blue'
-                                                defaultChecked={device.deviceState === 'ON'}
+                                                checked={device.deviceState === 'ON'}
                                                 onChange={handleTriggerDevice(device.adaFruitID)}
                                             />
                                         </div>
                                     )}
                                 </CardBody>
-                                <CardBody placeholder={''} className='flex items-center py-0 max-w-full '>
-                                    <div className='w-[100px] h-[100px] shrink-0'>
-                                        <img src={LightSensor} alt='device' className='w-full h-full object-cover' />
+                                <CardBody placeholder={''} className='flex items-center py-0 max-w-full gap-2 '>
+                                    <div className='shrink-0 w-[64px] h-[64px]'>
+                                        <MiniDeviceImage deviceType={device.deviceType} />
                                     </div>
-                                    <div className='flex flex-1 gap-1'>
-                                        <div className='flex flex-col gap-1'>
+                                    <div className='grid grid-cols-2 gap-2'>
+                                        <div className='flex items-center'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Tên thiết bị:
                                             </Typography>
+                                        </div>
+                                        <div className='flex'>
+                                            <Typography className='text-md truncate' placeholder={''}>
+                                                {device.deviceName}
+                                            </Typography>
+                                        </div>
+                                        <div className='flex'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Mã thiết bị:
                                             </Typography>
+                                        </div>
+                                        <div className='flex'>
+                                            <Typography className='text-md truncate' placeholder={''}>
+                                                {device.adaFruitID}
+                                            </Typography>
+                                        </div>
+                                        <div className='flex'>
                                             <Typography className='text-md font-semibold' placeholder={''}>
                                                 Trạng thái:
                                             </Typography>
                                         </div>
-                                        <div className='flex flex-col gap-1'>
-                                            <Typography className='text-md' placeholder={''}>
-                                                {device.deviceName}
-                                            </Typography>
-                                            <Typography className='text-md truncate' placeholder={''}>
-                                                {device.adaFruitID}
-                                            </Typography>
-                                            <Typography color='green' className='text-md' placeholder={''}>
-                                                Đang hoạt động
-                                            </Typography>
+                                        <div className='flex'>
+                                            {device.deviceState !== 'OFF' ? (
+                                                <Typography color='green' className='text-md truncate' placeholder={''}>
+                                                    Đang hoạt động
+                                                </Typography>
+                                            ) : (
+                                                <Typography color='red' className='text-md truncate ' placeholder={''}>
+                                                    Đã tắt
+                                                </Typography>
+                                            )}
                                         </div>
                                     </div>
                                 </CardBody>
                                 <CardBody placeholder={''} className='flex items-center gap-2'>
-                                    <Button placeholder={''} variant='outlined' color='blue' size='sm'>
+                                    <Button
+                                        placeholder={''}
+                                        variant='outlined'
+                                        color='blue'
+                                        size='sm'
+                                        onClick={() => handleOpenDeviceInfoDialog(device.adaFruitID)}
+                                    >
                                         Xem chi tiết
                                     </Button>
-                                    <Button placeholder={''} variant='outlined' color='red' size='sm'>
+                                    <Button
+                                        placeholder={''}
+                                        variant='outlined'
+                                        color='red'
+                                        size='sm'
+                                        onClick={() => handleRemoveDevice(device.adaFruitID)}
+                                    >
                                         Xóa thiết bị
                                     </Button>
                                 </CardBody>
@@ -137,7 +221,7 @@ export function DevicePage() {
                         <Card
                             placeholder={''}
                             onClick={() => setOpenNewDeviceDialog(true)}
-                            className='w-[400px] flex items-center justify-center cursor-pointer shrink'
+                            className='w-full lg:w-1/4 md:w-1/3 flex items-center justify-center cursor-pointer shrink flex-grow dark:bg-gray-300/50 dark:text-white'
                         >
                             <CardBody placeholder={''} className='flex flex-col items-center'>
                                 <PlusIcon className='w-14 h-14'></PlusIcon>
@@ -148,10 +232,19 @@ export function DevicePage() {
                         </Card>
                     </div>
                     <NewDeviceDialog open={openNewDeviceDialog} onClose={() => setOpenNewDeviceDialog(false)} />
-                    <div className='absolute bottom-0 flex left-1/2 -translate-x-1/2'>
-                        <Pagination />
-                    </div>
+                    <RemoveDeviceDialog open={openRemoveDeviceDialog} onClose={() => setOpenRemoveDeviceDialog(false)} device={device} />
+                    <DeviceInfoDialog open={openDeviceDialog} onClose={() => setOpenDeviceDialog(false)} device={device} />
                 </div>
+                {isLoading && (
+                    <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50'>
+                        <div className='flex items-center p-4 bg-white rounded-lg'>
+                            <Typography placeholder={''} className='mr-2 text-lg italic font-semibold' variant='h3'>
+                                Đang xử lý...
+                            </Typography>
+                            <Spinner className='w-8 h-8' />
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

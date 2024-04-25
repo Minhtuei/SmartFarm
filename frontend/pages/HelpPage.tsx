@@ -2,7 +2,7 @@ import { AppNavigationBar } from '@fe/components';
 export function HelpPage() {
     return (
         <>
-            <AppNavigationBar title='Help' />
+            <AppNavigationBar title='Trợ giúp' />
             <div className='p-4 bg-white/2'>
                 <div className=''>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe atque, animi officiis praesentium quis, officia

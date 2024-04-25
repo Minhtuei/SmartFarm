@@ -34,16 +34,16 @@ const login = async (req: Request, res: Response) => {
     try {
         // base64 decode the data: email, password
         const { email, password } = req.body;
-        if (!validateEmail(email) && !validatePassword(password)) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                status: 'error',
-                message: 'The email or password invalid.'
-            });
-        }
         if (!email || !password) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 status: 'error',
                 message: 'Request missing email or password'
+            });
+        }
+        if (!validateEmail(email) && !validatePassword(password)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'The email or password invalid.'
             });
         }
         // Assuming the username is in req.body.name

@@ -2,6 +2,8 @@ import { User } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 const bcrypt = require('bcrypt');
+import { validateEmail } from '@fe/utils';
+
 export const getUserInfo = async (req: Request, res: Response) => {
     try {
         const user = await User.findOne({ email: req.email });
@@ -26,10 +28,16 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const email = req.params.email;
+    if (!validateEmail(email)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            status: 'error',
+            message: 'Invalid email!'
+        });
+    }
     try {
-        await User.create({ email: email, password: password });
-        return res.status(StatusCodes.OK).json({ email: email, password: password });
+        await User.create({ email: email });
+        return res.status(StatusCodes.OK).json({ email: email });
     } catch (error) {
         console.log(error);
     }

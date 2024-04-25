@@ -21,6 +21,8 @@ interface IUser {
     account: string;
     sessionID: number;
     password: string;
+    otp: string;
+    otpExpired: Date;
     accessToken: string;
     avatar: string; //image url
     major: string;
@@ -35,6 +37,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     account: String,
     sessionID: Number,
     password: String,
+    otp: String,
+    otpExpired: Date,
     accessToken: String,
     avatar: String, //image url
     major: String,

@@ -4,6 +4,7 @@ import { Switch } from '@material-tailwind/react';
 import { NotificationsMenu, ProfileMenu } from '@fe/components';
 import { MoonIcon } from '@heroicons/react/20/solid';
 import { useDarkMode } from '@fe/hooks';
+import { NotificationPopUp } from '../Notify/NotificationPopUp';
 export function AppNavigationBar({ title }: { title: string }) {
     const [darkMode, toggleDarkMode] = useDarkMode();
     return (
@@ -23,6 +24,9 @@ export function AppNavigationBar({ title }: { title: string }) {
                         <ProfileMenu />
                     </div>
                 </div>
+            </div>
+            <div className='absolute right-0 -bottom-[1.5rem] -translate-x-[20px] translate-y-[80px]'>
+                <NotificationPopUp />
             </div>
         </Navbar>
     );

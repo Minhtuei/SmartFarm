@@ -3,5 +3,6 @@
  */
 
 export * from './device.state';
+export * from './notification.state';
 export * from './review.state';
 export * from './userInfo.state';

@@ -2,15 +2,15 @@ import { create } from 'zustand';
 import { DeviceService } from '@fe/services';
 export const useDevicesStore = create<DevicesInfo>((set) => ({
     deviceInfos: [],
-    getDeviceInfos: async () => {
+    getDeviceInfos: async (userId: string) => {
         try {
-            const data = await DeviceService.getAllDevice();
+            const data = await DeviceService.getAllDevice(userId);
             const deviceInfos = data.devices.map((device: DeviceData) => ({
                 deviceName: device.deviceName,
                 deviceState: device.deviceState,
                 deviceType: device.deviceType,
                 userID: device.userID,
-                pumpDuration: device.pumpDuration,
+                schedule: device.schedule,
                 color: device.color,
                 minLimit: device.minLimit,
                 maxLimit: device.maxLimit,
@@ -21,6 +21,7 @@ export const useDevicesStore = create<DevicesInfo>((set) => ({
             }));
             set({ deviceInfos });
         } catch (err) {
+            DeviceService.updateToken();
             console.log(err);
         }
     }

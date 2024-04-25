@@ -39,6 +39,7 @@ export function LoginPage() {
                         sessionStorage.setItem('refreshToken', `${response.data.refreshToken}`);
                         setIsAuth(true);
                         setUserData({ email: username, id: response.data.userInfo.id });
+                        sessionStorage.setItem('id', response.data.userInfo.id);
                         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
                     }
                     setBlock(false);

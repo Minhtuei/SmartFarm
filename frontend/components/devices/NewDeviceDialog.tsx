@@ -1,11 +1,7 @@
 import { Dialog, DialogHeader, DialogBody, DialogFooter, Button, Input } from '@material-tailwind/react';
 import { DeviceService } from '@fe/services';
 import { useState } from 'react';
-interface NewDeviceDialogProps {
-    open: boolean;
-    onClose: () => void;
-}
-export function NewDeviceDialog({ open, onClose }: NewDeviceDialogProps) {
+export function NewDeviceDialog({ open, onClose }: DeviceDialogProps) {
     const [deviceID, setDeviceID] = useState<string>('');
     const handleOnClick = () => {
         console.log('Adding device:', deviceID);
@@ -18,9 +14,11 @@ export function NewDeviceDialog({ open, onClose }: NewDeviceDialogProps) {
         onClose();
     };
     return (
-        <Dialog open={open} handler={onClose}>
-            <DialogHeader className='text-red-500'>Thêm thiết bị</DialogHeader>
-            <DialogBody>
+        <Dialog placeholder={''} open={open} handler={onClose}>
+            <DialogHeader placeholder={''} className='text-red-500'>
+                Thêm thiết bị
+            </DialogHeader>
+            <DialogBody placeholder={'Nhập ID thiết bị'}>
                 <Input
                     type='device'
                     placeholder='Nhập ID thiết bị'
@@ -34,11 +32,11 @@ export function NewDeviceDialog({ open, onClose }: NewDeviceDialogProps) {
                     onChange={(e) => setDeviceID(e.target.value)}
                 />{' '}
             </DialogBody>
-            <DialogFooter>
-                <Button variant='text' color='red' onClick={onClose} className='mr-1'>
+            <DialogFooter placeholder={''}>
+                <Button placeholder={''} variant='text' color='red' onClick={onClose} className='mr-1'>
                     <span>Huỷ bỏ</span>
                 </Button>
-                <Button variant='gradient' color='green' onClick={() => handleOnClick()}>
+                <Button placeholder={''} variant='gradient' color='green' onClick={() => handleOnClick()}>
                     <span>Chấp nhận</span>
                 </Button>
             </DialogFooter>

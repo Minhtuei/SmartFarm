@@ -7,8 +7,12 @@ const deviceSchemaFields: Record<keyof DeviceSchema, any> = {
     deviceState: { type: String, enum: ['ON', 'OFF', 'NONE'], required: true },
     deviceType: { type: String, enum: ['led', 'earthhumidity', 'airhumidity', 'temperature', 'waterpump', 'light'], required: true },
     userID: { type: String },
-    activateTime: { type: Date },
-    pumpDuration: { type: Number },
+    schedule: [
+        {
+            startTime: { type: String },
+            endTime: { type: String }
+        }
+    ],
     color: { type: String, enum: ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'white', 'black'], default: 'white' },
     minLimit: { type: Number, default: 0 },
     maxLimit: { type: Number, default: 0 },

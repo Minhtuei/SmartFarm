@@ -5,4 +5,5 @@
 export * from './common';
 export * from './dashboard.service';
 export * from './device.service';
+export * from './notification';
 export * from './review.service';

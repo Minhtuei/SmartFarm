@@ -8,11 +8,27 @@ import { router as login } from './routes/auth/authRouter';
 import { router as user } from './routes/userRouter';
 import { router as device } from './routes/deviceRouter';
 import { router as notification } from './routes/notificationRouter';
+import { router as genAcc } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
+import { Scheduler } from './handlers';
 const session = require('express-session');
 import { mqttController } from '@be/controllers';
 const app = express();
 app.use(express.json());
+mqttClient.onConnect();
+mqttClient.subscribe('#');
+
+mqttController.GetDeViceInfo;
+async function startScheduler() {
+    try {
+        await Scheduler();
+    } catch (error) {
+        console.error('Error running Scheduler:', error);
+    }
+    setTimeout(startScheduler, 1000);
+}
+
+startScheduler();
 const whitelist: string[] = ['http://localhost:3000', 'http://localhost:8080'];
 // CORS_WHITE_LIST=["http://localhost:3000","http://localhost:8080"] <- .env
 // Configure CORS options
@@ -46,16 +62,13 @@ app.use(
 // routes
 try {
     app.use('/login', login);
-    app.use('/user', authenticate, user);
+    app.use('/user', user);
     app.use('/device', authenticate, device);
     app.use('/notification', authenticate, notification);
+    app.use('/gen', genAcc);
 } catch (err) {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }
-mqttClient.onConnect();
-mqttClient.subscribe('#');
-
-mqttController.GetDeViceInfo;
 
 app.use(bodyParser.json());
 app.use(cookieParser(envs.COOKIE_SECRET));
@@ -76,3 +89,8 @@ mongoose
     .catch((err: Error) => {
         console.error(`Error connecting to the database. \n${err}`);
     });
+// const Notification = mongoose.model('Notification'); // Replace 'Notification' with your actual model name
+// Notification.deleteMany({ email: 'test2@gmail.com' }).then(() => {
+//     console.log('Deleted all notifications)');
+// }
+// );

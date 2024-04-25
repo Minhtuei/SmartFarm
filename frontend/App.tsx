@@ -7,19 +7,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AppSkeleton } from './components';
 import { AuthLayout } from './layouts/AuthLayout';
 import { useDevicesStore } from '@fe/states';
+import { useNotificationStore } from '@fe/states';
 export default function App() {
     const navigate = useNavigate();
     const pathname = useLocation();
-    const { isAuth } = useUserInfoStore();
+    const { isAuth, userData } = useUserInfoStore();
     const { getDeviceInfos } = useDevicesStore();
+    const { getNotifications, getLatestNotification } = useNotificationStore();
     useEffect(() => {
         if (pathname.pathname === '/' && isAuth) {
             navigate('/dashboard');
         }
     }, [pathname, navigate, isAuth]);
+
     useEffect(() => {
         const fetchDashboard = async () => {
-            await getDeviceInfos();
+            await getDeviceInfos(userData.id);
         };
         // Call immediately
         fetchDashboard(); // Then call every 3 seconds
@@ -28,7 +31,18 @@ export default function App() {
         }, 10000); // Interval of 3 seconds
 
         return () => clearInterval(interval); // Clear the interval if the component unmounts
-    }, []);
+    }, [userData]);
+    useEffect(() => {
+        const fetchNotification = async () => {
+            if (!userData) return;
+            await getNotifications(userData.id);
+            const interval = setInterval(() => {
+                getLatestNotification(userData.id);
+            }, 3000);
+            return () => clearInterval(interval);
+        };
+        fetchNotification();
+    }, [userData]);
 
     if (!isAuth) {
         return (
@@ -52,7 +66,7 @@ export default function App() {
                         type: 'item',
                         icon: <ChartBarIcon className='h-5 w-5' />,
                         path: '/dashboard' || '/',
-                        name: 'Dashboard',
+                        name: 'Thống kê',
                         element: <DashboardPage />,
                         isActive: pathname.pathname === '/dashboard' || pathname.pathname === '/'
                     },
@@ -60,23 +74,23 @@ export default function App() {
                         type: 'item',
                         icon: <UserIcon className='h-5 w-5' />,
                         path: '/profile',
-                        name: 'Profile',
+                        name: 'Cá nhân',
                         element: <ProfilePage />,
                         isActive: pathname.pathname === '/profile'
                     },
                     {
                         type: 'item',
                         icon: <ComputerDesktopIcon className='h-5 w-5' />,
-                        path: '/device',
-                        name: 'Device',
+                        path: '/device/*',
+                        name: 'Thiết bị',
                         element: <DevicePage />,
-                        isActive: pathname.pathname === '/device'
+                        isActive: pathname.pathname === '/device/*'
                     },
                     {
                         type: 'item',
                         icon: <EnvelopeIcon className='h-5 w-5' />,
                         path: '/notification',
-                        name: 'Notification',
+                        name: 'Thông báo',
                         element: <NotificationPage />,
                         isActive: pathname.pathname === '/notification'
                     },
@@ -84,7 +98,7 @@ export default function App() {
                         type: 'item',
                         icon: <QuestionMarkCircleIcon className='h-5 w-5' />,
                         path: '/help',
-                        name: 'Help',
+                        name: 'Trợ giúp',
                         element: <HelpPage />,
                         isActive: pathname.pathname === '/help'
                     }
