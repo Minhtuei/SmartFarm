@@ -88,7 +88,7 @@ const logout = async (req: Request, res: Response) => {
 const updateToken = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.header('Refresh-Token');
-
+        // console.log(req.headers);
         if (!refreshToken) {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Refresh token is required.' });
         }

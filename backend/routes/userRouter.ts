@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import { createUser, getUserInfo, updateUserInfo } from '../controllers/userController';
-import { SendOTP } from 'backend/controllers/emailController';
-
+import { getUserInfo, updateUserInfo } from '../controllers/userController';
+// import createUser ................
 const router = Router();
-router.route('/:email').get(getUserInfo).put(SendOTP).post(createUser);
-router.route('/:otp').put(updateUserInfo);
+// router.route('/:email').put(updateUserInfo).post(createUser);
+router.route('/').get(getUserInfo).put(updateUserInfo);
 export { router };

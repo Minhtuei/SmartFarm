@@ -15,12 +15,12 @@ export function LoginPage() {
     const serverHost = 'http://localhost:8080';
     const handleSignIn = () => {
         if (!validateEmail(username)) {
-            enqueueSnackbar('Invalid email format. Please enter a valid email.', { variant: 'error', autoHideDuration: 3000 });
+            enqueueSnackbar('Mail không đúng format, làm ơn nhập đúng email', { variant: 'error', autoHideDuration: 3000 });
         } else if (!validatePassword(password)) {
-            enqueueSnackbar(
-                'Password must be at least 8 characters long and contain at least one letter, one number, and one special character.',
-                { variant: 'error', autoHideDuration: 4000 }
-            );
+            enqueueSnackbar('Password phải ít nhất 8 ký tự gồm chữ cái, số và ít nhất 1 ký tự đặc biệt', {
+                variant: 'error',
+                autoHideDuration: 4000
+            });
         } else {
             setBlock(true);
 

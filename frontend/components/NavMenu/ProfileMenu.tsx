@@ -1,6 +1,11 @@
 import { Menu, MenuHandler, MenuList, MenuItem, Avatar, Typography } from '@material-tailwind/react';
 
 export function ProfileMenu() {
+    const handleSignout = () => {
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('refreshToken');
+        window.location.reload();
+    };
     return (
         <Menu>
             <MenuHandler>
@@ -50,7 +55,7 @@ export function ProfileMenu() {
                             fill='#90A4AE'
                         />
                     </svg>
-                    <Typography placeholder={''} variant='small' className='font-medium'>
+                    <Typography placeholder={''} variant='small' className='font-medium' onClick={handleSignout}>
                         Đăng xuất
                     </Typography>
                 </MenuItem>

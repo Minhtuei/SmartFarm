@@ -12,7 +12,6 @@ import { router as genAcc } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
 import { Scheduler } from './handlers';
 const session = require('express-session');
-
 import { mqttController } from '@be/controllers';
 const app = express();
 app.use(express.json());
