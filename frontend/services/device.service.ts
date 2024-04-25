@@ -39,7 +39,7 @@ export const DeviceService = {
         try {
             const response = await axios.post(`http://localhost:8080/login/updateToken`, {});
             sessionStorage.setItem('accessToken', response.data.accessToken);
-            sessionStorage.setItem('refreshToken', response.data.refreshToken);
+            // sessionStorage.setItem('refreshToken', response.data.refreshToken);
         } catch (error) {
             return error;
         }

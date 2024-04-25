@@ -10,7 +10,6 @@ import { router as device } from './routes/deviceRouter';
 import { router as notification } from './routes/notificationRouter';
 import { authenticate } from './services/authenticate';
 const session = require('express-session');
-
 import { mqttController } from '@be/controllers';
 const app = express();
 app.use(express.json());

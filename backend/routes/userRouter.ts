@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { createUser, getUserInfo, updateUserInfo } from '../controllers/userController';
-
+import { getUserInfo, updateUserInfo } from '../controllers/userController';
+// import createUser ................
 const router = Router();
-router.route('/:email').get(getUserInfo).put(updateUserInfo).post(createUser);
+// router.route('/:email').put(updateUserInfo).post(createUser);
+router.route('/').get(getUserInfo).put(updateUserInfo);
 export { router };
