@@ -25,14 +25,14 @@ export const NotificationPopUp = () => {
             {newNotifications.map((notification: NotificationInfo, index) => (
                 <Alert
                     key={index}
-                    className='w-80'
+                    className='w-80 p-2'
                     style={{ backgroundColor: NOTIFICATION_CATEGORY[notification.notificationType].color }}
                     open={isShow}
                 >
-                    <Typography color='white' className='font-bold text-sm'>
+                    <Typography color='white' className='font-bold text-md mb-1'>
                         {NOTIFICATION_CATEGORY[notification.notificationType].label}
                     </Typography>
-                    <Typography color='white' className='text-sm leading-3 truncate'>
+                    <Typography color='white' className='text-md truncate'>
                         {notification.context}
                     </Typography>
                 </Alert>

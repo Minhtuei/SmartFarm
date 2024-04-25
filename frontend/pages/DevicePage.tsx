@@ -60,7 +60,7 @@ export function DevicePage() {
     };
     return (
         <>
-            <AppNavigationBar title={'Device'} />
+            <AppNavigationBar title={'Thiết bị'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
                 <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-4 overflow-y-auto pr-4'>
                     <div className='flex items-center gap-2'>
@@ -86,7 +86,7 @@ export function DevicePage() {
                         </Menu>
                         <Input
                             type='device'
-                            placeholder='Search for a device...'
+                            placeholder='Tìm kiếm thiết bị'
                             className='!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10'
                             labelProps={{
                                 className: 'hidden'
@@ -94,7 +94,10 @@ export function DevicePage() {
                             containerProps={{ className: 'min-w-[100px] w-1/4' }}
                             crossOrigin={'true'}
                             value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
+                            onChange={(e) => {
+                                setSearchValue(e.target.value);
+                                filterDeviceByName(e.target.value, deviceInfos);
+                            }}
                         />{' '}
                         <IconButton
                             color='green'
@@ -129,7 +132,7 @@ export function DevicePage() {
                                 placeholder={''}
                                 id={device.adaFruitID}
                                 key={device.adaFruitID}
-                                className='flex-grow shrink w-full lg:w-1/4 md:w-1/3'
+                                className='flex-grow shrink w-full lg:w-1/4 md:w-1/3 dark:bg-white/80 '
                             >
                                 <CardBody placeholder={''} className='flex items-center'>
                                     <Typography color='blue' className='ml-2 font-semibold text-lg' placeholder={''}>
@@ -214,7 +217,7 @@ export function DevicePage() {
                         <Card
                             placeholder={''}
                             onClick={() => setOpenNewDeviceDialog(true)}
-                            className='w-[400px] flex items-center justify-center cursor-pointer shrink'
+                            className='w-full lg:w-1/4 md:w-1/3 flex items-center justify-center cursor-pointer shrink flex-grow dark:bg-gray-300/50 dark:text-white'
                         >
                             <CardBody placeholder={''} className='flex flex-col items-center'>
                                 <PlusIcon className='w-14 h-14'></PlusIcon>

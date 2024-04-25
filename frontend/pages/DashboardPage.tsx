@@ -13,7 +13,7 @@ export function DashboardPage() {
     const { deviceInfos } = useDevicesStore();
     return (
         <>
-            <AppNavigationBar title={'Dashboard'} />
+            <AppNavigationBar title={'Thống kê'} />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
                 {deviceInfos.length === 0 ? (
                     <ComponentSkeleton />
@@ -66,7 +66,7 @@ export function DashboardPage() {
                                 <Carousel
                                     placeholder={'Chưa có dữ liệu'}
                                     autoplay={true}
-                                    autoplayDelay={5000}
+                                    autoplayDelay={10000}
                                     loop={true}
                                     prevArrow={({ handlePrev }) => (
                                         <IconButton

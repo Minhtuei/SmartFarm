@@ -52,7 +52,7 @@ export function NotificationPage() {
     }, [notifications]);
     return (
         <>
-            <AppNavigationBar title='Notifications' />
+            <AppNavigationBar title='Thông báo' />
             <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
                 <Card className='h-[calc(100vh-130px)] w-full'>
                     <CardHeader floated={false} shadow={false} className='rounded-none'>

@@ -12,7 +12,7 @@ export const NOTIFICATION_CATEGORY = {
     },
     schedule: {
         label: 'Thông tin',
-        color: 'blue',
+        color: 'gray',
         icon: <Setting />
     },
     warning: {

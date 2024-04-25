@@ -2,7 +2,7 @@ import { AppNavigationBar } from '@fe/components';
 export function ProfilePage() {
     return (
         <>
-            <AppNavigationBar title='Profile' />
+            <AppNavigationBar title='Cá nhân' />
             <div className='p-4 bg-white/2'>
                 <div className=''>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe atque, animi officiis praesentium quis, officia

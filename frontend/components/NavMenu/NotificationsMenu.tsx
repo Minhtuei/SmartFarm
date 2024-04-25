@@ -1,7 +1,23 @@
-import { Menu, MenuHandler, MenuList, MenuItem, IconButton, Avatar, Typography } from '@material-tailwind/react';
-import { ClockIcon } from '@heroicons/react/20/solid';
-import { BellIcon } from '@heroicons/react/20/solid';
+import { NOTIFICATION_CATEGORY } from '@fe/constants';
+import { useNotificationStore } from '@fe/states';
+import { BellIcon, ClockIcon } from '@heroicons/react/20/solid';
+import { IconButton, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
+import moment from 'moment';
+import { useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 export function NotificationsMenu() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { notifications } = useNotificationStore();
+    const handleSeeAllNotifications = useCallback(() => {
+        if (location.pathname === '/notification') {
+            return;
+        }
+        return () => {
+            navigate('/notification');
+        };
+    }, [navigate, location.pathname]);
+
     return (
         <Menu>
             <MenuHandler>
@@ -10,54 +26,24 @@ export function NotificationsMenu() {
                 </IconButton>
             </MenuHandler>
             <MenuList placeholder={''} className='flex flex-col gap-2'>
-                <MenuItem placeholder={''} className='flex items-center gap-4 py-2 pl-2 pr-8'>
-                    <Avatar
-                        placeholder={''}
-                        variant='circular'
-                        alt='tania andrew'
-                        src='https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80'
-                    />
-                    <div className='flex flex-col gap-1'>
-                        <Typography placeholder={''} variant='small' color='gray' className='font-semibold'>
-                            Tania send you a message
-                        </Typography>
-                        <Typography placeholder={''} className='flex items-center gap-1 text-sm font-medium text-blue-gray-500'>
-                            <ClockIcon className='w-4 h-4' />
-                            13 minutes ago
-                        </Typography>
-                    </div>
-                </MenuItem>
-                <MenuItem placeholder={''} className='flex items-center gap-4 py-2 pl-2 pr-8'>
-                    <Avatar
-                        placeholder={''}
-                        variant='circular'
-                        alt='natali craig'
-                        src='https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1061&q=80'
-                    />
-                    <div className='flex flex-col gap-1'>
-                        <Typography placeholder={''} variant='small' color='gray' className='font-semibold'>
-                            Natali replied to your email.
-                        </Typography>
-                        <Typography placeholder={''} className='flex items-center gap-1 text-sm font-medium text-blue-gray-500'>
-                            <ClockIcon className='w-4 h-4' />1 hour ago
-                        </Typography>
-                    </div>
-                </MenuItem>
-                <MenuItem placeholder={''} className='flex items-center gap-4 py-2 pl-2 pr-8'>
-                    <Avatar
-                        placeholder={''}
-                        variant='circular'
-                        alt='paypal'
-                        src='https://dwglogo.com/wp-content/uploads/2016/08/PayPal_Logo_Icon.png'
-                    />
-                    <div className='flex flex-col gap-1'>
-                        <Typography placeholder={''} variant='small' color='gray' className='font-semibold'>
-                            You&apos;ve received a payment.
-                        </Typography>
-                        <Typography placeholder={''} className='flex items-center gap-1 text-sm font-medium text-blue-gray-500'>
-                            <ClockIcon className='w-4 h-4' />5 hours ago
-                        </Typography>
-                    </div>
+                {notifications.slice(0, 3).map((notification, index) => (
+                    <MenuItem key={index} placeholder={''} className='flex items-center gap-4 py-2 pl-2 pr-8'>
+                        {NOTIFICATION_CATEGORY[notification.notificationType].icon}
+                        <div className='flex flex-col gap-1'>
+                            <Typography placeholder={''} variant='small' color='gray' className='font-semibold'>
+                                {notification.context}
+                            </Typography>
+                            <Typography placeholder={''} className='flex items-center gap-1 text-sm font-medium text-blue-gray-500'>
+                                <ClockIcon className='w-4 h-4' />
+                                {moment(notification.createdAt).fromNow()}
+                            </Typography>
+                        </div>
+                    </MenuItem>
+                ))}
+                <MenuItem placeholder={''} className='flex items-center justify-center py-2'>
+                    <Typography placeholder={''} variant='small' className='text-blue-gray-500' onClick={handleSeeAllNotifications()}>
+                        Xem tất cả thông báo
+                    </Typography>
                 </MenuItem>
             </MenuList>
         </Menu>

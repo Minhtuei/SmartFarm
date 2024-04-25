@@ -13,7 +13,7 @@ export const filterDeviceByName = (deviceName: string, deviceInfos: DeviceData[]
     deviceInfos.forEach((device) => {
         if (deviceName === 'all') {
             document.getElementById(device.adaFruitID)?.classList.remove('hidden');
-        } else if (device.deviceName === deviceName) {
+        } else if (device.deviceName.includes(deviceName)) {
             document.getElementById(device.adaFruitID)?.classList.remove('hidden');
         } else {
             document.getElementById(device.adaFruitID)?.classList.add('hidden');
