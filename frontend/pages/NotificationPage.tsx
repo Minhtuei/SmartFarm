@@ -152,14 +152,14 @@ export function NotificationPage() {
                     </CardBody>
                     <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
                         <Typography variant='small' color='blue-gray' className='font-normal'>
-                            Page {currentPage} of {Math.ceil(notifications.length / itemsPerPage)}
+                            Trang {currentPage} / {Math.ceil(notifications.length / itemsPerPage) || 1}
                         </Typography>
                         <div className='flex gap-2'>
                             <Button variant='outlined' size='sm' onClick={() => handlePreviousClick()}>
-                                Previous
+                                Trang trước
                             </Button>
                             <Button variant='outlined' size='sm' onClick={() => handleNextClick()}>
-                                Next
+                                Trang sau
                             </Button>
                         </div>
                     </CardFooter>

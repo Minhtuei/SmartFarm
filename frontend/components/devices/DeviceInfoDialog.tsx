@@ -65,7 +65,6 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
             clearState();
         }
     }, [open, device]);
-
     if (!device) return null;
     return (
         <Dialog placeholder={''} open={open} handler={onClose} className='max-h-[650px] overflow-y-auto no-scrollbar bg-green-100'>
@@ -296,7 +295,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                     <span>Lưu</span>
                 </Button>
                 <Button placeholder={''} color='red' onClick={onClose} className='mr-1'>
-                    <span>Huỷ bỏ</span>
+                    <span>Trở về</span>
                 </Button>
             </DialogFooter>
         </Dialog>

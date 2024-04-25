@@ -11,7 +11,7 @@ const notficationSchema = new Schema(
             }
         },
         email: { type: String, required: true },
-        deviceName: { type: String, required: true }
+        deviceName: { type: String }
     },
     { timestamps: true }
 );

@@ -35,7 +35,7 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
 
     const temperatureData = (deviceInfos || []).map((device) => ({
         name: device.deviceName,
-        data: device.environmentValue.slice(device.environmentValue.length - 19, device.environmentValue.length - 1).map((value) => ({
+        data: device.environmentValue.slice(device.environmentValue.length - 19, device.environmentValue.length).map((value) => ({
             x: moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format),
             y: value.value
         }))

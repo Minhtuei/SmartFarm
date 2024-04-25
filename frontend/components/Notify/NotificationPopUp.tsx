@@ -21,18 +21,18 @@ export const NotificationPopUp = () => {
         return null;
     }
     return (
-        <div className='flex flex-col gap-y-2 w-80'>
+        <div className='flex flex-col gap-y-2 w-80 p-2'>
             {newNotifications.map((notification: NotificationInfo, index) => (
                 <Alert
                     key={index}
-                    className='w-80 p-2'
+                    className='w-full'
                     style={{ backgroundColor: NOTIFICATION_CATEGORY[notification.notificationType].color }}
                     open={isShow}
                 >
                     <Typography color='white' className='font-bold text-md mb-1'>
                         {NOTIFICATION_CATEGORY[notification.notificationType].label}
                     </Typography>
-                    <Typography color='white' className='text-md truncate'>
+                    <Typography color='white' className='text-md truncate max-w-[280px]'>
                         {notification.context}
                     </Typography>
                 </Alert>

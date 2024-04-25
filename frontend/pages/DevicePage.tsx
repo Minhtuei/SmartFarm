@@ -58,6 +58,10 @@ export function DevicePage() {
         setDevice(deviceInfos.find((device) => device.adaFruitID === adaFruitID) || null);
         navigate(`/device/${adaFruitID}`, { replace: true });
     };
+    const handleRemoveDevice = (adaFruitID: string) => {
+        setOpenRemoveDeviceDialog(true);
+        setDevice(deviceInfos.find((device) => device.adaFruitID === adaFruitID) || null);
+    };
     return (
         <>
             <AppNavigationBar title={'Thiết bị'} />
@@ -207,7 +211,7 @@ export function DevicePage() {
                                         variant='outlined'
                                         color='red'
                                         size='sm'
-                                        onClick={() => setOpenRemoveDeviceDialog(true)}
+                                        onClick={() => handleRemoveDevice(device.adaFruitID)}
                                     >
                                         Xóa thiết bị
                                     </Button>
@@ -228,7 +232,7 @@ export function DevicePage() {
                         </Card>
                     </div>
                     <NewDeviceDialog open={openNewDeviceDialog} onClose={() => setOpenNewDeviceDialog(false)} />
-                    <RemoveDeviceDialog open={openRemoveDeviceDialog} onClose={() => setOpenRemoveDeviceDialog(false)} />
+                    <RemoveDeviceDialog open={openRemoveDeviceDialog} onClose={() => setOpenRemoveDeviceDialog(false)} device={device} />
                     <DeviceInfoDialog open={openDeviceDialog} onClose={() => setOpenDeviceDialog(false)} device={device} />
                 </div>
                 {isLoading && (

@@ -69,5 +69,14 @@ export const DeviceService = {
         } catch (error) {
             return error;
         }
+    },
+    removeDeviceUser: async (deviceID: string) => {
+        setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
+        try {
+            const response = await axios.patch(`http://localhost:8080/device/${deviceID}/removeUser`, {});
+            return response.data;
+        } catch (error) {
+            return error;
+        }
     }
 };
