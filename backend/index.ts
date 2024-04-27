@@ -8,7 +8,7 @@ import { router as login } from './routes/auth/authRouter';
 import { router as user } from './routes/userRouter';
 import { router as device } from './routes/deviceRouter';
 import { router as notification } from './routes/notificationRouter';
-import { router as genAcc } from './routes/genAccRouter';
+import { router as genAcc, router2 as reset } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
 import { Scheduler } from './handlers';
 const session = require('express-session');
@@ -66,6 +66,7 @@ try {
     app.use('/device', authenticate, device);
     app.use('/notification', authenticate, notification);
     app.use('/gen', genAcc);
+    app.use('/reset', reset);
 } catch (err) {
     console.error('fix: ------\n' + err + '\n-------------------\n');
 }

@@ -76,12 +76,12 @@ export function ProfilePage() {
     const Save = () => {
         console.log('Saving...');
         if (newPassword !== '' && newPassword !== verPassword) {
-            enqueueSnackbar('The new password does not match the retype password', { variant: 'error', autoHideDuration: 2000 });
+            enqueueSnackbar('Mật khẩu không trùng khớp', { variant: 'error', autoHideDuration: 2000 });
         } else if (newPassword !== '' && (!validatePassword(newPassword) || !validatePassword(verPassword))) {
-            enqueueSnackbar(
-                'The new password must be at least 8 characters long and contain at least one letter, one number, and one special character.',
-                { variant: 'error', autoHideDuration: 2000 }
-            );
+            enqueueSnackbar('Mật khẩu phải gồm ít nhất 8 ký tự gồm chữ cái, số và ít nhất 1 ký tự đặc biệt.', {
+                variant: 'error',
+                autoHideDuration: 2000
+            });
         } else {
             let data;
             if (verPassword !== '') {

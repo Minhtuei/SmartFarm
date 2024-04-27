@@ -22,7 +22,7 @@ interface IUser {
     sessionID: number;
     password: string;
     otp: string;
-    otpExpired: Date;
+    otpExpired: { type: Date; default: undefined };
     accessToken: string;
     avatar: string; //image url
     major: string;

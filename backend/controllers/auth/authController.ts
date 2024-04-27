@@ -55,7 +55,7 @@ const login = async (req: Request, res: Response) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Password incorrect' });
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Sai mật khẩu' });
         }
         // Assuming you have user ID in the user object, adjust this accordingly based on your schema
         // const { email } = user;
