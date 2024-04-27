@@ -2,7 +2,7 @@ import { User } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 const bcrypt = require('bcrypt');
-import { validateEmail } from '@fe/utils';
+import { validateEmail, validatePassword } from '@fe/utils';
 
 export const getUserInfo = async (req: Request, res: Response) => {
     try {
@@ -28,7 +28,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-    const email = req.params.email;
+    const email = req.body.email;
     if (!validateEmail(email)) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             status: 'error',
@@ -36,8 +36,23 @@ export const createUser = async (req: Request, res: Response) => {
         });
     }
     try {
-        await User.create({ email: email });
-        return res.status(StatusCodes.OK).json({ email: email });
+        const password = req.body.password;
+        if (!validatePassword(password)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'Invalid Password!'
+            });
+        }
+        const user = await User.findOne({ email: email });
+        if (user) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                status: 'error',
+                message: 'The user is exist in the database!'
+            });
+        }
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        await User.create(req.body);
+        return res.status(StatusCodes.OK).json(req.body);
     } catch (error) {
         console.log(error);
     }
