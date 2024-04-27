@@ -156,9 +156,9 @@ export function LoginPage() {
     };
     const handleSignIn = () => {
         if (!validateEmail(username)) {
-            enqueueSnackbar('Mail không đúng định dạng, làm ơn nhập đúng email', { variant: 'error', autoHideDuration: 3000 });
+            enqueueSnackbar('Tài khoản không hợp lệ', { variant: 'error', autoHideDuration: 3000 });
         } else if (!validatePassword(password)) {
-            enqueueSnackbar('Password phải ít nhất 8 ký tự gồm chữ cái, số và ít nhất 1 ký tự đặc biệt', {
+            enqueueSnackbar('Mật khẩu phải gồm ít nhất 8 ký tự gồm chữ cái, số và ít nhất 1 ký tự đặc biệt', {
                 variant: 'error',
                 autoHideDuration: 4000
             });
