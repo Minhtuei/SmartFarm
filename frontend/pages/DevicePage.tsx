@@ -1,6 +1,6 @@
 import { AppNavigationBar, NewDeviceDialog, RemoveDeviceDialog, DeviceInfoDialog } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
-import { AdjustmentsHorizontalIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { AdjustmentsHorizontalIcon, InformationCircleIcon, MagnifyingGlassIcon, PlusIcon, TrashIcon } from '@heroicons/react/20/solid';
 import {
     Button,
     Card,
@@ -13,7 +13,9 @@ import {
     MenuList,
     Switch,
     Typography,
-    Spinner
+    Spinner,
+    Checkbox,
+    Tooltip
 } from '@material-tailwind/react';
 import { useState } from 'react';
 import { DeviceService } from '@fe/services';
@@ -28,6 +30,9 @@ export function DevicePage() {
     const [device, setDevice] = useState<DeviceData | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>('');
+    const [removeAllMode, setRemoveAllMode] = useState<boolean>(false);
+    const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
+
     const { deviceInfos } = useDevicesStore();
     const deviceTypeNames: { [key: string]: string } = {
         all: 'Tất cả',
@@ -38,6 +43,30 @@ export function DevicePage() {
         waterpump: 'Máy bơm nước',
         light: 'Cảm biến ánh sáng'
     };
+    const handleSelectDevice = (adaFruitID: string) => {
+        return (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e.target.checked) {
+                setSelectedDevices([...selectedDevices, adaFruitID]);
+                const deviceClassName = document.getElementById(adaFruitID)?.className;
+                document.getElementById(adaFruitID)!.className = deviceClassName + ' bg-red-100/50 dark:bg-gray-800' || '';
+            } else {
+                setSelectedDevices(selectedDevices.filter((id) => id !== adaFruitID));
+                const deviceClassName = document.getElementById(adaFruitID)?.className;
+                document.getElementById(adaFruitID)!.className = deviceClassName?.replace(' bg-red-100/50 dark:bg-gray-800', '') || '';
+            }
+        };
+    };
+    const handleRemoveDevices = async () => {
+        try {
+            setIsLoading(true);
+            await DeviceService.removeManyDevice(selectedDevices);
+        } finally {
+            setIsLoading(false);
+            setRemoveAllMode(false);
+            setSelectedDevices([]);
+        }
+    };
+
     const handleTriggerDevice = (adaFruitID: string) => {
         return async (e: React.ChangeEvent<HTMLInputElement>) => {
             const device = deviceInfos.find((device) => device.adaFruitID === adaFruitID);
@@ -125,7 +154,7 @@ export function DevicePage() {
                             color='red'
                             placeholder={''}
                             className='px-3 py-2 hover:shadow-none '
-                            onClick={() => setOpenRemoveDeviceDialog(true)}
+                            onClick={removeAllMode ? handleRemoveDevices : () => setRemoveAllMode(true)}
                         >
                             <TrashIcon className='w-6 h-6' />
                         </IconButton>
@@ -143,12 +172,20 @@ export function DevicePage() {
                                         {deviceTypeNames[device.deviceType]}
                                     </Typography>
                                     {device.deviceState !== 'NONE' && (
-                                        <div className=' flex ml-auto'>
+                                        <div className=' flex gap-x-2 ml-auto'>
+                                            {device.environmentValue[device.environmentValue.length - 1].controlType === 'limit' && (
+                                                <Tooltip content='Thiết bị đang được điều khiển tự động' placement='top' color='red'>
+                                                    <InformationCircleIcon className='w-6 h-6' />
+                                                </Tooltip>
+                                            )}
                                             <Switch
                                                 crossOrigin='true'
                                                 color='blue'
                                                 checked={device.deviceState === 'ON'}
                                                 onChange={handleTriggerDevice(device.adaFruitID)}
+                                                disabled={
+                                                    device.environmentValue[device.environmentValue.length - 1].controlType === 'limit'
+                                                }
                                             />
                                         </div>
                                     )}
@@ -215,6 +252,13 @@ export function DevicePage() {
                                     >
                                         Xóa thiết bị
                                     </Button>
+                                    {removeAllMode && (
+                                        <Checkbox
+                                            crossOrigin={'true'}
+                                            checked={selectedDevices.includes(device.adaFruitID)}
+                                            onChange={handleSelectDevice(device.adaFruitID)}
+                                        />
+                                    )}
                                 </CardBody>
                             </Card>
                         ))}

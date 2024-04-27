@@ -2,15 +2,16 @@ import axios from 'axios';
 import { setHeaderRequest } from '@fe/utils';
 import { useUserInfoStore } from '@fe/states';
 export const DeviceService = {
-    addDevice: async (deviceID: string) => {
+    addDevice: async (deviceIDs: string) => {
         const { userData } = useUserInfoStore.getState();
         if (!userData) {
             return;
         }
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
-            const response = await axios.patch(`http://localhost:8080/device/${deviceID}/updateUser`, {
-                userID: userData.id
+            const response = await axios.patch(`http://localhost:8080/device/updateUser`, {
+                userID: userData.id,
+                deviceIDs
             });
             // await DeviceService.getAllDevice();
             return response.data;
@@ -74,6 +75,17 @@ export const DeviceService = {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
             const response = await axios.patch(`http://localhost:8080/device/${deviceID}/removeUser`, {});
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    },
+    removeManyDevice: async (deviceIDs: string[]) => {
+        setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
+        try {
+            const response = await axios.patch(`http://localhost:8080/device/removeManyDevice`, {
+                deviceIDs
+            });
             return response.data;
         } catch (error) {
             return error;

@@ -65,8 +65,8 @@ export function DashboardPage() {
                             <div className='w-full'>
                                 <Carousel
                                     placeholder={'Chưa có dữ liệu'}
-                                    autoplay={true}
-                                    autoplayDelay={10000}
+                                    // autoplay={true}
+                                    // autoplayDelay={10000}
                                     loop={true}
                                     prevArrow={({ handlePrev }) => (
                                         <IconButton

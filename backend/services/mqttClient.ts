@@ -49,11 +49,20 @@ const publish = (topic: string, message: string) => {
         }
     });
 };
-
+const publishColor = (topic: string, message: string) => {
+    client.publish(`${envs.ADAFRUIT_IO_USERNAME}/feeds/${topic}`, message, async (err) => {
+        if (err) {
+            console.error('Failed to publish message to topic', topic);
+        } else {
+            console.log('Published message to topic', topic);
+        }
+    });
+};
 export const mqttClient = {
     client,
     onConnect,
     onMessage,
     subscribe,
-    publish
+    publish,
+    publishColor
 };

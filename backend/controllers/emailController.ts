@@ -47,7 +47,6 @@ export const GeneratePassword = (length: number): string => {
         .sort(() => Math.random() - 0.5)
         .join('');
     return password;
-
 };
 
 export const GenerateOTP = (length: number): string => {

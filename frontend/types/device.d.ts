@@ -1,6 +1,7 @@
 type DeviceType = 'led' | 'earthhumidity' | 'airhumidity' | 'temperature' | 'waterpump' | 'light';
-type ColorType = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'cyan' | 'white' | 'black';
+type ColorType = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'white';
 type DeviceState = 'ON' | 'OFF' | 'NONE';
+type ControlType = 'limit' | 'schedule ' | 'manual';
 interface Schedule {
     startTime: string;
     endTime: string;
@@ -16,7 +17,7 @@ interface DeviceData {
     maxLimit?: number;
     lastValue: number;
     updatedTime?: string;
-    environmentValue: { value: number; createdTime: string }[];
+    environmentValue: { value: number; createdTime: string; controlType: ControlType }[];
     adaFruitID: string;
     icon?: React.ReactElement;
     image?: string;
@@ -44,4 +45,5 @@ interface DeviceUpdateInfo {
     minLimit: number;
     maxLimit: number;
     schedule: Schedule[];
+    color?: ColorType;
 }

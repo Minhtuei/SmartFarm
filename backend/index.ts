@@ -95,3 +95,11 @@ mongoose
 //     console.log('Deleted all notifications)');
 // }
 // );
+
+// mongoose.model('Device').updateMany(
+//     { deviceType: 'waterpump' },
+//     { $set: { environmentValue: [] } }
+// ).then(() => {
+//     console.log('reset all devices');
+// }
+// );

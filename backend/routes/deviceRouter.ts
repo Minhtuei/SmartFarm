@@ -5,8 +5,9 @@ const router = Router();
 
 router.route('/:userID').get(DeviceController.getAllDevice);
 router.route('/:deviceID/removeUser').patch(DeviceController.removeDeviceUser);
-router.route('/:deviceID/updateUser').patch(DeviceController.updateDeviceUser);
+router.route('/updateUser').patch(DeviceController.updateDeviceUser);
 router.route('/:deviceID/updateInfo').patch(DeviceController.updateDeviceInfos);
+router.route('/removeManyDevice').patch(DeviceController.removeManyDevice);
 router
     .route('/:deviceID')
     .get(DeviceController.getDeviceInfo)
