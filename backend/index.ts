@@ -62,7 +62,7 @@ app.use(
 // routes
 try {
     app.use('/login', login);
-    app.use('/user', user);
+    app.use('/user', authenticate, user);
     app.use('/device', authenticate, device);
     app.use('/notification', authenticate, notification);
     app.use('/gen', genAcc);
@@ -92,5 +92,13 @@ mongoose
 // const Notification = mongoose.model('Notification'); // Replace 'Notification' with your actual model name
 // Notification.deleteMany({ email: 'test2@gmail.com' }).then(() => {
 //     console.log('Deleted all notifications)');
+// }
+// );
+
+// mongoose.model('Device').updateMany(
+//     { deviceType: 'waterpump' },
+//     { $set: { environmentValue: [] } }
+// ).then(() => {
+//     console.log('reset all devices');
 // }
 // );

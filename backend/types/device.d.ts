@@ -1,6 +1,7 @@
 type DeviceType = 'led' | 'earthhumidity' | 'airhumidity' | 'temperature' | 'waterpump' | 'light';
-type ColorType = 'red' | 'green' | 'blue' | 'yellow' | 'purple' | 'cyan' | 'white' | 'black';
+type ColorType = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'white';
 type DeviceState = 'ON' | 'OFF' | 'NONE';
+type ControlType = 'manual' | 'schedule' | 'limit';
 interface Scheduler {
     startTime: string;
     endTime: string;
@@ -17,7 +18,7 @@ interface DeviceSchema {
     maxLimit: number;
     lastValue: number;
     updatedTime: string;
-    environmentValue: { value: number; createdTime: string }[];
+    environmentValue: { value: number; createdTime: string; controlType?: ControlType }[];
     adaFruitID: string;
 }
 

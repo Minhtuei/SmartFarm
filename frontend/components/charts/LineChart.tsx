@@ -6,8 +6,8 @@ interface DeviceData {
     deviceName: string;
     environmentValue: { createdTime: string; value: number }[];
     deviceType: string;
-    minLimit: number;
-    maxLimit: number;
+    minLimit?: number;
+    maxLimit?: number;
 }
 
 interface LineChartProps {
@@ -35,11 +35,12 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
 
     const temperatureData = (deviceInfos || []).map((device) => ({
         name: device.deviceName,
-        data: device.environmentValue.slice(device.environmentValue.length - 19, device.environmentValue.length).map((value) => ({
+        data: device.environmentValue.map((value) => ({
             x: moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format),
             y: value.value
         }))
     }));
+    console.log(temperatureData);
     const options = useMemo(
         () => ({
             series: temperatureData,
@@ -55,9 +56,9 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             },
             yaxis: {
                 title: {
-                    text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} ${deviceTypeNames[
+                    text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} (${deviceTypeNames[
                         deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames
-                    ]?.unit}`,
+                    ]?.unit})`,
                     style: {
                         fontSize: '14px',
                         fontWeight: 'bold'

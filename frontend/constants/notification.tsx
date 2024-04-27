@@ -5,11 +5,6 @@ export const NOTIFICATION_CATEGORY = {
         color: 'green',
         icon: <Success />
     },
-    error: {
-        label: 'Lỗi',
-        color: 'red',
-        icon: <Error />
-    },
     schedule: {
         label: 'Thông tin',
         color: 'gray',
@@ -17,8 +12,13 @@ export const NOTIFICATION_CATEGORY = {
     },
     warning: {
         label: 'Cảnh báo',
-        color: 'rgb(254 249 195)',
+        color: 'orange',
 
         icon: <Warning />
+    },
+    error: {
+        label: 'Lỗi',
+        color: 'red',
+        icon: <Error />
     }
 };

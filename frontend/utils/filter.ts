@@ -20,3 +20,26 @@ export const filterDeviceByName = (deviceName: string, deviceInfos: DeviceData[]
         }
     });
 };
+
+export const filterNotificationByType = (notificationType: string, notificationInfos: NotificationInfo[]) => {
+    notificationInfos.forEach((notification) => {
+        if (notificationType === 'all') {
+            document.getElementById(notification._id)?.classList.remove('hidden');
+        } else if (notification.notificationType === notificationType) {
+            document.getElementById(notification._id)?.classList.remove('hidden');
+        } else {
+            document.getElementById(notification._id)?.classList.add('hidden');
+        }
+    });
+};
+export const filterNotificationByDeviceName = (deviceName: string, notificationInfos: NotificationInfo[]) => {
+    notificationInfos.forEach((notification) => {
+        if (deviceName === 'all') {
+            document.getElementById(notification._id)?.classList.remove('hidden');
+        } else if (notification.deviceName.includes(deviceName)) {
+            document.getElementById(notification._id)?.classList.remove('hidden');
+        } else {
+            document.getElementById(notification._id)?.classList.add('hidden');
+        }
+    });
+};
