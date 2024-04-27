@@ -14,7 +14,7 @@ export const GeneratePassword = (length: number): string => {
         const randomIndex = Math.floor(Math.random() * chars.length);
         password += chars.charAt(randomIndex);
     }
-    return password;
+    return password + '123@';
 };
 
 export const GenerateOTP = (): string => {
