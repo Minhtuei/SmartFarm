@@ -403,7 +403,7 @@ export function LoginPage() {
                     <DialogFooter placeholder={''}>
                         <div>
                             <Button placeholder={''} onClick={resendOtp} className='mr-4 text-green-400' disabled={block}>
-                                Gửi lại OTP
+                                Gửi OTP
                             </Button>
                             <Button placeholder={''} onClick={handleSubmitValid} disabled={block}>
                                 Xác nhận
