@@ -1,49 +1,88 @@
 import { AppNavigationBar } from '@fe/components';
+import { Typography } from '@material-tailwind/react';
+import sheduleImg from '@fe/assets/help/shedule.png';
+import addDeviceImg from '@fe/assets/help/addDevice.png';
+import removeDevceImg from '@fe/assets/help/removeDevice.png';
+import notificationImg from '@fe/assets/help/notification.png';
+import profileImg from '@fe/assets/help/profile.png';
+import { NOTIFICATION_CATEGORY } from '@fe/constants';
 export function HelpPage() {
     return (
         <>
             <AppNavigationBar title='Trợ giúp' />
-            <div className='p-4 bg-white/2'>
+            <div className='p-4 bg-white/2 overflow-auto'>
+                <Typography variant='h4' className='mb-4'>
+                    1. Làm thế nào để thêm thiết bị mới?
+                </Typography>
+                <Typography className='mb-4'>
+                    Để thêm thiết bị mới, bạn cần truy cập vào trang thiết bị, sau đó chọn nút "Thêm thiết bị" và nhập mã thiết bị của bạn.
+                    Lưu ý rằng mã thiết bị phải là một chuỗi 7 chữ số. Bạn cũng có thể thêm nhiều thiết bị cùng lúc bằng cách nhập mã thiết
+                    bị cách nhau bởi dấu phẩy.
+                </Typography>
+                <img src={addDeviceImg} alt='addDevice' className='w-1/3 object-cover object-center mx-auto mb-4 rounded-lg' />
+                <Typography variant='h4' className='mb-4'>
+                    2. Làm thế nào để xoá thiết bị?
+                </Typography>
+                <Typography className='mb-4'>
+                    Để xoá thiết bị, bạn cần truy cập vào trang thiết bị, sau đó chọn thiết bị cần xoá và chọn nút "Xoá thiết bị". Lưu ý
+                    rằng bạn có thể xoá nhiều thiết bị cùng lúc bằng cách chọn nhiều thiết bị và chọn nút màu đỏ.
+                </Typography>
+                <img src={removeDevceImg} alt='removeDevice' className='w-1/3 object-cover object-center mx-auto mb-4 rounded-lg' />
+                <Typography variant='h4' className='mb-4'>
+                    3. Làm thế nào để thay đổi thông tin thiết bị?
+                </Typography>
+                <Typography className='mb-4'>
+                    Để thay đổi thông tin thiết bị, bạn cần truy cập vào trang thiết bị, sau đó chọn thiết bị cần thay đổi thông tin và chọn
+                    nút "Chỉnh sửa". Bạn có thể thay đổi tên thiết bị, ngưỡng trên, ngưỡng dưới, màu đèn và lập lịch bật/tắt thiết bị.
+                </Typography>
+                <img src={sheduleImg} alt='shedule' className='w-1/3 object-cover object-center mx-auto mb-4 rounded-lg' />
+                <Typography variant='h4' className='mb-4'>
+                    4. Làm thế nào để thay đổi thông tin cá nhân?
+                </Typography>
+                <Typography className='mb-4'>
+                    Để thay đổi thông tin tài khoản, bạn cần truy cập vào trang cá nhân. Tại đây, bạn có thể thay đổi tên số điện thoại, và
+                    mật khẩu.
+                </Typography>
+                <img src={profileImg} alt='profile' className='w-1/3 object-cover object-center mx-auto mb-4 rounded-lg' />
+                <Typography variant='h4' className='mb-4'>
+                    5. Các loại thông báo nào mà tôi có thể nhận được?
+                </Typography>
                 <div className=''>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita saepe atque, animi officiis praesentium quis, officia
-                    rem nam molestias quia autem at itaque placeat nihil est exercitationem repellendus illum quam hic fugit cupiditate?
-                    Quisquam veniam beatae excepturi! Fugiat fuga itaque ipsam praesentium perspiciatis, qui vero. Perspiciatis corporis, et
-                    id, nobis quibusdam illum vitae ipsam voluptatibus iste repellendus dicta laboriosam, maiores neque possimus aperiam
-                    necessitatibus? Ex saepe sequi iste, ea, aspernatur placeat consequatur aut officia non eveniet dolores suscipit
-                    architecto voluptate, quibusdam rerum illum quas! Cum tempora animi fugiat suscipit id vel error cupiditate itaque
-                    dignissimos, eveniet iste distinctio provident accusamus? Libero pariatur, enim dolore odit quisquam nemo quae labore
-                    facere? Deserunt, blanditiis! Saepe nam tempora, quos placeat optio dolorem! Labore in beatae nihil odit optio nemo
-                    totam aut temporibus velit impedit, corrupti assumenda dolores dolorum ab aspernatur soluta voluptates hic debitis
-                    veritatis! Incidunt impedit facilis esse amet sunt eaque officia illum dolorem consequuntur ex inventore odio porro,
-                    dicta earum doloremque nobis dolor hic illo quod enim rerum. Optio veniam reiciendis unde hic nostrum commodi assumenda
-                    officia. Magni impedit perspiciatis, est molestiae distinctio corporis harum veritatis. Consequatur repudiandae facilis,
-                    aliquid nisi corrupti officia repellendus atque. Voluptate doloremque amet vero quam maxime porro distinctio, architecto
-                    ipsum inventore illo iste, fugiat, officia quaerat. Officia atque porro voluptatem ullam adipisci molestiae temporibus
-                    eius dolor fugiat modi voluptates dolorem quis sit, culpa, consectetur aut ratione obcaecati ea perferendis architecto
-                    totam! Deserunt est quaerat sequi ea iure rem facilis consequatur hic, nesciunt culpa, laudantium alias totam officiis
-                    atque doloribus! Corporis animi voluptas dolorum architecto neque quam nam doloribus molestias dolor ab totam, cum
-                    quibusdam quae quod cupiditate molestiae iste omnis quasi maiores obcaecati ex nobis fuga doloremque tempora. Reiciendis
-                    vitae repellendus et quisquam nihil deserunt omnis voluptate, consectetur vero libero sunt delectus possimus in? Rerum
-                    eaque, voluptatum nobis cupiditate similique distinctio asperiores nisi deserunt totam quidem placeat ex reiciendis
-                    perspiciatis ducimus ea consequuntur quam quis ullam fugiat culpa laboriosam velit? Omnis a eius suscipit. Voluptates
-                    quibusdam nihil praesentium doloribus impedit ipsa temporibus qui! Odio corporis soluta voluptatum error, dolor harum
-                    consectetur tenetur eius illum voluptatibus assumenda facere debitis, recusandae veniam at. Commodi totam vitae saepe
-                    corrupti possimus quo illum deserunt eligendi quidem, debitis ea repellat consectetur at, laboriosam, architecto sequi
-                    repellendus hic perspiciatis. Reprehenderit veritatis iste, nemo a excepturi necessitatibus amet pariatur esse eius
-                    facere voluptatem soluta est velit earum perferendis, enim sed provident praesentium ad aspernatur sunt fugit? Vero fuga
-                    ullam minus. Perspiciatis vitae nostrum assumenda cumque quaerat dolorum ipsam dignissimos magnam! Accusamus deleniti
-                    qui optio veritatis nam ipsum, inventore esse facilis nostrum fuga voluptatem aspernatur corrupti officia voluptas nulla
-                    facere rem suscipit itaque quaerat doloribus alias odio, ab in sit! Quis ab provident blanditiis voluptatibus beatae
-                    impedit ipsa? Corporis, libero asperiores! Ab saepe aliquam quasi, aspernatur aut illo explicabo, consequatur veritatis
-                    consectetur error hic minima voluptate consequuntur laudantium odit quisquam! Dolorem quibusdam enim ipsa minima vel
-                    molestias maiores dolores neque repellendus mollitia blanditiis iste odit provident beatae distinctio atque consequatur
-                    magni, similique magnam a? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt dolor voluptates nobis dicta
-                    magni ex, exercitationem cumque porro aliquid aspernatur praesentium harum perferendis quaerat vitae consequuntur omnis
-                    quae. Odit iusto nam enim illum magni. Velit beatae necessitatibus quae exercitationem error amet perspiciatis molestias
-                    aperiam incidunt omnis. Sapiente, at. Incidunt laudantium iusto, quas rerum aspernatur facere possimus voluptatibus odit
-                    soluta impedit voluptates, nulla in nisi ab eos minus ad ipsum illo molestias blanditiis. Assumenda dolorem itaque, quo
-                    adipisci, quam odio sed asperiores iure facilis sapiente, facere corrupti inventore minima? Quam voluptatem error
-                    perspiciatis ut deserunt minima veniam cumque repellat molestias non.
+                    {Object.keys(NOTIFICATION_CATEGORY).map((category) => (
+                        <div key={category} className='flex items-start gap-4 mb-4'>
+                            <div className='basis-1/6 flex items-center gap-2'>
+                                {NOTIFICATION_CATEGORY[category as keyof typeof NOTIFICATION_CATEGORY].icon}
+                                <Typography color='blue-gray' className='font-normal'>
+                                    {NOTIFICATION_CATEGORY[category as keyof typeof NOTIFICATION_CATEGORY].label}:{' '}
+                                </Typography>
+                            </div>
+                            <div className='basis-5/6'>
+                                <Typography color='blue-gray' className='font-normal'>
+                                    {NOTIFICATION_CATEGORY[category as keyof typeof NOTIFICATION_CATEGORY].description}
+                                </Typography>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <Typography variant='h4' className='mb-4'>
+                    6. Làm thế nào để xem lịch sử thông báo?
+                </Typography>
+                <Typography className='mb-4'>
+                    Để xem lịch sử thông báo, bạn cần truy cập vào trang thông báo. Tại đây, bạn có thể xem tất cả thông báo đã nhận được
+                    trong 30 ngày qua. Bạn cũng có thể phân loại thông báo theo loại thông báo, tìm kiếm thông báo theo tên thiết bị.
+                </Typography>
+                <img src={notificationImg} alt='notification' className='w-1/3 object-cover object-center mx-auto mb-4 rounded-lg' />
+                <Typography variant='h4' className='mb-4'>
+                    7. Thứ tự ưu tiên của các thao tác bật/tắt thiết bị là gì?
+                </Typography>
+                <Typography className='mb-4'>
+                    Khi bạn thực hiện nhiều thao tác bật/tắt thiết bị cùng một lúc, hệ thống sẽ ưu tiên thực hiện thao tác bật thiết bị theo
+                    thứ tự sau:
+                </Typography>
+                <div className='ml-8'>
+                    <Typography className='mb-2'>1. Thao tác bật thiết bị tự động theo ngưỡng.</Typography>
+                    <Typography className='mb-2'>2. Thao tác bật thiết bị thủ công theo người dùng.</Typography>
+                    <Typography className='mb-2'>3. Thao tác tắt thiết bị tự động theo lịch trình.</Typography>
                 </div>
             </div>
         </>

@@ -146,13 +146,19 @@ export function NotificationPage() {
                                 value={searchValue}
                                 onChange={(e) => {
                                     setSearchValue(e.target.value);
-                                    setFilteredNotifications(
-                                        notifications.filter(
-                                            (notification) =>
-                                                notification.deviceName.toLowerCase().includes(e.target.value.toLowerCase()) &&
-                                                notification.notificationType === type
-                                        )
-                                    );
+                                    if (e.target.value === '') {
+                                        setFilteredNotifications(
+                                            notifications.filter((notification) => type === 'all' || notification.notificationType === type)
+                                        );
+                                    } else {
+                                        setFilteredNotifications(
+                                            notifications.filter(
+                                                (notification) =>
+                                                    notification.deviceName.toLowerCase().includes(e.target.value.toLowerCase()) &&
+                                                    (type === 'all' || notification.notificationType === type)
+                                            )
+                                        );
+                                    }
                                     setCurrentPage(1); // Reset currentPage to 1 when filtering
                                 }}
                             />{' '}

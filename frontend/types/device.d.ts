@@ -25,7 +25,7 @@ interface DeviceData {
 }
 interface DevicesInfo {
     deviceInfos: DeviceData[];
-    getDeviceInfos: (userId: string) => Promise<void>;
+    getDeviceInfos: (userId: string, limit: number) => void;
 }
 interface DeviceCategory {
     longName: string;

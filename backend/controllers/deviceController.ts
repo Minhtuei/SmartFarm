@@ -7,7 +7,13 @@ import { User } from '@be/models';
 export const getAllDevice = async (req: Request, res: Response) => {
     try {
         const userID = req.params.userID;
-        const devices = await Device.find({ userID }).slice('environmentValue', -20);
+        const limit = parseInt(req.params.limit);
+        let devices;
+        if (limit === 0) {
+            devices = await Device.find({ userID });
+        } else {
+            devices = await Device.find({ userID }).slice('environmentValue', -limit);
+        }
         res.status(StatusCodes.OK).json({ devices });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
@@ -207,7 +213,7 @@ export const updateDeviceInfos = async (req: Request, res: Response) => {
         if (req.body.schedule && device.schedule !== req.body.schedule) {
             device.schedule = req.body.schedule;
         }
-        if (req.body.color && device.color !== req.body.color) {
+        if (req.body.color && device.color !== req.body.color && device.deviceType === 'led') {
             device.color = req.body.color;
             mqttController.UpdateDeviceColor('color', device?.color);
         }

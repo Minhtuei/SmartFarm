@@ -38,6 +38,7 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
                 await device.save();
                 await limitHandler(device);
             } else {
+                if (name === 'color' || name === 'speechrecognition') return;
                 const newDevice = new Device({
                     adaFruitID: jsonMessage.id,
                     deviceName: jsonMessage.key,
@@ -66,6 +67,7 @@ const UpdateDeviceInfo = (adaFruitID: string, body: MQTTDeviceData) => {
 };
 const UpdateDeviceColor = (adaFruitID: string, body: ColorType) => {
     if (Object.keys(body).length !== 0) {
+        console.log('UpdateDeviceColor', body);
         mqttClient.publishColor(`${adaFruitID}`, JSON.stringify(body));
     }
 };

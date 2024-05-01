@@ -3,20 +3,9 @@ import { useNotificationStore } from '@fe/states';
 import { BellIcon, ClockIcon } from '@heroicons/react/20/solid';
 import { IconButton, Menu, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
 import moment from 'moment';
-import { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 export function NotificationsMenu() {
-    const location = useLocation();
-    const navigate = useNavigate();
     const { notifications } = useNotificationStore();
-    const handleSeeAllNotifications = useCallback(() => {
-        if (location.pathname === '/notification') {
-            return;
-        }
-        return () => {
-            navigate('/notification');
-        };
-    }, [navigate, location.pathname]);
 
     return (
         <Menu>
@@ -41,9 +30,9 @@ export function NotificationsMenu() {
                     </MenuItem>
                 ))}
                 <MenuItem placeholder={''} className='flex items-center justify-center py-2'>
-                    <Typography placeholder={''} variant='small' className='text-blue-gray-500' onClick={handleSeeAllNotifications()}>
+                    <Link to='/notification' className='text-blue-500 font-semibold'>
                         Xem tất cả thông báo
-                    </Typography>
+                    </Link>
                 </MenuItem>
             </MenuList>
         </Menu>

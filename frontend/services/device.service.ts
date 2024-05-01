@@ -19,10 +19,10 @@ export const DeviceService = {
             return error;
         }
     },
-    getAllDevice: async (userId: string) => {
+    getAllDevice: async (userId: string, limit: number) => {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
-            const response = await axios.get(`http://localhost:8080/device/${userId}`);
+            const response = await axios.get(`http://localhost:8080/device/${userId}/${limit}`);
             return response.data;
         } catch (error) {
             DeviceService.updateToken();

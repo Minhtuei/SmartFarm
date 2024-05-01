@@ -3,7 +3,7 @@ import * as DeviceController from '../controllers/deviceController';
 
 const router = Router();
 
-router.route('/:userID').get(DeviceController.getAllDevice);
+router.route('/:userID/:limit').get(DeviceController.getAllDevice);
 router.route('/:deviceID/removeUser').patch(DeviceController.removeDeviceUser);
 router.route('/updateUser').patch(DeviceController.updateDeviceUser);
 router.route('/:deviceID/updateInfo').patch(DeviceController.updateDeviceInfos);

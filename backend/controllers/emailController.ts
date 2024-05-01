@@ -199,10 +199,8 @@ export const SendOTP = async (req: Request, res: Response) => {
     }
 };
 //attach to create notification in notification controller
-export const SendNotification = async (req: Request, res: Response) => {
+export const SendNotification = async (email: string, deviceName: string, context: string) => {
     try {
-        const { context, email, deviceName } = req.body;
-
         const transporter = nodemailer.createTransport({
             service: 'Gmail', // Replace 'Gmail' with your email service provider
             auth: {
@@ -213,7 +211,7 @@ export const SendNotification = async (req: Request, res: Response) => {
         const mailOptions: nodemailer.SendMailOptions = {
             from: EMAIL, // Sender email address
             to: email, // Recipient email address
-            subject: 'A notice from' + deviceName, // Email subject
+            subject: 'Thông báo đến từ hệ thống Smart Farm', // Email subject
             // Email body
             html: `
             <!DOCTYPE html>
@@ -224,28 +222,21 @@ export const SendNotification = async (req: Request, res: Response) => {
             <title>Email Content</title>
             </head>
             <body>
-            <p style="font-size: 18px; color: black;">Hi!</p>
-            <p style="font-size: 18px; color: black;">Thank you for using our service.</p>
-            <p style="font-size: 18px; color: black;">There is a notice from: <span style="font-size: 24px; color: orange;"><b>${deviceName}</b></span></p>
+            <p style="font-size: 18px; color: black;">Xin chào!</p>
+            <p style="font-size: 18px; color: black;">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+            <p style="font-size: 18px; color: black;">Có một thông báo đến từ: <span style="font-size: 24px; color: orange;"><b>${deviceName}</b></span></p>
             <p style="font-size: 18px; color: black;">${context}</p>
-            <p style="font-size: 18px; color: black;">Please do not reply to this email.</p>
+            <p style="font-size: 18px; color: black;">Vui lòng không trả lời email này.</p>
+            <p style="font-size: 18px; color: black;">Trân trọng!</p>
             </body>
             </html>
             `
         };
 
         // Send the email
-        await transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                return res.status(500).json({ error: 'Failed to send email' });
-            } else {
-                console.log('Email sent:', info.response);
-                return res.status(200).json({ message: 'Email sent successfully' });
-            }
-        });
+        await transporter.sendMail(mailOptions);
     } catch (error) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+        console.log('Error sending email:', error);
     }
 };
 export const verificationAcccount = async (req: Request, res: Response) => {

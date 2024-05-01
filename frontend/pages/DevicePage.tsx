@@ -48,11 +48,11 @@ export function DevicePage() {
             if (e.target.checked) {
                 setSelectedDevices([...selectedDevices, adaFruitID]);
                 const deviceClassName = document.getElementById(adaFruitID)?.className;
-                document.getElementById(adaFruitID)!.className = deviceClassName + ' bg-red-100/50 dark:bg-gray-800' || '';
+                document.getElementById(adaFruitID)!.className = deviceClassName + ' !bg-red-100/50 !dark:bg-gray-800' || '';
             } else {
                 setSelectedDevices(selectedDevices.filter((id) => id !== adaFruitID));
                 const deviceClassName = document.getElementById(adaFruitID)?.className;
-                document.getElementById(adaFruitID)!.className = deviceClassName?.replace(' bg-red-100/50 dark:bg-gray-800', '') || '';
+                document.getElementById(adaFruitID)!.className = deviceClassName?.replace(' !bg-red-100/50 !dark:bg-gray-800', '') || '';
             }
         };
     };

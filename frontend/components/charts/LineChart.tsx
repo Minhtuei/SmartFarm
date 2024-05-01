@@ -40,7 +40,6 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             y: value.value
         }))
     }));
-    console.log(temperatureData);
     const options = useMemo(
         () => ({
             series: temperatureData,

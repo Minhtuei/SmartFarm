@@ -38,6 +38,9 @@ export const Scheduler = async () => {
                             });
                             await device.save();
                             mqttController.UpdateDeviceInfo(device.adaFruitID, { lastValue: 1 });
+                            if (device.deviceType === 'led') {
+                                mqttController.UpdateDeviceColor('color', device.color);
+                            }
                         }
                     } else if (
                         currentTime === schedule.endTime.padEnd(8, ':00') &&

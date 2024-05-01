@@ -1,8 +1,11 @@
 import { AppSlideMenu } from '@fe/components';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import { useScreenSize } from '@fe/hooks';
+import { useDevicesStore } from '@fe/states';
+import { useNotificationStore } from '@fe/states';
+import { useUserInfoStore } from '@fe/states';
 export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
     const screen = useScreenSize();
     const routeItems = useMemo(() => {
@@ -19,6 +22,33 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
         }
         return items;
     }, [menu]);
+    const { userData } = useUserInfoStore();
+    const { getDeviceInfos } = useDevicesStore();
+    const { getNotifications, getLatestNotification } = useNotificationStore();
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            getDeviceInfos(userData.id, 20);
+        };
+        // Call immediately
+        fetchDashboard(); // Then call every 3 seconds
+        const interval = setInterval(() => {
+            fetchDashboard();
+        }, 10000); // Interval of 3 seconds
+
+        return () => clearInterval(interval); // Clear the interval if the component unmounts
+    }, [userData]);
+    useEffect(() => {
+        const fetchNotification = async () => {
+            if (!userData) return;
+            await getNotifications(userData.id);
+            const interval = setInterval(() => {
+                getLatestNotification(userData.id);
+            }, 3000);
+            return () => clearInterval(interval);
+        };
+        fetchNotification();
+    }, [userData]);
+
     const [open, setOpen] = useState(true);
     return (
         <div>

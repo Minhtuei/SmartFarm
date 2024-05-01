@@ -2,9 +2,9 @@ import { create } from 'zustand';
 import { DeviceService } from '@fe/services';
 export const useDevicesStore = create<DevicesInfo>((set) => ({
     deviceInfos: [],
-    getDeviceInfos: async (userId: string) => {
+    getDeviceInfos: async (userId: string, limit: number) => {
         try {
-            const data = await DeviceService.getAllDevice(userId);
+            const data = await DeviceService.getAllDevice(userId, limit);
             const deviceInfos = data.devices.map((device: DeviceData) => ({
                 deviceName: device.deviceName,
                 deviceState: device.deviceState,
