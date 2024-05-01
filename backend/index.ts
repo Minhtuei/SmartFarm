@@ -11,6 +11,7 @@ import { router as notification } from './routes/notificationRouter';
 import { router as genAcc, router2 as reset } from './routes/genAccRouter';
 import { authenticate } from './services/authenticate';
 import { Scheduler } from './handlers';
+import MongoServer from './services/MongoServer';
 const session = require('express-session');
 import { mqttController } from '@be/controllers';
 const app = express();
@@ -78,18 +79,8 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-const mongoose = require('mongoose');
-
-const url = `mongodb+srv://dadn223:dadn223@dadn.jonmqsq.mongodb.net/?retryWrites=true&w=majority&appName=DADN`;
-
-mongoose
-    .connect(url)
-    .then(() => {
-        console.log('Connected to database ');
-    })
-    .catch((err: Error) => {
-        console.error(`Error connecting to the database. \n${err}`);
-    });
+MongoServer.getInstance();
+MongoServer.getInstance().logger.info('Server started');
 // const Notification = mongoose.model('Notification'); // Replace 'Notification' with your actual model name
 // Notification.deleteMany({ email: 'test2@gmail.com' }).then(() => {
 //     console.log('Deleted all notifications)');
