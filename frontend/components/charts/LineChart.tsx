@@ -2,12 +2,13 @@ import moment from 'moment';
 import Chart from 'react-apexcharts';
 import { DEVICE_CATEGORY } from '@fe/constants';
 import { useMemo } from 'react';
+import { useScreenSize } from '@fe/hooks';
 interface DeviceData {
     deviceName: string;
     environmentValue: { createdTime: string; value: number }[];
     deviceType: string;
-    minLimit: number;
-    maxLimit: number;
+    minLimit?: number;
+    maxLimit?: number;
 }
 
 interface LineChartProps {
@@ -17,7 +18,7 @@ interface LineChartProps {
 
 export function LineChart({ deviceInfos, time }: LineChartProps) {
     const deviceTypeNames = DEVICE_CATEGORY;
-
+    const screen = useScreenSize();
     const TIME = {
         minute: {
             timeUnit: 'second',
@@ -35,7 +36,7 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
 
     const temperatureData = (deviceInfos || []).map((device) => ({
         name: device.deviceName,
-        data: device.environmentValue.slice(device.environmentValue.length - 19, device.environmentValue.length).map((value) => ({
+        data: device.environmentValue.map((value) => ({
             x: moment(new Date(value.createdTime)).format(TIME[time as keyof typeof TIME].format),
             y: value.value
         }))
@@ -55,20 +56,20 @@ export function LineChart({ deviceInfos, time }: LineChartProps) {
             },
             yaxis: {
                 title: {
-                    text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} ${deviceTypeNames[
+                    text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.shortName} (${deviceTypeNames[
                         deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames
-                    ]?.unit}`,
+                    ]?.unit})`,
                     style: {
-                        fontSize: '14px',
+                        fontSize: screen.screenSize >= 2 ? '14px' : '10px',
                         fontWeight: 'bold'
                     }
                 }
             },
             title: {
                 text: `${deviceTypeNames[deviceInfos[0]?.deviceType as keyof typeof deviceTypeNames]?.lineChartName}`,
-                align: 'center',
+                align: screen.screenSize >= 2 ? 'center' : 'left',
                 style: {
-                    fontSize: '20px',
+                    fontSize: screen.screenSize >= 2 ? '20px' : '14px',
                     fontWeight: 'bold'
                 }
             },

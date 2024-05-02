@@ -1,5 +1,5 @@
 import { Menu, MenuHandler, MenuList, MenuItem, Avatar, Typography } from '@material-tailwind/react';
-
+import { Link } from 'react-router-dom';
 export function ProfileMenu() {
     const handleSignout = () => {
         sessionStorage.removeItem('accessToken');
@@ -28,9 +28,11 @@ export function ProfileMenu() {
                         />
                     </svg>
 
-                    <Typography placeholder={''} variant='small' className='font-medium'>
-                        Cá nhân
-                    </Typography>
+                    <Link to='/profile'>
+                        <Typography placeholder={''} variant='small' className='font-medium'>
+                            Cá nhân
+                        </Typography>
+                    </Link>
                 </MenuItem>
                 <MenuItem placeholder={''} className='flex items-center gap-2'>
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -41,9 +43,11 @@ export function ProfileMenu() {
                             fill='#90A4AE'
                         />
                     </svg>
-                    <Typography placeholder={''} variant='small' className='font-medium'>
-                        Trợ giúp
-                    </Typography>
+                    <Link to='/help '>
+                        <Typography placeholder={''} variant='small' className='font-medium'>
+                            Trợ giúp
+                        </Typography>
+                    </Link>
                 </MenuItem>
                 <hr className='my-2 border-blue-gray-50' />
                 <MenuItem placeholder={''} className='flex items-center gap-2 '>

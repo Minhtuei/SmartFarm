@@ -1,20 +1,19 @@
 import weatherScreen from '@fe/assets/weather-screen.png';
-import { AppNavigationBar, LineChart, MiniDeviceInfo, RadioChart } from '@fe/components';
+import { AppNavigationBar, ColumnCharts, ComponentSkeleton, LineChart, MiniDeviceInfo, RadioChart, Timer } from '@fe/components';
 import { useDevicesStore } from '@fe/states';
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
 import { Carousel, IconButton, Typography } from '@material-tailwind/react';
 import moment from 'moment';
 import { FaTemperatureHigh } from 'react-icons/fa';
-import { ComponentSkeleton } from '@fe/components';
-import { Timer } from '@fe/components';
 export function DashboardPage() {
     const time = moment().format('HH:mm');
     const day = moment().format('DD/MM/YYYY');
     const { deviceInfos } = useDevicesStore();
+    const deviceTypes = ['temperature', 'airhumidity', 'earthhumidity', 'light'];
     return (
         <>
             <AppNavigationBar title={'Thống kê'} />
-            <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
+            <div className='px-2 md:px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
                 {deviceInfos.length === 0 ? (
                     <ComponentSkeleton />
                 ) : (
@@ -41,7 +40,7 @@ export function DashboardPage() {
                                         </div>
                                         <div className='flex items-center gap-2 '>
                                             <Typography className='text-white text-3xl font-semibold' placeholder={undefined}>
-                                                {deviceInfos.filter((device) => device.deviceType === 'temperature')[0]?.lastValue}
+                                                {deviceInfos.filter((device) => device.deviceType === 'temperature')[0]?.lastValue || 0}°C
                                             </Typography>
                                             <FaTemperatureHigh className='text-4xl text-white' />
                                         </div>
@@ -54,7 +53,7 @@ export function DashboardPage() {
                                         </Typography>
                                         <Typography className='text-sm text-white' placeholder={undefined}>
                                             Thời tiết hiện tại ở trang tại là{' '}
-                                            {deviceInfos.filter((device) => device.deviceType === 'temperature')[0]?.lastValue}°C
+                                            {deviceInfos.filter((device) => device.deviceType === 'temperature')[0]?.lastValue || 0}°C
                                         </Typography>
                                         <Typography className='text-sm text-white' placeholder={undefined}>
                                             Hãy dành chút thời gian để xem thông tin cảm biến và chăm sóc trang trại của bạn nhé!
@@ -65,8 +64,8 @@ export function DashboardPage() {
                             <div className='w-full'>
                                 <Carousel
                                     placeholder={'Chưa có dữ liệu'}
-                                    autoplay={true}
-                                    autoplayDelay={10000}
+                                    // autoplay={true}
+                                    // autoplayDelay={10000}
                                     loop={true}
                                     prevArrow={({ handlePrev }) => (
                                         <IconButton
@@ -108,40 +107,20 @@ export function DashboardPage() {
                                     transition={{ type: 'spring', stiffness: 100, damping: 20 }}
                                     className='overflow-y-hidden bg-white rounded-3xl py-4 shadow-lg'
                                 >
-                                    <LineChart
-                                        deviceInfos={deviceInfos.filter((device) => device.deviceType === 'temperature')}
-                                        time='minute'
-                                    />
-                                    <LineChart
-                                        deviceInfos={deviceInfos.filter((device) => device.deviceType === 'airhumidity')}
-                                        time='minute'
-                                    />
-                                    <LineChart
-                                        deviceInfos={deviceInfos.filter((device) => device.deviceType === 'earthhumidity')}
-                                        time='minute'
-                                    />
-                                    <LineChart deviceInfos={deviceInfos.filter((device) => device.deviceType === 'light')} time='minute' />
+                                    {deviceTypes.map((type) => {
+                                        const filteredDevices = deviceInfos.filter((device) => device.deviceType === type);
+                                        return filteredDevices.length > 0 ? (
+                                            <LineChart key={type} deviceInfos={filteredDevices} time='minute' />
+                                        ) : null;
+                                    })}
                                 </Carousel>
                             </div>
+                            <ColumnCharts />
                             <RadioChart deviceInfos={deviceInfos} />
-                            {/* <Menu>
-                             <MenuHandler>
-                                 <IconButton placeholder={''} className='px-3 py-2 bg-green/1 '>
-                                     <AdjustmentsHorizontalIcon className='w-6 h-6' />
-                                 </IconButton>
-                             </MenuHandler>
-                             <MenuList placeholder={''}>
-                                 <MenuItem placeholder={''}>Phút</MenuItem>
-                                 <MenuItem placeholder={''}>Giờ</MenuItem>
-                                 <MenuItem placeholder={''}>Ngày</MenuItem>
-                                 <MenuItem placeholder={''}>Tuần</MenuItem>
-                                 <MenuItem placeholder={''}>Tháng</MenuItem>
-                             </MenuList>
-                         </Menu> */}
                         </div>
 
                         <div className='flex flex-col items-center gap-4'>
-                            <div className='w-4/5 h-[300px] lg:w-[250px] lg:h-[200px] lg:min-h-[200px] flex items-center bg-white  rounded-2xl  '>
+                            <div className='w-full h-[300px] lg:w-[250px] lg:h-[200px] lg:min-h-[200px] flex items-center bg-white  rounded-2xl  '>
                                 <Timer />
                             </div>
                             {deviceInfos

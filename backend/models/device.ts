@@ -13,15 +13,16 @@ const deviceSchemaFields: Record<keyof DeviceSchema, any> = {
             endTime: { type: String }
         }
     ],
-    color: { type: String, enum: ['red', 'green', 'blue', 'yellow', 'purple', 'cyan', 'white', 'black'], default: 'white' },
+    color: { type: String, enum: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'white'], default: 'white' },
     minLimit: { type: Number, default: 0 },
     maxLimit: { type: Number, default: 0 },
     lastValue: { type: Number, required: true },
     updatedTime: { type: String, required: true },
     environmentValue: [
         {
-            value: { type: Number, required: true },
-            createdTime: { type: String, required: true }
+            value: { type: Number },
+            createdTime: { type: String },
+            controlType: { type: String, enum: ['manual', 'schedule', 'limit'] }
         }
     ]
 };

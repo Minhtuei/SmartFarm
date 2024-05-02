@@ -11,8 +11,11 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
             const adaFruitID = jsonMessage.id;
             const name = jsonMessage.key;
             if (name === 'speechrecognition') return;
+            if (name === 'color') return;
             const device = await Device.findOne({ adaFruitID });
             if (device) {
+                const updateTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' });
+                if (updateTime === device.updatedTime) return;
                 device.deviceState =
                     jsonMessage.key.split('-')[0] === 'led' || jsonMessage.key.split('-')[0] === 'waterpump'
                         ? jsonMessage.last_value === '1'
@@ -20,14 +23,22 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
                             : 'OFF'
                         : 'NONE';
                 device.lastValue = jsonMessage.last_value;
-                device.updatedTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' });
-                device.environmentValue.push({
-                    value: jsonMessage.data.value,
-                    createdTime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
-                });
-                device.save();
+                device.updatedTime = updateTime;
+                if (!device.environmentValue[device.environmentValue.length - 1].value) {
+                    device.environmentValue[device.environmentValue.length - 1].value = jsonMessage.data.value;
+                    device.environmentValue[device.environmentValue.length - 1].createdTime = new Date().toLocaleString('en-US', {
+                        timeZone: 'Asia/Bangkok'
+                    });
+                } else {
+                    device.environmentValue.push({
+                        value: jsonMessage.data.value,
+                        createdTime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
+                    });
+                }
+                await device.save();
                 await limitHandler(device);
             } else {
+                if (name === 'color' || name === 'speechrecognition') return;
                 const newDevice = new Device({
                     adaFruitID: jsonMessage.id,
                     deviceName: jsonMessage.key,
@@ -40,7 +51,7 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
                         createdTime: new Date().toLocaleString('en-US', { timeZone: 'Asia/Bangkok' })
                     }
                 });
-                newDevice.save();
+                await newDevice.save();
             }
             const dataPath = path.join(__dirname, 'data.json');
             fs.writeFileSync(dataPath, JSON.stringify(device), 'utf8');
@@ -49,12 +60,26 @@ const GetDeViceInfo = mqttClient.onMessage(async (topic, message) => {
         }
     }
 });
-const UpdateDeviceInfo = async (adaFruitID: string, body: MQTTDeviceData) => {
+const UpdateDeviceInfo = (adaFruitID: string, body: MQTTDeviceData) => {
     if (Object.keys(body).length !== 0) {
         mqttClient.publish(`${adaFruitID}`, JSON.stringify(body.lastValue));
     }
 };
+const UpdateDeviceColor = (adaFruitID: string, body: ColorType) => {
+    if (Object.keys(body).length !== 0) {
+        console.log('UpdateDeviceColor', body);
+        mqttClient.publishColor(`${adaFruitID}`, JSON.stringify(body));
+    }
+};
+const UpdateSpeechRecognition = (adaFruitID: string, body: boolean) => {
+    if (Object.keys(body).length !== 0) {
+        console.log('UpdateSpeechRecognition', body);
+        mqttClient.publishSpeechRecognition(`${adaFruitID}`, JSON.stringify(body));
+    }
+};
 export const mqttController = {
     GetDeViceInfo,
-    UpdateDeviceInfo
+    UpdateDeviceInfo,
+    UpdateDeviceColor,
+    UpdateSpeechRecognition
 };

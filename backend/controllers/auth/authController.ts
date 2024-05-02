@@ -49,7 +49,7 @@ const login = async (req: Request, res: Response) => {
         // Assuming the username is in req.body.name
         const user = await User.findOne({ email: email }); // Using findOne instead of findALL and awaiting the result
         if (!user) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found' });
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Tài khoản không hợp lệ' });
         }
         // console.log(user);
         const isPasswordValid = await bcrypt.compare(password, user.password);

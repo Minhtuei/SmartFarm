@@ -1,7 +1,9 @@
 import { Card, CardBody } from '@material-tailwind/react';
 import Chart from 'react-apexcharts';
 import { useMemo } from 'react';
+import { useScreenSize } from '@fe/hooks';
 export function RadioChart(deviceInfos: DevicesInfo) {
+    const screen = useScreenSize();
     const getAverageByType = (deviceInfos: DeviceData[], type: string) => {
         // Filter devices by type and calculate average
         const filteredDevices = deviceInfos.filter((device) => device.deviceType === type);
@@ -9,7 +11,6 @@ export function RadioChart(deviceInfos: DevicesInfo) {
         const sum = filteredDevices.reduce((acc, device) => acc + device.lastValue, 0);
         return sum / filteredDevices.length;
     };
-
     const options = useMemo(
         () => ({
             series: [
@@ -30,7 +31,7 @@ export function RadioChart(deviceInfos: DevicesInfo) {
                 categories: ['Nhiệt độ', 'Độ ẩm không khí', 'Độ ẩm đất', 'Ánh sáng'],
                 labels: {
                     style: {
-                        fontSize: '14px',
+                        fontSize: screen.screenSize >= 2 ? '14px' : '10px',
                         fontWeight: 'bold'
                     }
                 }
@@ -39,7 +40,7 @@ export function RadioChart(deviceInfos: DevicesInfo) {
                 text: 'Thông số trung bình tổng thể của trang trại',
                 align: 'center',
                 style: {
-                    fontSize: '20px',
+                    fontSize: screen.screenSize >= 2 ? '20px' : '14px',
                     fontWeight: 'bold'
                 }
             },
@@ -65,9 +66,9 @@ export function RadioChart(deviceInfos: DevicesInfo) {
         [deviceInfos]
     );
     return (
-        <Card>
-            <CardBody>
-                <Chart options={options} series={options.series} type='radar' height={400} />
+        <Card className='overflow-auto'>
+            <CardBody className='flex justify-center'>
+                <Chart options={options} series={options.series} type='radar' width={450} height={400} />
             </CardBody>
         </Card>
     );

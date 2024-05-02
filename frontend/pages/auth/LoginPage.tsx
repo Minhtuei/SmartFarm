@@ -1,4 +1,4 @@
-import { CardHeader, CardBody, CardFooter, Typography, Input, Checkbox, Button } from '@material-tailwind/react';
+import { CardHeader, CardBody, CardFooter, Typography, Input, Button } from '@material-tailwind/react';
 import { useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
 import { validateEmail, validatePassword } from '@fe/utils';
@@ -204,7 +204,7 @@ export function LoginPage() {
             {' '}
             <CardHeader placeholder={''} variant='gradient' color='blue' className='mb-4 grid h-28 place-items-center'>
                 <Typography placeholder='' variant='h3' color='white'>
-                    Sign In
+                    Đăng nhập
                 </Typography>
             </CardHeader>
             <CardBody placeholder={''} className='flex flex-col gap-4'>
@@ -220,20 +220,17 @@ export function LoginPage() {
                 <Input
                     crossOrigin={''}
                     type='password'
-                    label='Password'
+                    label='Mật khẩu'
                     size='lg'
                     color='blue'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={block}
                 />
-                <div className='-ml-2.5'>
-                    <Checkbox crossOrigin={''} label='Remember Me' />
-                </div>
             </CardBody>
             <CardFooter placeholder={''} className='pt-0'>
                 <Button placeholder={''} variant='gradient' color='light-blue' fullWidth onClick={handleSignIn} disabled={block}>
-                    {block ? 'Signing In...' : 'Sign In'}
+                    {block ? 'Đang xử lý...' : 'Đăng nhập'}
                 </Button>
                 <Typography placeholder='' variant='small' className='mt-6 flex justify-center'>
                     Bạn đã quên mật khẩu?
@@ -311,7 +308,7 @@ export function LoginPage() {
                 </Typography>
                 <div className='mt-3 flex items-center'>
                     <div className='flex-grow border-t border-gray-300'></div>
-                    <span className='mx-4 text-md text-gray-800'>Or</span>
+                    <span className='mx-4 text-md text-gray-800'>Hoặc</span>
                     <div className='flex-grow border-t border-gray-300'></div>
                 </div>
                 <Typography
@@ -403,7 +400,7 @@ export function LoginPage() {
                     <DialogFooter placeholder={''}>
                         <div>
                             <Button placeholder={''} onClick={resendOtp} className='mr-4 text-green-400' disabled={block}>
-                                Gửi lại OTP
+                                Gửi OTP
                             </Button>
                             <Button placeholder={''} onClick={handleSubmitValid} disabled={block}>
                                 Xác nhận

@@ -1,5 +1,5 @@
 import { ACTIVATE_DEVICE, DEVICE_CATEGORY } from '@fe/constants';
-import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Typography } from '@material-tailwind/react';
+import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Typography, Spinner } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { validateDeviceName, validateLimit } from '@fe/utils';
 import { TimePicker } from 'antd';
@@ -10,33 +10,52 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
     const deviceTypeNames = DEVICE_CATEGORY;
     const activateType = ACTIVATE_DEVICE;
     const navigate = useNavigate();
-    const COLOR = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'white'];
+    const COLOR: ('red' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'white')[] = [
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'blue',
+        'purple',
+        'pink',
+        'white'
+    ];
     const [onChange, setOnChange] = useState(false);
     const [deviceName, setDeviceName] = useState(device?.deviceName || '');
     const [minLimit, setMinLimit] = useState(device?.minLimit || 0);
     const [maxLimit, setMaxLimit] = useState(device?.maxLimit || 0);
     const [schedule, setSchedule] = useState<Schedule[]>(device?.schedule || []);
     const [scheduleNumber, setScheduleNumber] = useState(0);
-    const [error, setError] = useState<string | null>(null);
+    const [nameError, setNameError] = useState('');
+    const [limitError, setLimitError] = useState('');
+    const [color, setColor] = useState(device?.deviceType === 'led' ? (device?.color as ColorType) : 'white');
+    const [loading, setLoading] = useState(false);
     const handleOnClick = async () => {
         if (!validateDeviceName(deviceName)) {
-            setError('Tên thiết bị không hợp lệ');
+            setNameError('Tên không hợp lệ');
             return;
         }
         if (!validateLimit(minLimit, maxLimit)) {
-            setError('Ngưỡng dưới và trên không hợp lệ');
+            setLimitError('Ngưỡng không hợp lệ');
             return;
         }
-        setError(null);
+        setNameError('');
+        setLimitError('');
         try {
             const data: DeviceUpdateInfo = {
                 deviceName,
                 minLimit,
                 maxLimit,
-                schedule
+                schedule,
+                color
             };
+            setLoading(true);
+            setOnChange(false);
             const response = await DeviceService.updateDeviceInfo(device?.adaFruitID || '', device?.deviceType || '', data);
-            console.log(response);
+            setLoading(false);
+            if (response.message === 'success') {
+                device?.schedule?.unshift(...schedule.slice(device?.schedule?.length, schedule.length));
+            }
         } catch (error) {
             console.log(error);
         }
@@ -48,13 +67,16 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
         setMaxLimit(device?.maxLimit || 0);
         setSchedule(device?.schedule || []);
         setScheduleNumber(0);
+        setNameError('');
+        setLimitError('');
     };
     const isInfoUnchanged = () => {
         return (
             deviceName === device?.deviceName &&
             minLimit === device?.minLimit &&
             maxLimit === device?.maxLimit &&
-            JSON.stringify(schedule) === JSON.stringify(device?.schedule)
+            JSON.stringify(schedule) === JSON.stringify(device?.schedule) &&
+            color === device?.color
         );
     };
     useEffect(() => {
@@ -64,7 +86,11 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
         if (device) {
             clearState();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, device]);
+    useEffect(() => {
+        setColor(device?.color as ColorType);
+    }, [device]);
     if (!device) return null;
     return (
         <Dialog placeholder={''} open={open} handler={onClose} className='max-h-[650px] overflow-y-auto no-scrollbar bg-green-100'>
@@ -99,7 +125,11 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                 onChange={(e) => setDeviceName(e.target.value)}
                                 disabled={!onChange}
                             />
-                            {error && <Typography className='text-red-500'>{error}</Typography>}
+                            {nameError && (
+                                <Typography placeholder={''} className='text-red-500'>
+                                    {nameError}
+                                </Typography>
+                            )}
                         </div>
                     </div>
                     <div className='flex items-center w-full '>
@@ -154,7 +184,11 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                         onChange={(e) => setMinLimit(parseInt(e.target.value) || 0)}
                                         disabled={!onChange}
                                     />
-                                    {error && <Typography className='text-red-500'>{error}</Typography>}
+                                    {limitError && (
+                                        <Typography placeholder={''} className='text-red-500'>
+                                            {limitError}
+                                        </Typography>
+                                    )}
                                 </div>
                             </div>
                             <div className='flex items-center w-full '>
@@ -173,14 +207,20 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                         onChange={(e) => setMaxLimit(parseInt(e.target.value) || 0)}
                                         disabled={!onChange}
                                     />
-                                    {error && <Typography className='text-red-500'>{error}</Typography>}
+                                    {limitError && (
+                                        <Typography placeholder={''} className='text-red-500'>
+                                            {limitError}
+                                        </Typography>
+                                    )}
                                 </div>
                             </div>
                         </>
                     ) : (
                         <>
                             <div className='flex items-center w-full'>
-                                <Typography className='text-lg font-semibold w-1/2'>Tự động bật:</Typography>
+                                <Typography placeholder={''} className='text-lg font-semibold w-1/2'>
+                                    Tự động bật:
+                                </Typography>
                                 <div className='w-1/2 flex flex-col gap-y-1' id='scheduleHelp'>
                                     {schedule.map((item, index) => (
                                         <TimePicker.RangePicker
@@ -213,6 +253,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                                     endTime: timeString[1]
                                                 });
                                                 setSchedule(newSchedule);
+                                                setScheduleNumber((prev) => prev - 1 || 0);
                                             }}
                                         />
                                     ))}
@@ -250,16 +291,22 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                                         Màu sắc:
                                     </Typography>
                                     <div className='flex items-center gap-2 flex-wrap w-1/2'>
-                                        {COLOR.map((color) => (
+                                        {COLOR.map((colorEle) => (
                                             <Button
-                                                key={color}
+                                                key={colorEle}
                                                 placeholder={''}
                                                 variant='text'
                                                 className={`w-8 h-8 rounded-full ${
-                                                    color === 'white'
+                                                    colorEle === 'white'
                                                         ? 'bg-white hover:bg-gray-200 active:bg-gray-300'
-                                                        : `bg-${color}-500 hover:bg-${color}-600 active:bg-${color}-700`
-                                                }`}
+                                                        : `bg-${colorEle}-500 hover:bg-${colorEle}-600 active:bg-${colorEle}-700`
+                                                } hover:shadow-md active:shadow-lg`}
+                                                style={{
+                                                    border: colorEle === color ? '2px solid black' : 'none',
+                                                    boxShadow: colorEle === color ? '0 0 0 2px black' : 'none'
+                                                }}
+                                                onClick={() => setColor(colorEle)}
+                                                disabled={!onChange}
                                             >
                                                 <span></span>
                                             </Button>
@@ -292,7 +339,7 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                     disabled={isInfoUnchanged() || !onChange}
                     className='mr-1'
                 >
-                    <span>Lưu</span>
+                    {loading ? <Spinner className='w-4 h-4 text-sm ' /> : <span>Lưu</span>}
                 </Button>
                 <Button placeholder={''} color='red' onClick={onClose} className='mr-1'>
                     <span>Trở về</span>

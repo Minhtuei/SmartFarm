@@ -15,6 +15,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
 };
 
 export const updateUserInfo = async (req: Request, res: Response) => {
+    console.log(req.body);
     try {
         if (req.body.password !== undefined) {
             req.body.password = await bcrypt.hash(req.body.password, 10);
