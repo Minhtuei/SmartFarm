@@ -3,4 +3,5 @@
  */
 
 export * from './authenticate';
+export * from './MongoServer';
 export * from './mqttClient';

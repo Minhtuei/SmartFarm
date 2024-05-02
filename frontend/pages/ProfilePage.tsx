@@ -88,14 +88,14 @@ export function ProfilePage() {
                 data = {
                     name: username,
                     password: verPassword,
-                    phoneNumber: phone
-                    // voice: voice
+                    phoneNumber: phone,
+                    voice: voice
                 };
             } else {
                 data = {
                     name: username,
-                    phoneNumber: phone
-                    // voice: voice
+                    phoneNumber: phone,
+                    voice: voice
                 };
             }
             axios({
