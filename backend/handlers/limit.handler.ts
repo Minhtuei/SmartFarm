@@ -1,7 +1,8 @@
 import { Device } from '@be/models';
 import { mqttController } from '@be/controllers';
-import { Notification, User } from '@be/models';
+import { User } from '@be/models';
 import { SendNotification } from '../controllers/emailController';
+import NotificationFactory from '../services/NotificationFactory';
 export const limitHandler = async (device: DeviceSchema) => {
     if (device.deviceType === 'light') {
         const led = await Device.findOne({ deviceType: 'led', userID: device.userID });
@@ -13,13 +14,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'limit'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Ánh sáng dưới mức cho phép, hệ thống sẽ bật đèn',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await led.save();
                 if (user?.email) {
                     await SendNotification(
@@ -42,13 +41,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'limit'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Ánh sáng vượt mức cho phép, hệ thống sẽ tắt đèn',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await led.save();
                 if (user?.email) {
                     await SendNotification(
@@ -71,13 +68,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'manual'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Ánh sáng đã ổn định, hệ thống sẽ tắt đèn',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await led.save();
                 if (user?.email) {
                     await SendNotification(
@@ -99,13 +94,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'manual'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Ánh sáng đã ổn định, hệ thống sẽ bật đèn',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await led.save();
                 if (user?.email) {
                     await SendNotification(
@@ -131,13 +124,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'limit'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Độ ẩm đất dưới mức cho phép, hệ thống sẽ bật máy tưới',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await waterpump.save();
                 if (user?.email) {
                     await SendNotification(
@@ -161,13 +152,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'limit'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Độ ẩm đất vượt mức cho phép, hệ thống sẽ tắt máy tưới',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await waterpump.save();
                 if (user?.email) {
                     await SendNotification(
@@ -194,13 +183,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'manual'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Độ ẩm đất đã ổn định, hệ thống sẽ tắt máy tưới',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await waterpump.save();
                 if (user?.email) {
                     await SendNotification(
@@ -225,13 +212,11 @@ export const limitHandler = async (device: DeviceSchema) => {
                     controlType: 'manual'
                 });
                 const user = await User.findOne({ _id: device.userID });
-                const notification = new Notification({
+                await NotificationFactory.createWarningNotification({
                     context: 'Độ ẩm đất đã ổn định, hệ thống sẽ bật máy tưới',
-                    deviceName: 'Hệ thống',
-                    notificationType: 'warning',
-                    email: user?.email
+                    email: user?.email,
+                    deviceName: 'Hệ thống'
                 });
-                await notification.save();
                 await waterpump.save();
                 if (user?.email) {
                     await SendNotification(

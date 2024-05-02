@@ -1,6 +1,7 @@
 import mqtt from 'mqtt';
 import { envs } from '@be/configs';
-import { Notification, Device, User } from '@be/models';
+import { Device, User } from '@be/models';
+import NotificationFactory from './NotificationFactory';
 
 class MQTTClient {
     private client: mqtt.MqttClient;
@@ -48,23 +49,19 @@ class MQTTClient {
             const user = await User.findOne({ _id: device?.userID });
             if (err) {
                 console.error('Failed to publish message to topic', topic);
-                const notification = new Notification({
-                    context: `Thiết bị ${device?.deviceName} không thể cập nhật trạng thái`,
-                    notificationType: 'error',
+                await NotificationFactory.createErrorNotification({
+                    context: 'Đã xảy ra lỗi khi điều khiển thiết bị',
                     email: user?.email,
                     deviceName: device?.deviceName
                 });
-                await notification.save();
             } else {
                 console.log('Published message to topic', topic);
                 const state = message === '1' ? 'bật' : 'tắt';
-                const notification = new Notification({
+                await NotificationFactory.createSuccessNotification({
                     context: `Thiết bị ${device?.deviceName} đã được ${state}`,
-                    notificationType: 'success',
                     email: user?.email,
                     deviceName: device?.deviceName
                 });
-                await notification.save();
             }
         });
     }
