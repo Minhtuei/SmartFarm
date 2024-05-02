@@ -25,9 +25,11 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
     const { userData } = useUserInfoStore();
     const { getDeviceInfos } = useDevicesStore();
     const { getNotifications, getLatestNotification } = useNotificationStore();
+    const limit = screen.screenSize >= 2 ? 20 : 10;
+
     useEffect(() => {
         const fetchDashboard = async () => {
-            getDeviceInfos(userData.id, 20);
+            getDeviceInfos(userData.id, limit);
         };
         // Call immediately
         fetchDashboard(); // Then call every 3 seconds
@@ -36,7 +38,7 @@ export const AppLayout: Component<{ menu: RouteMenu }> = function ({ menu }) {
         }, 10000); // Interval of 3 seconds
 
         return () => clearInterval(interval); // Clear the interval if the component unmounts
-    }, [userData]);
+    }, [userData, limit]);
     useEffect(() => {
         const fetchNotification = async () => {
             if (!userData) return;

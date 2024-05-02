@@ -15,7 +15,9 @@ export const envs = cleanEnv(process.env, {
     ADAFRUIT_IO_USERNAME: str(),
     ADAFRUIT_IO_KEY: str(),
     ADAFRUIT_IO_PASSWORD: str(),
-    DB_ENDPOINT: str()
+    DB_ENDPOINT: str(),
+    EMAIL_ADDRESS: str(),
+    APP_PASSWORD: str()
 });
 
 export const CORS_WHITE_LIST = envs.CORS_WHITE_LIST.split(',');

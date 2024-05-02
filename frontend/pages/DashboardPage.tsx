@@ -13,7 +13,7 @@ export function DashboardPage() {
     return (
         <>
             <AppNavigationBar title={'Thống kê'} />
-            <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
+            <div className='px-2 md:px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700'>
                 {deviceInfos.length === 0 ? (
                     <ComponentSkeleton />
                 ) : (
@@ -120,7 +120,7 @@ export function DashboardPage() {
                         </div>
 
                         <div className='flex flex-col items-center gap-4'>
-                            <div className='w-4/5 h-[300px] lg:w-[250px] lg:h-[200px] lg:min-h-[200px] flex items-center bg-white  rounded-2xl  '>
+                            <div className='w-full h-[300px] lg:w-[250px] lg:h-[200px] lg:min-h-[200px] flex items-center bg-white  rounded-2xl  '>
                                 <Timer />
                             </div>
                             {deviceInfos

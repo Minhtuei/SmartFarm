@@ -2,8 +2,8 @@ import { Device } from '@be/models';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import { mqttController } from './mqttController';
-import { Notification } from '@be/models';
 import { User } from '@be/models';
+import NotificationFactory from '../services/NotificationFactory';
 export const getAllDevice = async (req: Request, res: Response) => {
     try {
         const userID = req.params.userID;
@@ -29,13 +29,11 @@ export const removeDeviceUser = async (req: Request, res: Response) => {
         device.userID = undefined;
         device.deviceName = device.deviceType;
         await device.save();
-        const newNotification = new Notification({
-            context: `Thiết bị ${device?.deviceName} đã được xóa!`,
-            notificationType: 'success',
+        await NotificationFactory.createSuccessNotification({
+            context: `Thiết bị ${device.deviceName} đã được xóa!`,
             email: user?.email,
             deviceName: device.deviceName
         });
-        await newNotification.save();
         return res.status(StatusCodes.OK).json({ message: 'Device updated', device });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
@@ -51,13 +49,11 @@ export const removeManyDevice = async (req: Request, res: Response) => {
             device.userID = undefined;
             device.deviceName = device.deviceType;
             await device.save();
-            const newNotification = new Notification({
+            await NotificationFactory.createSuccessNotification({
                 context: `Thiết bị ${device.deviceName} đã được xóa!`,
-                notificationType: 'success',
                 email: user?.email,
                 deviceName: device.deviceName
             });
-            await newNotification.save();
         });
         return res.status(StatusCodes.OK).json({ message: 'Device updated', devices });
     } catch (error) {
@@ -73,13 +69,11 @@ export const updateDeviceUser = async (req: Request, res: Response) => {
         const invalidDeviceIDs = deviceIDs.filter((deviceID: string) => !regex.test(deviceID));
         if (invalidDeviceIDs.length > 0) {
             invalidDeviceIDs.forEach(async (deviceID: string) => {
-                const newNotification = new Notification({
+                await NotificationFactory.createErrorNotification({
                     context: `Lỗi khi thêm thiết bị: mã thiết bị ${deviceID} không hợp lệ !`,
-                    notificationType: 'error',
                     email: user?.email,
                     deviceName: 'Hệ thống'
                 });
-                await newNotification.save();
             });
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Device ID is invalid' });
         }
@@ -88,13 +82,11 @@ export const updateDeviceUser = async (req: Request, res: Response) => {
         const nonExistingDevices = devices.filter((device) => !device);
         if (nonExistingDevices.length > 0) {
             nonExistingDevices.forEach(async (device, index) => {
-                const newNotification = new Notification({
+                await NotificationFactory.createErrorNotification({
                     context: `Lỗi khi thêm thiết bị: thiết bị với mã ${deviceIDs[index]} không tồn tại !`,
-                    notificationType: 'error',
                     email: user?.email,
                     deviceName: 'Hệ thống'
                 });
-                await newNotification.save();
             });
             return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have device!" });
         }
@@ -102,26 +94,22 @@ export const updateDeviceUser = async (req: Request, res: Response) => {
             devices.map(async (device) => {
                 device.userID = req.body.userID;
                 await device.save();
-                const newNotification = new Notification({
-                    context: `Thêm thiết bị ${device.deviceName} thành công !`,
-                    notificationType: 'success',
+                await NotificationFactory.createSuccessNotification({
+                    context: `Thiết bị ${device.deviceName} đã được thêm vào tài khoản của bạn!`,
                     email: user?.email,
                     deviceName: device.deviceName
                 });
-                await newNotification.save();
             })
         );
 
         return res.status(StatusCodes.OK).json({ message: 'success', deviceIDs });
     } catch (error) {
         const user = await User.findById(req.body.userID);
-        const newNotification = new Notification({
+        await NotificationFactory.createErrorNotification({
             context: `Lỗi khi thêm thiết bị: ${error}`,
-            notificationType: 'error',
             email: user?.email,
             deviceName: 'Hệ thống'
         });
-        await newNotification.save();
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
 };
@@ -151,13 +139,11 @@ export const updateDeviceInfo = async (req: Request, res: Response) => {
         if (!device) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Don't have device!" });
         if (device.environmentValue[device.environmentValue.length - 1].controlType === 'limit') {
             const user = await User.findById(device.userID);
-            const newNotification = new Notification({
-                context: `Không thể điều khiển thiết bị ${device.deviceName} do đã vượt quá giới hạn!`,
-                notificationType: 'error',
+            await NotificationFactory.createWarningNotification({
+                context: `Thiết bị ${device.deviceName} đã vượt quá giới hạn!`,
                 email: user?.email,
                 deviceName: device.deviceName
             });
-            await newNotification.save();
 
             return res.status(StatusCodes.BAD_REQUEST).json({ message: "Can't control device!" });
         }
@@ -219,13 +205,11 @@ export const updateDeviceInfos = async (req: Request, res: Response) => {
         }
         await device.save();
         const user = await User.findById(device.userID);
-        const newNotification = new Notification({
-            context: `Cập nhật thông tin thiết bị ${device.deviceName} thành công !`,
-            notificationType: 'success',
+        await NotificationFactory.createSuccessNotification({
+            context: `Thông tin thiết bị ${device.deviceName} đã được cập nhật!`,
             email: user?.email,
             deviceName: device.deviceName
         });
-        await newNotification.save();
         return res.status(StatusCodes.OK).json({ message: 'success', device });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });

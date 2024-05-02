@@ -5,3 +5,4 @@
 export * from './authenticate';
 export * from './MongoServer';
 export * from './mqttClient';
+export * from './NotificationFactory';

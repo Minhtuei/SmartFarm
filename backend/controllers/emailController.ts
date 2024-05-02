@@ -3,11 +3,10 @@ import { User } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
 const bcrypt = require('bcrypt');
-dotenv.config({ path: '../../.env' });
-const EMAIL = process.env.EMAIL_ADDRESS;
-const PASSWORD = process.env.APP_PASSWORD;
+import { envs } from '@be/configs';
+const EMAIL = envs.EMAIL_ADDRESS;
+const PASSWORD = envs.APP_PASSWORD;
 export const GeneratePassword = (length: number): string => {
     const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
