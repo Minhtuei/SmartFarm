@@ -6,7 +6,7 @@ import Chart from 'react-apexcharts';
 import _ from 'lodash';
 import { Carousel, IconButton } from '@material-tailwind/react';
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
-
+import { useScreenSize } from '@fe/hooks';
 interface EnvironmentValue {
     id: number;
     value: number;
@@ -14,6 +14,7 @@ interface EnvironmentValue {
 }
 
 export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: DeviceData[] }) {
+    const screen = useScreenSize();
     const infoByDate = useMemo(() => {
         return _.chain(deviceInfos)
             .filter((device: DeviceData) => device.deviceType === type)
@@ -45,7 +46,7 @@ export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: 
                 categories: infoByDate.map((info) => info.x),
                 labels: {
                     style: {
-                        fontSize: '14px',
+                        fontSize: screen.screenSize >= 2 ? '14px' : '10px',
                         fontWeight: 'bold'
                     }
                 }
@@ -54,7 +55,7 @@ export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: 
                 text: `Biểu đồ ${type === 'temperature' ? 'nhiệt độ' : type === 'airhumidity' ? 'độ ẩm không khí' : 'ánh sáng'} theo ngày`,
                 align: 'center',
                 style: {
-                    fontSize: '20px',
+                    fontSize: screen.screenSize >= 2 ? '20px' : '14px',
                     fontWeight: 'bold'
                 }
             },
