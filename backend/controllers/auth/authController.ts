@@ -19,9 +19,9 @@ const generateToken = async (user: UserDataType) => {
         const accessToken = jwt.sign(payload, process.env.ACCESS_JWT_SECRET, { expiresIn: '10m' });
         const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET, { expiresIn: '30d' });
 
-        const userToken = await UserToken.findOne({ email: user.email });
-        // console.log(userToken);
-        if (userToken) await UserToken.updateOne({ email: user.email });
+        const userToken = await UserToken.deleteMany({ email: user.email });
+        console.log(userToken);
+        // if (userToken) await userToken.deleteOne({ email });
         // console.log(user.email + ' : new token');
         await new UserToken({ email: user.email, token: refreshToken }).save();
         return Promise.resolve({ accessToken, refreshToken });
