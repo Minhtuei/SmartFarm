@@ -169,14 +169,14 @@ export const SendOTP = async (req: Request, res: Response) => {
             <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Email Content</title>
+            <title>Nội dung email</title>
             </head>
             <body>
-            <p style="font-size: 18px; color: black;">Hi!</p>
-            <p style="font-size: 18px; color: black;">Thank you for using our service.</p>
-            <p style="font-size: 18px; color: black;">Your verification code is: <span style="font-size: 24px; color: blue;"><b>${genOTP}</b></span></p>
-            <p style="font-size: 18px; color: black;">Please complete the verification process in 30 minutes.</p>
-            <p style="font-size: 18px; color: black;">Please do not reply to this email.</p>
+            <p style="font-size: 18px; color: black;">Xin chào!</p>
+            <p style="font-size: 18px; color: black;">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+            <p style="font-size: 18px; color: black;">Mã xác thực của bạn là: <span style="font-size: 24px; color: blue;"><b>${genOTP}</b></span></p>
+            <p style="font-size: 18px; color: black;">Vui lòng dùng mã xác thực này trong vòng 30 phút.</p>
+            <p style="font-size: 18px; color: black;">Vui lòng không trả lời email này.</p>
             </body>
             </html>
             `

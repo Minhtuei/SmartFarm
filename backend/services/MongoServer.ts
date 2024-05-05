@@ -22,6 +22,11 @@ class MongoServer {
             .connect(envs.DB_ENDPOINT)
             .then(() => this._logger.info('MongoDB connection established successfully'))
             .catch((e: mongoose.Error) => this._logger.error(`MongoDB connection failed with error: ${e}`));
+        // const Notification = mongoose.model('Notification'); // Replace 'Notification' with your actual model name
+        // Notification.deleteMany({ email: 'test2@gmail.com' }).then(() => {
+        //     console.log('Deleted all notifications)');
+        // }
+        // );
     }
 
     static getInstance() {
