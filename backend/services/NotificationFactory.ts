@@ -1,5 +1,5 @@
 import { Notification } from '@be/models';
-
+import winston from 'winston';
 interface NotificationData {
     context: string;
     notificationType: string;
@@ -15,6 +15,19 @@ class NotificationFactory {
             deviceName
         });
         await notification.save();
+        winston
+            .createLogger({
+                level: 'info',
+                format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+                transports: [
+                    new winston.transports.Console(),
+                    new winston.transports.File({
+                        filename: 'logs.log',
+                        level: 'info'
+                    })
+                ]
+            })
+            .info(`Notification created: ${notification}`);
     }
     static async createErrorNotification({ context, email, deviceName }: Omit<NotificationData, 'notificationType'>) {
         await NotificationFactory.createNotification({ context, notificationType: 'error', email, deviceName });

@@ -53,7 +53,7 @@ export function RadioChart(deviceInfos: DevicesInfo) {
             },
             plotOptions: {
                 radar: {
-                    size: 150,
+                    size: screen.screenSize >= 2 ? 150 : 80,
                     polygons: {
                         strokeColor: '#e8e8e8',
                         fill: {
@@ -66,9 +66,9 @@ export function RadioChart(deviceInfos: DevicesInfo) {
         [deviceInfos]
     );
     return (
-        <Card className='overflow-auto'>
-            <CardBody className='flex justify-center'>
-                <Chart options={options} series={options.series} type='radar' width={450} height={400} />
+        <Card className='overflow-auto p-0 dark:bg-white/80'>
+            <CardBody className='block p-1'>
+                <Chart options={options} series={options.series} type='radar' height={400} />
             </CardBody>
         </Card>
     );

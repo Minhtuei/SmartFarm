@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { Carousel, IconButton } from '@material-tailwind/react';
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/outline';
 import { useScreenSize } from '@fe/hooks';
+import { useResponsiveStore } from '@fe/states';
 interface EnvironmentValue {
     id: number;
     value: number;
@@ -15,6 +16,12 @@ interface EnvironmentValue {
 
 export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: DeviceData[] }) {
     const screen = useScreenSize();
+    const { darkMode } = useResponsiveStore();
+    useEffect(() => {
+        document.querySelectorAll('.apexcharts-tooltip').forEach((tooltip) => {
+            tooltip.classList.add('bg-white', 'dark:bg-black', 'shadow-lg', 'dark:shadow-none');
+        });
+    }, [darkMode]);
     const infoByDate = useMemo(() => {
         return _.chain(deviceInfos)
             .filter((device: DeviceData) => device.deviceType === type)
@@ -71,6 +78,12 @@ export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: 
                     distributed: true
                 }
             },
+            grid: {
+                borderColor: darkMode ? '#333' : '#e8e8e8'
+            },
+            tooltip: {
+                theme: darkMode ? 'dark' : 'light'
+            },
             yaxis: {
                 title: {
                     text: type === 'temperature' ? 'Nhiệt độ (°C)' : type === 'airhumidity' ? 'Độ ẩm không khí (%)' : 'Ánh sáng (lux)',
@@ -81,7 +94,7 @@ export function ColumnChart({ type, deviceInfos }: { type: string; deviceInfos: 
                 }
             }
         }),
-        [infoByDate, type]
+        [infoByDate, type, screen.screenSize, darkMode]
     );
 
     return <Chart options={options} series={options.series} height={350} type='bar' />;
@@ -142,7 +155,7 @@ export function ColumnCharts() {
                     </div>
                 )}
                 transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-                className='overflow-y-hidden bg-white rounded-3xl py-4 shadow-lg'
+                className='overflow-y-hidden bg-white rounded-3xl py-4 shadow-lg dark:bg-white/80'
             >
                 {['temperature', 'airhumidity', 'light'].map((type) => (
                     <div key={type}>

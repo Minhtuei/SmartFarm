@@ -4,5 +4,5 @@
 
 export * from './device.state';
 export * from './notification.state';
-export * from './review.state';
+export * from './responsive.state';
 export * from './userInfo.state';

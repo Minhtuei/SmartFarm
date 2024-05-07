@@ -13,19 +13,22 @@ export const DeviceService = {
                 userID: userData.id,
                 deviceIDs
             });
-            // await DeviceService.getAllDevice();
             return response.data;
         } catch (error) {
             return error;
         }
     },
     getAllDevice: async (userId: string, limit: number) => {
+        if (!sessionStorage.getItem('refreshToken')) {
+            return;
+        }
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
             const response = await axios.get(`http://localhost:8080/device/${userId}/${limit}`);
+
             return response.data;
         } catch (error) {
-            DeviceService.updateToken();
+            await DeviceService.updateToken();
             return error;
         }
     },
@@ -66,8 +69,12 @@ export const DeviceService = {
         setHeaderRequest(sessionStorage.getItem('accessToken'), sessionStorage.getItem('refreshToken'));
         try {
             const response = await axios.post(`http://localhost:8080/login/updateToken`, {});
-            sessionStorage.setItem('accessToken', response.data.accessToken);
+            if (response.data.accessToken) {
+                sessionStorage.setItem('accessToken', response.data.accessToken);
+            }
+            return response.data;
         } catch (error) {
+            sessionStorage.removeItem('refreshToken');
             return error;
         }
     },

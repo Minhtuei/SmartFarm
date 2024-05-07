@@ -116,10 +116,10 @@ export function DeviceInfoDialog({ open, onClose, device }: DeviceInfoDialogProp
                         <div className='w-1/2'>
                             <Input
                                 type='device'
-                                placeholder='Nhập ID thiết bị'
+                                placeholder='Nhập tên thiết bị'
                                 className='!border !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10 w-[100px]'
                                 labelProps={{ className: 'hidden' }}
-                                containerProps={{ className: 'min-w-[1/2] w-[50px]' }}
+                                containerProps={{ className: 'min-w-[50px] w-[50px]' }}
                                 crossOrigin={'none'}
                                 value={deviceName}
                                 onChange={(e) => setDeviceName(e.target.value)}

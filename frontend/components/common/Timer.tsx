@@ -6,7 +6,7 @@ export function Timer() {
     const [darkMode] = useDarkMode();
     useEffect(() => {
         const interval = setInterval(() => {
-            setTimer((prev) => (prev - 1 < 0 ? 9 : prev - 1));
+            setTimer((prev) => (prev - 1 < 0 ? 14 : prev - 1));
         }, 1000);
         return () => clearInterval(interval);
     }, []);
@@ -17,7 +17,7 @@ export function Timer() {
             </div>
             <div className='flex justify-center mt-[14px]'>
                 <CircularProgressbarWithChildren
-                    value={(timer / 9) * 100}
+                    value={(timer / 14) * 100}
                     strokeWidth={9}
                     className='w-32 h-32'
                     styles={{

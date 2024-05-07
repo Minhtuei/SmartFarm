@@ -28,6 +28,11 @@ export const removeDeviceUser = async (req: Request, res: Response) => {
         const user = await User.findById(device.userID);
         device.userID = undefined;
         device.deviceName = device.deviceType;
+        device.schedule = [];
+        if (device.deviceType === 'led') {
+            device.color = 'white';
+            mqttController.UpdateDeviceColor('color', device.color);
+        }
         await device.save();
         await NotificationFactory.createSuccessNotification({
             context: `Thiết bị ${device.deviceName} đã được xóa!`,
@@ -92,6 +97,14 @@ export const updateDeviceUser = async (req: Request, res: Response) => {
         }
         await Promise.all(
             devices.map(async (device) => {
+                if (device?.userID === req.body.userID) {
+                    await NotificationFactory.createErrorNotification({
+                        context: `Lỗi khi thêm thiết bị: thiết bị ${device.deviceName} đã có trong tài khoản của bạn!`,
+                        email: user?.email,
+                        deviceName: device.deviceName
+                    });
+                    return;
+                }
                 device.userID = req.body.userID;
                 await device.save();
                 await NotificationFactory.createSuccessNotification({

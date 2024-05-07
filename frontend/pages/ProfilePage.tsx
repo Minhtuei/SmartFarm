@@ -1,5 +1,5 @@
 import { AppNavigationBar } from '@fe/components';
-import { Avatar, Button } from '@material-tailwind/react';
+import { Avatar, Button, IconButton } from '@material-tailwind/react';
 import { AiTwotoneMail } from 'react-icons/ai';
 import { IoIosPhonePortrait } from 'react-icons/io';
 import { FaKey, FaEye } from 'react-icons/fa';
@@ -74,7 +74,6 @@ export function ProfilePage() {
         setVerPassword(e.target.value);
     };
     const Save = () => {
-        console.log('Saving...');
         if (newPassword !== '' && newPassword !== verPassword) {
             enqueueSnackbar('Mật khẩu không trùng khớp', { variant: 'error', autoHideDuration: 2000 });
         } else if (newPassword !== '' && (!validatePassword(newPassword) || !validatePassword(verPassword))) {
@@ -132,8 +131,8 @@ export function ProfilePage() {
         <>
             <AppNavigationBar title='Profile' />
             <SnackbarProvider />
-            <div className='p-4 bg-white/2 h-screen'>
-                <div className='w-[max-content]'>
+            <div className='px-2 md:px-8 bg-white/2 h-screen dark:bg-gray-700 dark:text-white/2'>
+                <div className='w-[max-content] py-4'>
                     <p className='font-semibold text-xl'>Thông tin</p>
                     <div className='w-full border-b border-gray-500'></div>
                 </div>
@@ -152,23 +151,6 @@ export function ProfilePage() {
                             <p>Đại Học Bách Khoa, TP.HCM</p>
                         </div>
                     </div>
-                    <div
-                        className={`md:absolute md:right-0 border-2 border-black p-2 rounded-xl text-white font-bold shadow-md ${
-                            voice ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'
-                        }`}
-                        onClick={handleVoice}
-                    >
-                        <p className='text-center text-[#1d1d1d]'>
-                            Điều kiển bằng <br />
-                            giọng nói
-                        </p>
-                        {voice ? (
-                            <MdKeyboardVoice className='mx-auto text-xl font-bold ' />
-                        ) : (
-                            <MdVoiceOverOff className='mx-auto text-xl font-bold ' />
-                        )}
-                        <p className={`text-center ${voice ? 'text-[#0f172a]' : ''}`}>{voice ? 'Đang bật' : 'Đang tắt'}</p>
-                    </div>
                 </div>
                 <div className='w-full border-b border-gray-500'></div>
                 <div>
@@ -182,7 +164,13 @@ export function ProfilePage() {
                             <div className='w-full ml-3'>
                                 <div style={{ position: 'relative' }}>
                                     <AiTwotoneMail
-                                        style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '10px',
+                                            transform: 'translateY(-50%)',
+                                            color: '#333'
+                                        }}
                                     />
                                     <input
                                         type='email'
@@ -199,7 +187,13 @@ export function ProfilePage() {
                             <div className='w-full ml-3'>
                                 <div style={{ position: 'relative' }}>
                                     <IoIosPhonePortrait
-                                        style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '10px',
+                                            transform: 'translateY(-50%)',
+                                            color: '#333'
+                                        }}
                                     />
                                     <input
                                         type='number'
@@ -217,9 +211,17 @@ export function ProfilePage() {
                             <p className='font-semibold text-lg my-3 ml-3'>Mật khẩu mới</p>
                             <div className='w-full ml-3'>
                                 <div style={{ position: 'relative' }}>
-                                    <FaKey style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }} />
+                                    <FaKey
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '10px',
+                                            transform: 'translateY(-50%)',
+                                            color: '#333'
+                                        }}
+                                    />
                                     <FaEye
-                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e]'
+                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e] text-[#333]'
                                         onClick={() => handleClick2()}
                                     />
                                     <input
@@ -237,9 +239,17 @@ export function ProfilePage() {
                             <p className='font-semibold text-lg my-3 ml-3'>Nhập lại mật khẩu</p>
                             <div className='w-full ml-3'>
                                 <div style={{ position: 'relative' }}>
-                                    <FaKey style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)' }} />
+                                    <FaKey
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '10px',
+                                            transform: 'translateY(-50%)',
+                                            color: '#333'
+                                        }}
+                                    />
                                     <FaEye
-                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e]'
+                                        className='absolute top-1/2 right-5 transform -translate-y-1/2 hover:text-[#546e7a] active:text-[#9e9e9e] text-[#333]'
                                         onClick={() => handleClick3()}
                                     />
                                     <input
@@ -254,10 +264,16 @@ export function ProfilePage() {
                             </div>
                         </div>
                     </div>
+                    <div className='w-[90%] flex gap-x-4 mt-3 items-center'>
+                        <p className='font-semibold text-lg my-3 ml-3'>Điều khiển bằng giọng nói:</p>
+                        <IconButton onClick={handleVoice} className={`bg-[#fff] ${voice ? 'bg-green/1' : 'bg-red-500'}`}>
+                            {voice ? <MdKeyboardVoice className='text-2xl' /> : <MdVoiceOverOff className='text-2xl' />}
+                        </IconButton>
+                    </div>
                 </div>
                 <div className='w-[90%] space-x-2 mt-3 flex justify-end'>
                     <Button
-                        className='bg-[#fff] text-[$000] border-[1px] border-black'
+                        className='bg-[#fff] text-[#333] border-[1px] border-black'
                         onClick={() => {
                             window.location = '/profile';
                         }}

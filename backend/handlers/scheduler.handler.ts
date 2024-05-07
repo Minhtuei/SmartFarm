@@ -24,7 +24,7 @@ export const Scheduler = async () => {
                                 deviceName: 'Hệ thống'
                             });
                         } else {
-                            await NotificationFactory.createSuccessNotification({
+                            await NotificationFactory.createInfoNotification({
                                 context: `Thiết bị ${device?.deviceName} sẽ được bật theo lịch từ ${schedule.startTime} đến ${schedule.endTime}`,
                                 email: user?.email,
                                 deviceName: 'Hệ thống'
@@ -44,7 +44,7 @@ export const Scheduler = async () => {
                         device.environmentValue[device.environmentValue.length - 1].controlType === 'schedule'
                     ) {
                         const user = await User.findOne({ _id: device?.userID });
-                        await NotificationFactory.createSuccessNotification({
+                        await NotificationFactory.createInfoNotification({
                             context: `Thiết bị ${device?.deviceName} sẽ được tắt theo lịch từ ${schedule.startTime} đến ${schedule.endTime}`,
                             email: user?.email,
                             deviceName: 'Hệ thống'

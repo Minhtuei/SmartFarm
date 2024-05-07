@@ -26,6 +26,7 @@ interface DeviceData {
 interface DevicesInfo {
     deviceInfos: DeviceData[];
     getDeviceInfos: (userId: string, limit: number) => void;
+    removeDevice: (deviceID: string) => void;
 }
 interface DeviceCategory {
     longName: string;

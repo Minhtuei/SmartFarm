@@ -2,8 +2,8 @@ import { Response, Request, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User } from '@be/models';
-import { UserToken } from '@be/models';
+// import { User } from '@be/models';
+import UserToken from 'backend/models/userToken';
 
 // import { generateToken } from '../controllers/auth/authController';
 dotenv.config();
@@ -25,28 +25,25 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
             }
             req.email = decoded.email;
             req.userID = decoded.id;
-            return next();
         }
 
         if (refreshToken) {
             const secret = process.env.REFRESH_JWT_SECRET;
             const decoded = jwt.verify(refreshToken.split(' ')[1], secret) as { email: string; exp: number; id: string };
-            const userToken = await UserToken.findOne({ _id: decoded.id, token: refreshToken });
 
+            const userToken = await UserToken.findOne({ email: decoded.email, token: refreshToken.split(' ')[1] });
             if (!userToken) {
-                return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid refresh token.' });
+                return res.status(StatusCodes.FORBIDDEN).json({ message: 'Invalid refresh token.' });
             }
 
-            const user = await User.findOne({ _id: decoded.id });
-            if (!user) {
-                return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found.' });
-            }
+            // const user = await User.findOne({ _id: decoded.id });
+            // if (!user) {
+            //     return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User not found.' });
+            // }
 
             // const newTokens = await generateToken(user); // Assuming generateToken function is available
-            req.email = decoded.email;
-
-            req.userID = decoded.id;
-
+            // req.email = decoded.email;
+            // req.userID = decoded.id;
             // res.locals.newTokens = newTokens;
             return next();
         }

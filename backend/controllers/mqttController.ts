@@ -67,15 +67,11 @@ const UpdateDeviceInfo = (adaFruitID: string, body: MQTTDeviceData) => {
 };
 const UpdateDeviceColor = (adaFruitID: string, body: ColorType) => {
     if (Object.keys(body).length !== 0) {
-        console.log('UpdateDeviceColor', body);
         mqttClient.publishColor(`${adaFruitID}`, JSON.stringify(body));
     }
 };
 const UpdateSpeechRecognition = (adaFruitID: string, body: boolean) => {
-    if (Object.keys(body).length !== 0) {
-        console.log('UpdateSpeechRecognition', body);
-        mqttClient.publishSpeechRecognition(`${adaFruitID}`, JSON.stringify(body));
-    }
+    mqttClient.publishSpeechRecognition(`${adaFruitID}`, JSON.stringify(body));
 };
 export const mqttController = {
     GetDeViceInfo,

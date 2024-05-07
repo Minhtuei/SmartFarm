@@ -1,21 +1,11 @@
 import { AppNavigationBar } from '@fe/components';
 import { useNotificationStore } from '@fe/states';
-// import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/sol_id";
 import { NOTIFICATION_CATEGORY } from '@fe/constants';
 import {
-    Button,
     Card,
     CardBody,
-    // Chip,
     CardFooter,
-    // Tabs,
-    // TabsHeader,
-    // Tab,
-    // Avatar,
-    // IconButton,
-    // Tooltip,
     CardHeader,
-    // Input,
     Typography,
     Menu,
     MenuHandler,
@@ -25,7 +15,13 @@ import {
     IconButton
 } from '@material-tailwind/react';
 import moment from 'moment';
-import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
+import {
+    MagnifyingGlassIcon,
+    AdjustmentsHorizontalIcon,
+    ChevronUpIcon,
+    ChevronDoubleLeftIcon,
+    ChevronDoubleRightIcon
+} from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 const TABLE_HEAD = ['', 'Loại', 'Thiết bị', 'Nội dung', 'Thời gian'];
 export function NotificationPage() {
@@ -63,7 +59,7 @@ export function NotificationPage() {
     return (
         <>
             <AppNavigationBar title='Thông báo' />
-            <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
+            <div className='px-2 md:px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
                 <Card className='h-[calc(100vh-130px)] w-full'>
                     <CardHeader floated={false} shadow={false} className='rounded-none min-h-[50px]'>
                         <div className='flex items-center gap-2'>
@@ -167,7 +163,7 @@ export function NotificationPage() {
                             </IconButton>
                         </div>
                     </CardHeader>
-                    <CardBody className='overflow-scroll px-0'>
+                    <CardBody className='overflow-scroll px-0 '>
                         {rowsToDisplay.length > 0 ? (
                             <table className='mt-4 w-full min-w-max table-auto text-left'>
                                 <thead>
@@ -271,12 +267,12 @@ export function NotificationPage() {
                         </div>
 
                         <div className='flex gap-2 items-center'>
-                            <Button variant='outlined' size='sm' onClick={() => handlePreviousClick()}>
-                                Trang trước
-                            </Button>
-                            <Button variant='outlined' size='sm' onClick={() => handleNextClick()}>
-                                Trang sau
-                            </Button>
+                            <IconButton variant='outlined' size='sm' onClick={() => handlePreviousClick()}>
+                                <ChevronDoubleLeftIcon className='w-6 h-6' />
+                            </IconButton>
+                            <IconButton variant='outlined' size='sm' onClick={() => handleNextClick()}>
+                                <ChevronDoubleRightIcon className='w-6 h-6 ' />
+                            </IconButton>
                         </div>
                     </CardFooter>
                 </Card>

@@ -40,11 +40,10 @@ export function LoginPage() {
                 url: `${serverHost}/gen/otp/${emailValid}`,
                 responseType: 'json'
             })
-                .then(function (res) {
+                .then(function () {
                     setErrorColor(false);
                     setValidMessage(true);
                     setMessageValid('Chúng tôi đã gửi OTP mới vào email của bạn vui lòng kiểm tra lại');
-                    console.log(res);
                 })
                 .catch(function (error) {
                     setValidMessage(true);
@@ -137,9 +136,9 @@ export function LoginPage() {
                 url: `${serverHost}/gen/otp/${email}`,
                 responseType: 'json'
             })
-                .then(function (res) {
+                .then(function () {
                     setSendOtp(true);
-                    console.log(res);
+                    // console.log(res);
                 })
                 .catch(function (error) {
                     setSendOtp(false);

@@ -4,12 +4,16 @@ import { Typography } from '@material-tailwind/react';
 import { ChevronDoubleLeftIcon } from '@heroicons/react/20/solid';
 import { ChevronDoubleRightIcon } from '@heroicons/react/20/solid';
 import { useScreenSize } from '@fe/hooks';
+import { useResponsiveStore } from '@fe/states';
 export function AppSlideMenu({ menu, open, setOpen }: { menu: RouteMenu } & { open: boolean; setOpen: (open: boolean) => void }) {
     const screen = useScreenSize();
+    const { setHideSideBar, hideSideBar } = useResponsiveStore();
     return (
         <div
             className={
-                `fixed top-0 left-0 h-full bg-green/1 text-white dark:bg-black/1` + (open && screen.screenSize >= 2 ? ` w-60` : ` w-16`)
+                `fixed top-0 left-0 h-full bg-green/1 text-white dark:bg-black/1 z-[999]` +
+                (open && screen.screenSize >= 2 ? ` w-60` : ` w-16`) +
+                (hideSideBar ? ' transition-all duration-300 ease-in-out' : '')
             }
         >
             <div className='p-4 flex items-center justify-between'>
@@ -21,10 +25,23 @@ export function AppSlideMenu({ menu, open, setOpen }: { menu: RouteMenu } & { op
                                 Smart Farm
                             </Typography>
                         </div>{' '}
-                        <ChevronDoubleLeftIcon className='h-5 w-5 hover:text-black/1 cursor-pointer' onClick={() => setOpen(false)} />
+                        <ChevronDoubleLeftIcon
+                            className='h-5 w-5 hover:text-black/1 cursor-pointer'
+                            onClick={() => {
+                                setOpen(false);
+                            }}
+                        />
                     </>
                 ) : (
-                    <ChevronDoubleRightIcon className='h-5 w-5 hover:text-black/1 cursor-pointer ml-1' onClick={() => setOpen(true)} />
+                    <ChevronDoubleRightIcon
+                        className='h-5 w-5 hover:text-black/1 cursor-pointer ml-1'
+                        onClick={() => {
+                            setOpen(true);
+                            if (screen.screenSize < 2) {
+                                setHideSideBar(true);
+                            }
+                        }}
+                    />
                 )}
             </div>
             <div>

@@ -24,5 +24,9 @@ export const useDevicesStore = create<DevicesInfo>((set) => ({
             DeviceService.updateToken();
             console.log(err);
         }
+    },
+    removeDevice: async (deviceID: string) => {
+        const deviceInfos = useDevicesStore.getState().deviceInfos.filter((device) => device.adaFruitID !== deviceID);
+        set({ deviceInfos });
     }
 }));

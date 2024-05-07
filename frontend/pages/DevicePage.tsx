@@ -60,6 +60,9 @@ export function DevicePage() {
         try {
             setIsLoading(true);
             await DeviceService.removeManyDevice(selectedDevices);
+            selectedDevices.forEach((adaFruitID) => {
+                useDevicesStore.getState().removeDevice(adaFruitID);
+            });
         } finally {
             setIsLoading(false);
             setRemoveAllMode(false);
@@ -94,8 +97,8 @@ export function DevicePage() {
     return (
         <>
             <AppNavigationBar title={'Thiết bị'} />
-            <div className='px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
-                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-4 overflow-y-auto pr-4'>
+            <div className='px-2 md:px-8 py-6 bg-white/2 dark:text-white/2 dark:bg-gray-700 '>
+                <div className='h-[calc(100vh-130px)] flex flex-col overflow-hidden relative gap-y-4 overflow-y-auto md:pr-4'>
                     <div className='flex items-center gap-2'>
                         <Menu>
                             <MenuHandler>
@@ -135,7 +138,7 @@ export function DevicePage() {
                         <IconButton
                             color='green'
                             placeholder={''}
-                            className='px-3 py-2 hover:shadow-none '
+                            className='hidden md:block px-3 py-2 hover:shadow-none '
                             onClick={() => {
                                 filterDeviceByName(searchValue, deviceInfos);
                             }}

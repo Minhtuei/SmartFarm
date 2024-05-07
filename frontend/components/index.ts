@@ -11,6 +11,7 @@ export * from './common/AppSlideMenu';
 export * from './common/Pagination';
 export * from './common/ProtectedRoutes';
 export * from './common/Timer';
+export * from './common/WelcomeComponent';
 export * from './devices/DeviceInfoDialog';
 export * from './devices/MiniDeviceImage';
 export * from './devices/MiniDeviceInfo';
