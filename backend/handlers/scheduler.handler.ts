@@ -2,20 +2,17 @@ import { Device } from '@be/models';
 import { mqttController } from '@be/controllers';
 import NotificationFactory from '../services/NotificationFactory';
 import { User } from '@be/models';
+import moment from 'moment';
 export const Scheduler = async () => {
     try {
         const devices = await Device.find({ deviceType: { $in: ['led', 'waterpump'] } });
         devices.forEach(async (device) => {
             if (device.schedule.length !== 0) {
-                const currentTime = new Date().toLocaleTimeString('en-US', {
-                    hour12: false,
-                    timeZone: 'Asia/Bangkok',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                });
+                const currentTime = moment().unix();
+                const startTime = moment(device.schedule[0].startTime, 'HH:mm:ss').unix();
+                const endTime = moment(device.schedule[0].endTime, 'HH:mm:ss').unix();
                 device.schedule.forEach(async (schedule: Scheduler) => {
-                    if (currentTime === schedule.startTime.padEnd(8, ':00') && device.deviceState === 'OFF') {
+                    if (Math.abs(startTime - currentTime) <= 3 && device.deviceState === 'OFF') {
                         const user = await User.findOne({ _id: device?.userID });
                         if (device.environmentValue[device.environmentValue.length - 1].controlType === 'limit') {
                             await NotificationFactory.createWarningNotification({
@@ -39,7 +36,7 @@ export const Scheduler = async () => {
                             }
                         }
                     } else if (
-                        currentTime === schedule.endTime.padEnd(8, ':00') &&
+                        Math.abs(endTime - currentTime) <= 3 &&
                         device.deviceState === 'ON' &&
                         device.environmentValue[device.environmentValue.length - 1].controlType === 'schedule'
                     ) {

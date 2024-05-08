@@ -106,7 +106,7 @@ export function ColumnCharts() {
 
     useEffect(() => {
         const fetchDeviceInfos = async () => {
-            const data = await DeviceService.getAllDevice(userData.id, 350);
+            const data = await DeviceService.getAllDevice(userData.id, 600);
             setDeviceInfos(data.devices);
         };
         fetchDeviceInfos();

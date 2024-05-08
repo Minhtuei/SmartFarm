@@ -39,7 +39,7 @@ class NotificationFactory {
         await NotificationFactory.createNotification({ context, notificationType: 'warning', email, deviceName });
     }
     static async createInfoNotification({ context, email, deviceName }: Omit<NotificationData, 'notificationType'>) {
-        await NotificationFactory.createNotification({ context, notificationType: 'info', email, deviceName });
+        await NotificationFactory.createNotification({ context, notificationType: 'schedule', email, deviceName });
     }
 }
 export default NotificationFactory;
